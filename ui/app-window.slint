@@ -332,6 +332,8 @@ component RomOutputBar inherits Rectangle {
     in property <bool> can_generate;
     in property <int> rom_valid_state;
 
+    out property <bool> write_spoilerlog;
+
     HorizontalLayout {
         Rectangle {
             width: parent.width / 2;
@@ -380,6 +382,7 @@ component RomOutputBar inherits Rectangle {
                     x: 30px;
                     text: "Generate Spoilerlog";
                     checked: true;
+                    toggled => { root.write_spoilerlog = self.checked }
                 }
 
                 Button {
@@ -411,6 +414,8 @@ export component MainWindow inherits Window {
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
 
+    out property <bool> write_spoilerlog <=> romoutput.write_spoilerlog;
+
     out property <int> shuffle_adventure <=> settings.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> settings.shuffle_race_rewards;
     out property <bool> shuffle_warppads <=> settings.shuffle_warppads;
@@ -436,11 +441,12 @@ export component MainWindow inherits Window {
             sources_generator() => { root.sources_generator(); }
             sources_mod() => { root.sources_mod(); }
         }
-        RomOutputBar {
+        romoutput := RomOutputBar {
             height: parent.height * 0.13;
             rom_path: root.rom_path;
             can_generate: root.can_generate;
             rom_valid_state: root.rom_valid_state;
+
             gen_seed() => { root.gen_seed(); }
             pick_rom() => { root.pick_rom(); }
         }
