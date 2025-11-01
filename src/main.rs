@@ -1,15 +1,18 @@
 // Prevent console window in addition to Slint window in Windows release builds when, e.g., starting the app via file manager. Ignored on other platforms.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::error::Error;
-use std::fs::File;
-use std::io::{BufRead, BufReader, Write, stdout};
-use rfd::FileDialog;
-use slint::SharedString;
 use md5;
 use open;
+use rfd::FileDialog;
+use slint::SharedString;
+use std::error::Error;
+use std::fs::File;
+use std::io::{stdout, BufRead, BufReader, Write};
 
-use crate::seed_settings::{FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, WarppadUnlockRequirements};
+use crate::seed_settings::{
+    FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime,
+    WarppadUnlockRequirements,
+};
 
 slint::include_modules!();
 
@@ -19,7 +22,7 @@ enum RomValidState {
     NoRom = 0,
     //Validating = 1, // not actually used, just for reference
     Invalid = 2,
-    Valid = 3
+    Valid = 3,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -42,18 +45,27 @@ fn main() -> Result<(), Box<dyn Error>> {
             shuffle_adventure: main_window.get_shuffle_adventure() == 1,
             shuffle_race_rewards: main_window.get_shuffle_race_rewards(),
             shuffle_warppads: main_window.get_shuffle_warppads(),
-            warppad_unlock_requirements: WarppadUnlockRequirements::try_from(main_window.get_warppad_unlock_requirements()).unwrap(),
+            warppad_unlock_requirements: WarppadUnlockRequirements::try_from(
+                main_window.get_warppad_unlock_requirements(),
+            )
+            .unwrap(),
             autounlock_ctrchallenge_relicrace: main_window.get_autounlock_ctrchallenge_relicrace(),
         };
         let chosen_qol_settings = QualityOfLifeSettings {
             skip_mask_hints: main_window.get_qol_skip_mask_hints(),
             autoskip_podium_cutscenes: main_window.get_qol_skip_podium(),
-            skip_mask_congrats: main_window.get_qol_skip_mask_congrats()
+            skip_mask_congrats: main_window.get_qol_skip_mask_congrats(),
         };
         let chosen_general_settings = GeneralSettings {
-            rr_required_minimum_time: RelicTime::try_from(main_window.get_rr_required_minimum_time()).unwrap(),
+            rr_required_minimum_time: RelicTime::try_from(
+                main_window.get_rr_required_minimum_time(),
+            )
+            .unwrap(),
             rr_require_perfects: main_window.get_rr_require_perfects(),
-            oxide_final_challenge_unlock: FinalOxideUnlock::try_from(main_window.get_oxide_final_challenge_unlock()).unwrap(),
+            oxide_final_challenge_unlock: FinalOxideUnlock::try_from(
+                main_window.get_oxide_final_challenge_unlock(),
+            )
+            .unwrap(),
         };
 
         //todo Generate seed
@@ -65,9 +77,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let main_window = main_ui_weak.unwrap();
     ui.on_pick_rom(move || {
         // Open File Picker Dialog
-        let files = FileDialog::new()
-            .add_filter(".bin", &["bin"])
-            .pick_file();
+        let files = FileDialog::new().add_filter(".bin", &["bin"]).pick_file();
         if files.is_some() {
             let tmp_files = files.unwrap();
             let rom_path = tmp_files.to_str().unwrap();
