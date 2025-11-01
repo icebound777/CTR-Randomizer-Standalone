@@ -28,39 +28,39 @@ component TitleBar inherits Rectangle {
     }
 }
 
-component SettingsMetaBar inherits Rectangle {
-    HorizontalLayout {
-        alignment: space-evenly;
-        padding: 4px;
-        Text {
-            text: "Settings Hash:";
-            vertical-alignment: center;
-            horizontal-alignment: center;
-            font-size: 20pt;
-        }
-
-        VerticalBox {
-            alignment: space-evenly;
-            LineEdit {
-                height: parent.height / 2;
-                width: 200px;
-                horizontal-alignment: left;
-                read-only: true;
-            }
-        }
-
-        Button {
-            text: "Export Settings";
-            height: parent.height * (2/3);
-            width: 200px;
-        }
-        Button {
-            text: "Import Settings";
-            height: parent.height * (2/3);
-            width: 200px;
-        }
-    }
-}
+//component SettingsMetaBar inherits Rectangle {
+//    HorizontalLayout {
+//        alignment: space-evenly;
+//        padding: 4px;
+//        Text {
+//            text: "Settings Hash:";
+//            vertical-alignment: center;
+//            horizontal-alignment: center;
+//            font-size: 20pt;
+//        }
+//
+//        VerticalBox {
+//            alignment: space-evenly;
+//            LineEdit {
+//                height: parent.height / 2;
+//                width: 200px;
+//                horizontal-alignment: left;
+//                read-only: true;
+//            }
+//        }
+//
+//        Button {
+//            text: "Export Settings";
+//            height: parent.height * (2/3);
+//            width: 200px;
+//        }
+//        Button {
+//            text: "Import Settings";
+//            height: parent.height * (2/3);
+//            width: 200px;
+//        }
+//    }
+//}
 
 component RandomizationSubmenu inherits Rectangle {
     out property <int> shuffle_adventure <=> chosen_randomization.current-index;
@@ -429,9 +429,9 @@ export component MainWindow inherits Window {
         TitleBar {
             height: parent.height * 0.18;
         }
-        SettingsMetaBar {
-            height: parent.height * 0.1;
-        }
+        //SettingsMetaBar {
+        //    height: parent.height * 0.1;
+        //}
         settings := SettingsMenu {
             sources_generator() => { root.sources_generator(); }
             sources_mod() => { root.sources_mod(); }
