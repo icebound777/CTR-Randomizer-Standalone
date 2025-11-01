@@ -1,1 +1,1 @@
-pub mod xdelta_patching;
+pub mod bsdiff_patching;

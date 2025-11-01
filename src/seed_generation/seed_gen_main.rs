@@ -1,5 +1,5 @@
 use crate::seed_generation::seed_settings::SeedSettings;
-use crate::seed_generation::rom_patching::xdelta_patching::{apply_patchfile, create_patchfile};
+use crate::seed_generation::rom_patching::bsdiff_patching::{apply_patchfile, create_patchfile};
 
 pub fn generate_seed(rom_filepath: &str, chosen_settings: SeedSettings) {
     let mut seed: u32;
