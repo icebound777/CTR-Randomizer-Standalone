@@ -9,7 +9,7 @@ use slint::SharedString;
 use md5;
 use open;
 
-use crate::seed_settings::{GeneralSettings, QualityOfLifeSettings, RelicTime, FinalOxideUnlock};
+use crate::seed_settings::{FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, WarppadUnlockRequirements};
 
 slint::include_modules!();
 
@@ -38,6 +38,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     ui.on_gen_seed(move || {
         // Collect settings chosen via UI
+        let chosen_rando_settings = RandomizationSettings {
+            shuffle_adventure: main_window.get_shuffle_adventure() == 1,
+            shuffle_race_rewards: main_window.get_shuffle_race_rewards(),
+            shuffle_warppads: main_window.get_shuffle_warppads(),
+            warppad_unlock_requirements: WarppadUnlockRequirements::try_from(main_window.get_warppad_unlock_requirements()).unwrap(),
+            autounlock_ctrchallenge_relicrace: main_window.get_autounlock_ctrchallenge_relicrace(),
+        };
         let chosen_qol_settings = QualityOfLifeSettings {
             skip_mask_hints: main_window.get_qol_skip_mask_hints(),
             autoskip_podium_cutscenes: main_window.get_qol_skip_podium(),

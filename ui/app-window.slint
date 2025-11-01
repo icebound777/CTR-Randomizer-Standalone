@@ -63,6 +63,12 @@ component SettingsMetaBar inherits Rectangle {
 }
 
 component RandomizationSubmenu inherits Rectangle {
+    out property <int> shuffle_adventure <=> chosen_randomization.current-index;
+    out property <bool> shuffle_race_rewards;
+    out property <bool> shuffle_warppads;
+    out property <int> warppad_unlock_requirements <=> warppad_unlocks.current-index;
+    out property <bool> autounlock_ctrchallenge_relicrace;
+
     VerticalLayout {
         Rectangle {
             height: 60px;
@@ -95,10 +101,12 @@ component RandomizationSubmenu inherits Rectangle {
             Switch {
                 y: 40px;
                 text: "Shuffle Race Rewards";
+                toggled => {root.shuffle_race_rewards = self.checked}
             }
             Switch {
                 y: 80px;
                 text: "Shuffle Warp Pads";
+                toggled => {root.shuffle_warppads = self.checked}
             }
             Text {
                 y: 130px;
@@ -106,7 +114,7 @@ component RandomizationSubmenu inherits Rectangle {
                 text: "Warp Pad Unlock Requirements";
                 font-size: 10pt;
             }
-            ComboBox {
+            warppad_unlocks := ComboBox {
                 y: 122px;
                 x: 530px;
                 model: ["Vanilla", "Shuffled", "More Choices", "Wild", "Chaotic"];
@@ -114,6 +122,7 @@ component RandomizationSubmenu inherits Rectangle {
             Switch {
                 y: 170px;
                 text: "Auto-Unlock CTR Challenge & Relic Race";
+                toggled => {root.autounlock_ctrchallenge_relicrace = self.checked}
             }
         }
     }
@@ -280,6 +289,12 @@ component SettingsMenu inherits TabWidget {
     callback sources_generator();
     callback sources_mod();
 
+    out property <int> shuffle_adventure <=> randomization.shuffle_adventure;
+    out property <bool> shuffle_race_rewards <=> randomization.shuffle_race_rewards;
+    out property <bool> shuffle_warppads <=> randomization.shuffle_warppads;
+    out property <int> warppad_unlock_requirements <=> randomization.warppad_unlock_requirements;
+    out property <bool> autounlock_ctrchallenge_relicrace <=> randomization.autounlock_ctrchallenge_relicrace;
+
     out property <int> rr_required_minimum_time <=> generalmenu.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> generalmenu.rr_require_perfects;
     out property <int> oxide_final_challenge_unlock <=> generalmenu.rr_required_minimum_time;
@@ -288,7 +303,7 @@ component SettingsMenu inherits TabWidget {
     out property <bool> qol_skip_podium <=> qolmenu.qol_skip_podium;
     out property <bool> qol_skip_mask_congrats <=> qolmenu.qol_skip_mask_congrats;
 
-    current-index: 1;
+    current-index: 0;
     Tab {
         title: "Randomization";
         randomization := RandomizationSubmenu {}
@@ -395,6 +410,12 @@ export component MainWindow inherits Window {
     in property <string> rom_path;
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
+
+    out property <int> shuffle_adventure <=> settings.shuffle_adventure;
+    out property <bool> shuffle_race_rewards <=> settings.shuffle_race_rewards;
+    out property <bool> shuffle_warppads <=> settings.shuffle_warppads;
+    out property <int> warppad_unlock_requirements <=> settings.warppad_unlock_requirements;
+    out property <bool> autounlock_ctrchallenge_relicrace <=> settings.autounlock_ctrchallenge_relicrace;
 
     out property <int> rr_required_minimum_time <=> settings.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> settings.rr_require_perfects;

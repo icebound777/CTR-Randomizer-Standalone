@@ -43,6 +43,21 @@ pub enum RelicTime {
     PlatinumTime = 2
 }
 
+impl TryFrom<i32> for WarppadUnlockRequirements {
+    type Error = ();
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
+        match v {
+            x if x == WarppadUnlockRequirements::Vanilla as i32 => Ok(WarppadUnlockRequirements::Vanilla),
+            x if x == WarppadUnlockRequirements::Shuffled as i32 => Ok(WarppadUnlockRequirements::Shuffled),
+            x if x == WarppadUnlockRequirements::MoreChoices as i32 => Ok(WarppadUnlockRequirements::MoreChoices),
+            x if x == WarppadUnlockRequirements::Wild as i32 => Ok(WarppadUnlockRequirements::Wild),
+            x if x == WarppadUnlockRequirements::Chaotic as i32 => Ok(WarppadUnlockRequirements::Chaotic),
+            _ => Err(()),
+        }
+    }
+}
+
 impl TryFrom<i32> for RelicTime {
     type Error = ();
 
