@@ -7,8 +7,9 @@ use rfd::FileDialog;
 use slint::SharedString;
 use std::error::Error;
 use std::fs::File;
-use std::io::{stdout, BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader};
 
+use crate::seed_generation::seed_gen_main::generate_seed;
 use crate::seed_generation::seed_settings::{FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, SeedSettings, WarppadUnlockRequirements};
 
 slint::include_modules!();
@@ -71,8 +72,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         };
 
         //todo Generate seed
-        let mut lock = stdout().lock();
-        write!(lock, "hello world").unwrap();
+        let rom_path = main_window.get_rom_path();
+        let rom_path = rom_path.as_str();
+        generate_seed(rom_path, chosen_settings);
     });
 
     let main_ui_weak = ui.as_weak();
@@ -81,13 +83,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Open File Picker Dialog
         let files = FileDialog::new().add_filter(".bin", &["bin"]).pick_file();
         if files.is_some() {
-            let tmp_files = files.unwrap();
-            let rom_path = tmp_files.to_str().unwrap();
+            let something = files.unwrap();
+            let rom_path_str = something.to_str().unwrap();
 
             main_window.set_rom_valid_state(RomValidState::NoRom as i32);
 
             // Validate ROM
-            let f = File::open(rom_path).unwrap();
+            let f = File::open(rom_path_str).unwrap();
             let f_len = f.metadata().unwrap().len();
             let buf_len = f_len.min(1_000_000) as usize;
             let mut f_buf = BufReader::with_capacity(buf_len, f);
@@ -110,7 +112,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 main_window.set_rom_valid_state(RomValidState::Invalid as i32);
             }
 
-            main_window.set_rom_path(SharedString::from(rom_path));
+            main_window.set_rom_path(SharedString::from(rom_path_str));
         }
     });
 

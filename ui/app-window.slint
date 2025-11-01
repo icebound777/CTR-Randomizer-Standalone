@@ -328,7 +328,7 @@ component SettingsMenu inherits TabWidget {
 component RomOutputBar inherits Rectangle {
     callback gen_seed();
     callback pick_rom();
-    in property <string> rom_path;
+    in-out property <string> rom_path;
     in property <bool> can_generate;
     in property <int> rom_valid_state;
 
@@ -407,7 +407,7 @@ export component MainWindow inherits Window {
     callback pick_rom();
     callback sources_generator();
     callback sources_mod();
-    in property <string> rom_path;
+    in-out property <string> rom_path;
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
 
