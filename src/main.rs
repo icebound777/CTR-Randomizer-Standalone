@@ -29,7 +29,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let main_window = main_ui_weak.unwrap();
 
     ui.on_sources_generator(move || {
-        let _ = open::that("https://docs.rs/slint/latest/slint/struct.SharedString.html");
+        let _ = open::that("https://github.com/icebound777/CTR-Randomizer-Standalone");
     });
 
     ui.on_sources_mod(move || {
@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             skip_mask_congrats: main_window.get_qol_skip_mask_congrats()
         };
 
-        // Generate seed
+        //todo Generate seed
         let mut lock = stdout().lock();
         write!(lock, "hello world").unwrap();
     });
