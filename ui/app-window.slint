@@ -120,6 +120,10 @@ component RandomizationSubmenu inherits Rectangle {
 }
 
 component GeneralSubmenu inherits Rectangle {
+    out property <int> rr_required_minimum_time <=> required_minimum_time.current-index;
+    out property <bool> rr_require_perfects;
+    out property <int> oxide_final_challenge_unlock <=> oxide_final_unlock.current-index;
+
     VerticalLayout {
         alignment: start;
         width: 500px;
@@ -127,15 +131,17 @@ component GeneralSubmenu inherits Rectangle {
             height: 60px;
             Text {
                 vertical-alignment: center;
-                text: "Relic Races: Required Minimum Rank";
+                text: "Relic Races: Required Minimum Time";
             }
-            ComboBox {
+            required_minimum_time := ComboBox {
                 width: 250px;
                 model: ["Any Time", "Gold Time or better", "Platinum Time"];
             }
         }
         Switch {
+            x: 6px;
             text: "Relic Races: Require Perfects";
+            toggled => {root.rr_require_perfects = self.checked}
         }
         HorizontalBox {
             height: 60px;
@@ -143,7 +149,7 @@ component GeneralSubmenu inherits Rectangle {
                 vertical-alignment: center;
                 text: "Oxide's Final Challenge Unlock";
             }
-            ComboBox {
+            oxide_final_unlock := ComboBox {
                 width: 250px;
                 model: ["18 Sapphire Relics", "18 Gold+Platinum Relics"];
             }
@@ -274,18 +280,22 @@ component SettingsMenu inherits TabWidget {
     callback sources_generator();
     callback sources_mod();
 
+    out property <int> rr_required_minimum_time <=> generalmenu.rr_required_minimum_time;
+    out property <bool> rr_require_perfects <=> generalmenu.rr_require_perfects;
+    out property <int> oxide_final_challenge_unlock <=> generalmenu.rr_required_minimum_time;
+
     out property <bool> qol_skip_mask_hints <=> qolmenu.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> qolmenu.qol_skip_podium;
     out property <bool> qol_skip_mask_congrats <=> qolmenu.qol_skip_mask_congrats;
 
-    current-index: 3;
+    current-index: 1;
     Tab {
         title: "Randomization";
-        RandomizationSubmenu {}
+        randomization := RandomizationSubmenu {}
     }
     Tab {
         title: "General";
-        GeneralSubmenu {}
+        generalmenu := GeneralSubmenu {}
     }
     Tab {
         title: "Quality of Life";
@@ -385,6 +395,10 @@ export component MainWindow inherits Window {
     in property <string> rom_path;
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
+
+    out property <int> rr_required_minimum_time <=> settings.rr_required_minimum_time;
+    out property <bool> rr_require_perfects <=> settings.rr_require_perfects;
+    out property <int> oxide_final_challenge_unlock <=> settings.rr_required_minimum_time;
 
     out property <bool> qol_skip_mask_hints <=> settings.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> settings.qol_skip_podium;

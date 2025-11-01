@@ -9,7 +9,7 @@ use slint::SharedString;
 use md5;
 use open;
 
-use crate::seed_settings::QualityOfLifeSettings;
+use crate::seed_settings::{GeneralSettings, QualityOfLifeSettings, RelicTime, FinalOxideUnlock};
 
 slint::include_modules!();
 
@@ -42,6 +42,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             skip_mask_hints: main_window.get_qol_skip_mask_hints(),
             autoskip_podium_cutscenes: main_window.get_qol_skip_podium(),
             skip_mask_congrats: main_window.get_qol_skip_mask_congrats()
+        };
+        let chosen_general_settings = GeneralSettings {
+            rr_required_minimum_time: RelicTime::try_from(main_window.get_rr_required_minimum_time()).unwrap(),
+            rr_require_perfects: main_window.get_rr_require_perfects(),
+            oxide_final_challenge_unlock: FinalOxideUnlock::try_from(main_window.get_oxide_final_challenge_unlock()).unwrap(),
         };
 
         //todo Generate seed

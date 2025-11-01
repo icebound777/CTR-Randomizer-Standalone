@@ -13,7 +13,7 @@ pub struct RandomizationSettings {
 }
 
 pub struct GeneralSettings {
-    pub rr_required_minimum_rank: RelicTime,
+    pub rr_required_minimum_time: RelicTime,
     pub rr_require_perfects: bool,
     pub oxide_final_challenge_unlock: FinalOxideUnlock
 }
@@ -41,4 +41,29 @@ pub enum RelicTime {
     SapphireTime = 0,
     GoldTime = 1,
     PlatinumTime = 2
+}
+
+impl TryFrom<i32> for RelicTime {
+    type Error = ();
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
+        match v {
+            x if x == RelicTime::SapphireTime as i32 => Ok(RelicTime::SapphireTime),
+            x if x == RelicTime::GoldTime as i32 => Ok(RelicTime::GoldTime),
+            x if x == RelicTime::PlatinumTime as i32 => Ok(RelicTime::PlatinumTime),
+            _ => Err(()),
+        }
+    }
+}
+
+impl TryFrom<i32> for FinalOxideUnlock {
+    type Error = ();
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
+        match v {
+            x if x == FinalOxideUnlock::SappireRelics18 as i32 => Ok(FinalOxideUnlock::SappireRelics18),
+            x if x == FinalOxideUnlock::GoldAndPlatinumRelics18 as i32 => Ok(FinalOxideUnlock::GoldAndPlatinumRelics18),
+            _ => Err(()),
+        }
+    }
 }
