@@ -9,14 +9,11 @@ use std::error::Error;
 use std::fs::File;
 use std::io::{stdout, BufRead, BufReader, Write};
 
-use crate::seed_settings::{
-    FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime,
-    WarppadUnlockRequirements,
-};
+use crate::seed_generation::seed_settings::{FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, SeedSettings, WarppadUnlockRequirements};
 
 slint::include_modules!();
 
-pub mod seed_settings;
+pub mod seed_generation;
 
 enum RomValidState {
     NoRom = 0,
@@ -66,6 +63,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                 main_window.get_oxide_final_challenge_unlock(),
             )
             .unwrap(),
+        };
+        let chosen_settings = SeedSettings {
+            randomization: chosen_rando_settings,
+            general: chosen_general_settings,
+            qol: chosen_qol_settings,
         };
 
         //todo Generate seed
