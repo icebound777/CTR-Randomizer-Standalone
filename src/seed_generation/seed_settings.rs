@@ -3,6 +3,7 @@ pub struct SeedSettings {
     pub general: GeneralSettings,
     pub qol: QualityOfLifeSettings,
     pub write_spoilerlog: bool,
+    pub write_patchfile: bool,
 }
 
 pub struct RandomizationSettings {

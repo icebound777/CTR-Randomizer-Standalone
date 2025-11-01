@@ -1077,6 +1077,7 @@ version = "0.1.0"
 dependencies = [
  "md5",
  "open",
+ "rand 0.9.2",
  "rfd",
  "slint",
  "slint-build",

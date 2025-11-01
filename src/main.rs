@@ -70,6 +70,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             general: chosen_general_settings,
             qol: chosen_qol_settings,
             write_spoilerlog: main_window.get_write_spoilerlog(),
+            write_patchfile: false,
         };
 
         //todo Generate seed
