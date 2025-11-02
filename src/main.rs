@@ -10,7 +10,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use crate::seed_generation::seed_gen_main::generate_seed;
-use crate::seed_generation::seed_settings::{FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, SeedSettings, WarppadUnlockRequirements};
+use crate::seed_generation::seed_settings::{BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, SeedSettings, WarppadUnlockRequirements};
 
 slint::include_modules!();
 
@@ -47,6 +47,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 main_window.get_warppad_unlock_requirements(),
             )
             .unwrap(),
+            bossgarage_unlock_requirements: BossGarageRequirements::try_from(main_window.get_bossgarage_unlock_requirements()).unwrap(),
             autounlock_ctrchallenge_relicrace: main_window.get_autounlock_ctrchallenge_relicrace(),
         };
         let chosen_qol_settings = QualityOfLifeSettings {

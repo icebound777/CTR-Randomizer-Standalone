@@ -11,6 +11,7 @@ pub struct RandomizationSettings {
     pub shuffle_race_rewards: bool,
     pub shuffle_warppads: bool,
     pub warppad_unlock_requirements: WarppadUnlockRequirements,
+    pub bossgarage_unlock_requirements: BossGarageRequirements,
     pub autounlock_ctrchallenge_relicrace: bool,
 }
 
@@ -32,6 +33,12 @@ pub enum WarppadUnlockRequirements {
     MoreChoices = 2,
     Wild = 3,
     Chaotic = 4,
+}
+
+pub enum BossGarageRequirements {
+    Original4Tracks = 0,
+    SameHubTracks = 1,
+    Trophies = 2,
 }
 
 pub enum FinalOxideUnlock {
@@ -62,6 +69,25 @@ impl TryFrom<i32> for WarppadUnlockRequirements {
             x if x == WarppadUnlockRequirements::Wild as i32 => Ok(WarppadUnlockRequirements::Wild),
             x if x == WarppadUnlockRequirements::Chaotic as i32 => {
                 Ok(WarppadUnlockRequirements::Chaotic)
+            }
+            _ => Err(()),
+        }
+    }
+}
+
+impl TryFrom<i32> for BossGarageRequirements {
+    type Error = ();
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
+        match v {
+            x if x == BossGarageRequirements::Original4Tracks as i32 => {
+                Ok(BossGarageRequirements::Original4Tracks)
+            }
+            x if x == BossGarageRequirements::SameHubTracks as i32 => {
+                Ok(BossGarageRequirements::SameHubTracks)
+            }
+            x if x == BossGarageRequirements::Trophies as i32 => {
+                Ok(BossGarageRequirements::Trophies)
             }
             _ => Err(()),
         }
