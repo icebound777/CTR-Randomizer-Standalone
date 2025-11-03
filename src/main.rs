@@ -42,7 +42,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         let chosen_rando_settings = RandomizationSettings {
             shuffle_adventure: main_window.get_shuffle_adventure() == 1,
             shuffle_race_rewards: main_window.get_shuffle_race_rewards(),
-            shuffle_warppads: main_window.get_shuffle_warppads(),
+            warppad_shuffle: if main_window.get_shuffle_warppads() {
+                Some(WarppadShuffle {
+                    include_battle_arenas: main_window.get_shuffle_warppads_battlearenas(),
+                    include_gem_cups: main_window.get_shuffle_warppads_gemcups(),
+                })
+            } else {
+                None
+            },
             warppad_unlock_requirements: WarppadUnlockRequirements::try_from(
                 main_window.get_warppad_unlock_requirements(),
             )

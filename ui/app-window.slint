@@ -66,6 +66,8 @@ component RandomizationSubmenu inherits Rectangle {
     out property <int> shuffle_adventure <=> chosen_randomization.current-index;
     out property <bool> shuffle_race_rewards;
     out property <bool> shuffle_warppads;
+    out property <bool> shuffle_warppads_battlearenas;
+    out property <bool> shuffle_warppads_gemcups;
     out property <int> warppad_unlock_requirements <=> warppad_unlocks.current-index;
     out property <bool> autounlock_ctrchallenge_relicrace;
     out property <int> bossgarage_unlock_requirements <=> bossgarage_unlocks.current-index;
@@ -104,10 +106,31 @@ component RandomizationSubmenu inherits Rectangle {
                 text: "Shuffle Race Rewards";
                 toggled => {root.shuffle_race_rewards = self.checked}
             }
-            Switch {
-                y: 80px;
-                text: "Shuffle Warp Pads";
-                toggled => {root.shuffle_warppads = self.checked}
+            Rectangle {
+                width: root.width * 0.65;
+                height: 40px;
+                y: 70px;
+                border-width: shuffle_warppads.x == (self.width/2)-300px ? 1px : 0px;
+                border-color: black;
+                border-radius: 10px;
+                shuffle_warppads := Switch {
+                    checked: true;
+                    x: self.checked ? (parent.width/2)-300px : (parent.width/2)-84px;
+                    animate x {duration: 300ms; delay: 150ms; easing: ease-in-out-quad;}
+                    text: "Shuffle Warp Pads";
+                    toggled => {root.shuffle_warppads = self.checked}
+                }
+                Switch {
+                    text: "Include Battle Arenas";
+                    visible: shuffle_warppads.x == (parent.width/2)-300px;
+                    toggled => {root.shuffle_warppads_battlearenas = self.checked}
+                }
+                Switch {
+                    x: (parent.width/2)+130px;
+                    text: "Include Gem Cups";
+                    visible: shuffle_warppads.x == (parent.width/2)-300px;
+                    toggled => {root.shuffle_warppads_gemcups = self.checked}
+                }
             }
             Text {
                 y: 130px;
@@ -304,6 +327,8 @@ component SettingsMenu inherits TabWidget {
     out property <int> shuffle_adventure <=> randomization.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> randomization.shuffle_race_rewards;
     out property <bool> shuffle_warppads <=> randomization.shuffle_warppads;
+    out property <bool> shuffle_warppads_battlearenas <=> randomization.shuffle_warppads_battlearenas;
+    out property <bool> shuffle_warppads_gemcups <=> randomization.shuffle_warppads_gemcups;
     out property <int> warppad_unlock_requirements <=> randomization.warppad_unlock_requirements;
     out property <bool> autounlock_ctrchallenge_relicrace <=> randomization.autounlock_ctrchallenge_relicrace;
     out property <int> bossgarage_unlock_requirements <=> randomization.bossgarage_unlock_requirements;
@@ -432,6 +457,8 @@ export component MainWindow inherits Window {
     out property <int> shuffle_adventure <=> settings.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> settings.shuffle_race_rewards;
     out property <bool> shuffle_warppads <=> settings.shuffle_warppads;
+    out property <bool> shuffle_warppads_battlearenas <=> settings.shuffle_warppads_battlearenas;
+    out property <bool> shuffle_warppads_gemcups <=> settings.shuffle_warppads_gemcups;
     out property <int> warppad_unlock_requirements <=> settings.warppad_unlock_requirements;
     out property <bool> autounlock_ctrchallenge_relicrace <=> settings.autounlock_ctrchallenge_relicrace;
     out property <int> bossgarage_unlock_requirements <=> settings.bossgarage_unlock_requirements;
