@@ -114,9 +114,8 @@ component RandomizationSubmenu inherits Rectangle {
                 border-color: black;
                 border-radius: 10px;
                 shuffle_warppads := Switch {
-                    checked: true;
                     x: self.checked ? (parent.width/2)-300px : (parent.width/2)-84px;
-                    animate x {duration: 300ms; delay: 150ms; easing: ease-in-out-quad;}
+                    animate x {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
                     text: "Shuffle Warp Pads";
                     toggled => {root.shuffle_warppads = self.checked}
                 }
