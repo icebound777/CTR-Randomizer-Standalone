@@ -10,7 +10,10 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use crate::seed_generation::seed_gen_main::generate_seed;
-use crate::seed_generation::seed_settings::{BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, SeedSettings, WarppadUnlockRequirements};
+use crate::seed_generation::seed_settings::{
+    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings,
+    RandomizationSettings, RelicTime, SeedSettings, WarppadShuffle, WarppadUnlockRequirements,
+};
 
 slint::include_modules!();
 
