@@ -1,3 +1,8 @@
+use std::collections::HashMap;
+
+use rand::seq::SliceRandom;
+use rand_chacha::ChaCha8Rng;
+
 use crate::seed_generation::{
     randomization_datastructures::{
         LevelID, RaceReward, RaceType, RandomizedGame, RequiredItem, SettingID, SettingValue,
@@ -8,7 +13,7 @@ use crate::seed_generation::{
 
 fn get_vanilla_game() -> RandomizedGame {
     RandomizedGame {
-        warppad_links: vec![
+        warppad_links: HashMap::from([
             (LevelID::DingoCanyon, LevelID::DingoCanyon),
             (LevelID::DragonMines, LevelID::DragonMines),
             (LevelID::BlizzardBluff, LevelID::BlizzardBluff),
@@ -36,7 +41,7 @@ fn get_vanilla_game() -> RandomizedGame {
             (LevelID::CupBlue, LevelID::CupBlue),
             (LevelID::CupYellow, LevelID::CupYellow),
             (LevelID::CupPurple, LevelID::CupPurple),
-        ],
+        ]),
         warppad_unlocks: vec![
             (
                 LevelID::CrashCove,
@@ -841,11 +846,28 @@ fn get_vanilla_game() -> RandomizedGame {
     }
 }
 
-pub fn get_randomized_game(seed: u32, chosen_settings: SeedSettings) -> RandomizedGame {
+pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: SeedSettings) -> RandomizedGame {
     let vanilla_game = get_vanilla_game();
     let mut new_warppads = vanilla_game.warppad_links;
     let mut new_warppad_unlocks = vanilla_game.warppad_unlocks;
     let mut new_race_rewards = vanilla_game.race_rewards;
+
+    if chosen_settings.randomization.shuffle_adventure {
+        // Warppads
+        if let Some(warppad_shuffle) = chosen_settings.randomization.warppad_shuffle {
+            new_warppads = get_shuffled_warppads(
+                seed,
+                new_warppads,
+                warppad_shuffle.include_battle_arenas,
+                warppad_shuffle.include_gem_cups,
+            );
+        }
+
+        // Warppad Unlocks
+        // Race Rewards
+    }
+
+    //todo sort relic from best item to worst, sapphire to plat?
 
     RandomizedGame {
         warppad_links: new_warppads,
@@ -886,4 +908,50 @@ pub fn get_randomized_game(seed: u32, chosen_settings: SeedSettings) -> Randomiz
             ),
         ],
     }
+}
+
+fn get_shuffled_warppads(
+    mut seed: ChaCha8Rng,
+    original_warppads: HashMap<LevelID, LevelID>,
+    include_battle_arenas: bool,
+    include_gem_cups: bool
+) -> HashMap<LevelID, LevelID> {
+    let mut randomized_levels: HashMap<LevelID, LevelID> = original_warppads.clone();
+
+    let mut untouched_levels: HashMap<LevelID, LevelID> = HashMap::new();
+
+    if !include_battle_arenas {
+        for level_key in original_warppads.keys() {
+            if *level_key >= LevelID::NitroCourt && *level_key <= LevelID::RockyRoad {
+                untouched_levels.insert(*level_key, *level_key);
+            }
+        }
+    }
+
+    if !include_gem_cups {
+        for level_key in original_warppads.keys() {
+            if *level_key >= LevelID::CupRed && *level_key <= LevelID::CupPurple {
+                untouched_levels.insert(*level_key, *level_key);
+            }
+        }
+    }
+
+    for level_key in untouched_levels.keys() {
+        let _ = randomized_levels.remove(level_key);
+    }
+
+    let randomized_levels_clone = randomized_levels.clone();
+    let mut level_values: Vec<&LevelID> = randomized_levels_clone.values().collect::<Vec<_>>();
+    level_values.sort();
+    level_values.shuffle(&mut seed);
+
+    let mut level_keys: Vec<&LevelID>  = randomized_levels_clone.keys().collect();
+    level_keys.sort();
+    for level_key in level_keys {
+        randomized_levels.insert(*level_key, *level_values.pop().expect("Same size as target vec."));
+    }
+
+    randomized_levels.extend(untouched_levels);
+
+    randomized_levels
 }

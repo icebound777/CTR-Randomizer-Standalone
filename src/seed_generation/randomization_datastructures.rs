@@ -1,12 +1,15 @@
+use std::collections::HashMap;
+
 use crate::seed_generation::seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime};
 
 pub struct RandomizedGame {
-    pub warppad_links: Vec<(LevelID, LevelID)>,
+    pub warppad_links: HashMap<LevelID, LevelID>,
     pub warppad_unlocks: Vec<(LevelID, UnlockStage, UnlockRequirement)>,
     pub race_rewards: Vec<(LevelID, RaceType, RaceReward)>,
     pub settings: Vec<(SettingID, SettingValue)>,
 }
 
+#[derive(PartialEq, PartialOrd, Eq, Hash, Copy, Clone, Ord)]
 pub enum LevelID {
     DingoCanyon = 0,
     DragonMines = 1,

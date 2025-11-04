@@ -1,5 +1,9 @@
-use crate::seed_generation::seed_settings::SeedSettings;
+use rand::SeedableRng;
+use rand_chacha::ChaCha8Rng;
+
+use crate::seed_generation::randomize_game::get_randomized_game;
 use crate::seed_generation::rom_patching::bsdiff_patching::{apply_patchfile, create_patchfile};
+use crate::seed_generation::seed_settings::SeedSettings;
 
 pub fn generate_seed(rom_filepath: &str, chosen_settings: SeedSettings) {
     let mut seed: u32;
@@ -13,7 +17,8 @@ pub fn generate_seed(rom_filepath: &str, chosen_settings: SeedSettings) {
     let seed: u32 = seed;
 
     // randomize game
-    //randomize_game(seed, chosen_settings);
+    let rng = ChaCha8Rng::seed_from_u64(seed as u64);
+    let randomized_game = get_randomized_game(rng, chosen_settings);
 
     // apply base mod patch to rom
     let filepath_new_rom = apply_patchfile(rom_filepath, seed);
