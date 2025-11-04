@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::seed_generation::seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime};
 
+#[derive(Debug)]
 pub struct RandomizedGame {
     pub warppad_links: HashMap<LevelID, LevelID>,
     pub warppad_unlocks: Vec<(LevelID, UnlockStage, UnlockRequirement)>,
@@ -9,7 +10,7 @@ pub struct RandomizedGame {
     pub settings: Vec<(SettingID, SettingValue)>,
 }
 
-#[derive(PartialEq, PartialOrd, Eq, Hash, Copy, Clone, Ord)]
+#[derive(PartialEq, PartialOrd, Eq, Hash, Copy, Clone, Ord, Debug)]
 pub enum LevelID {
     DingoCanyon = 0,
     DragonMines = 1,
@@ -40,16 +41,19 @@ pub enum LevelID {
     CupPurple = 104,
 }
 
+#[derive(Debug)]
 pub enum UnlockStage {
     One,
     Two,
 }
 
+#[derive(Debug)]
 pub struct UnlockRequirement {
     pub item_type: RequiredItem,
     pub count: u8,
 }
 
+#[derive(Debug)]
 pub enum RequiredItem {
     Trophy = 98,
     RedCtrToken = 381,
@@ -71,6 +75,7 @@ pub enum RequiredItem {
     AnyGem = 1887,
 }
 
+#[derive(Debug)]
 pub enum RaceType {
     TrophyRace,
     CtrOrCrystalChallenge,
@@ -81,6 +86,7 @@ pub enum RaceType {
     GemCup,
 }
 
+#[derive(Debug)]
 pub enum RaceReward {
     Trophy = 98,
     RedCtrToken = 381,
@@ -99,6 +105,7 @@ pub enum RaceReward {
     PurpleGem = 1119,
 }
 
+#[derive(Debug)]
 pub enum SettingID {
     RelicDifficulty = 0,
     RelicNeedsPerfect = 1,
@@ -109,6 +116,7 @@ pub enum SettingID {
     OxideRequiredRelics = 6,
 }
 
+#[derive(Debug)]
 pub enum SettingValue {
     Boolean(bool),
     RelicDifficulty(RelicTime),

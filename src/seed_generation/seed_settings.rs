@@ -40,17 +40,20 @@ pub enum WarppadUnlockRequirements {
     Chaotic = 4,
 }
 
+#[derive(Debug)]
 pub enum BossGarageRequirements {
     Original4Tracks = 0,
     SameHubTracks = 1,
     Trophies = 2,
 }
 
+#[derive(Debug)]
 pub enum FinalOxideUnlock {
     SappireRelics18 = 0,
     GoldAndPlatinumRelics18 = 1,
 }
 
+#[derive(Debug)]
 pub enum RelicTime {
     SapphireTime = 0,
     GoldTime = 1,
