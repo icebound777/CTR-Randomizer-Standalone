@@ -5,7 +5,7 @@ use crate::seed_generation::randomize_game::get_randomized_game;
 use crate::seed_generation::rom_patching::bsdiff_patching::{apply_patchfile, create_patchfile};
 use crate::seed_generation::seed_settings::SeedSettings;
 
-pub fn generate_seed(rom_filepath: &str, chosen_settings: SeedSettings) {
+pub fn generate_seed(rom_filepath: &str, chosen_settings: &SeedSettings) {
     let mut seed: u32;
     loop {
         seed = rand::random::<u32>();

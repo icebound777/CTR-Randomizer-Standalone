@@ -846,7 +846,7 @@ fn get_vanilla_game() -> RandomizedGame {
     }
 }
 
-pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: SeedSettings) -> RandomizedGame {
+pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: &SeedSettings) -> RandomizedGame {
     let vanilla_game = get_vanilla_game();
     let mut new_warppads = vanilla_game.warppad_links;
     let mut new_warppad_unlocks = vanilla_game.warppad_unlocks;
@@ -854,7 +854,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: SeedSettings) -> R
 
     if chosen_settings.randomization.shuffle_adventure {
         // Warppads
-        if let Some(warppad_shuffle) = chosen_settings.randomization.warppad_shuffle {
+        if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             new_warppads = get_shuffled_warppads(
                 seed,
                 new_warppads,
