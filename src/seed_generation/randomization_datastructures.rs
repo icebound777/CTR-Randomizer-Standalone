@@ -114,6 +114,8 @@ pub enum SettingID {
     QolSkipPodium = 4,
     QolSkipMaskcongrats = 5,
     OxideRequiredRelics = 6,
+    SeedHash1 = 7,
+    SeedHash2 = 8,
 }
 
 #[derive(Debug)]
@@ -122,4 +124,5 @@ pub enum SettingValue {
     RelicDifficulty(RelicTime),
     BossGarageRequirements(BossGarageRequirements),
     OxideRequiredRelics(FinalOxideUnlock),
+    SeedHashPart(u16),
 }

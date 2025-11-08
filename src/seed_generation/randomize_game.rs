@@ -842,17 +842,25 @@ fn get_vanilla_game() -> RandomizedGame {
                 SettingID::OxideRequiredRelics,
                 SettingValue::OxideRequiredRelics(FinalOxideUnlock::SappireRelics18),
             ),
+            (SettingID::SeedHash1, SettingValue::SeedHashPart(0x0000)),
+            (SettingID::SeedHash2, SettingValue::SeedHashPart(0x0000)),
         ],
     }
 }
 
-pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: &SeedSettings) -> RandomizedGame {
+pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> RandomizedGame {
     let vanilla_game = get_vanilla_game();
     let mut new_warppads = vanilla_game.warppad_links;
     let mut new_warppad_unlocks = vanilla_game.warppad_unlocks;
     let mut new_race_rewards = vanilla_game.race_rewards;
 
+    let overwrite_seed_hash_1;
+    let overwrite_seed_hash_2;
+
     if chosen_settings.randomization.shuffle_adventure {
+        overwrite_seed_hash_1 = (seed_as_number >> 16) as u16;
+        overwrite_seed_hash_2 = (seed_as_number & 0xFFFF) as u16;
+
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             new_warppads = get_shuffled_warppads(
@@ -865,6 +873,9 @@ pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: &SeedSettings) -> 
 
         // Warppad Unlocks
         // Race Rewards
+    } else {
+        overwrite_seed_hash_1 = 0u16;
+        overwrite_seed_hash_2 = 0u16;
     }
 
     //todo sort relic from best item to worst, sapphire to plat?
@@ -905,6 +916,14 @@ pub fn get_randomized_game(seed: ChaCha8Rng, chosen_settings: &SeedSettings) -> 
                 SettingValue::OxideRequiredRelics(
                     chosen_settings.general.oxide_final_challenge_unlock,
                 ),
+            ),
+            (
+                SettingID::SeedHash1,
+                SettingValue::SeedHashPart(overwrite_seed_hash_1),
+            ),
+            (
+                SettingID::SeedHash2,
+                SettingValue::SeedHashPart(overwrite_seed_hash_2),
             ),
         ],
     }
