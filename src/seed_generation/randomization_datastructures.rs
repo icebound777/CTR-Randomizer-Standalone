@@ -11,6 +11,7 @@ pub struct RandomizedGame {
 }
 
 #[derive(PartialEq, PartialOrd, Eq, Hash, Copy, Clone, Ord, Debug)]
+#[repr(u32)]
 pub enum LevelID {
     DingoCanyon = 0,
     DragonMines = 1,
@@ -41,7 +42,7 @@ pub enum LevelID {
     CupPurple = 104,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum UnlockStage {
     One,
     Two,
@@ -54,6 +55,7 @@ pub struct UnlockRequirement {
 }
 
 #[derive(Debug)]
+#[repr(u32)]
 pub enum RequiredItem {
     Trophy = 98,
     RedCtrToken = 381,
@@ -76,17 +78,19 @@ pub enum RequiredItem {
 }
 
 #[derive(Debug)]
+#[repr(u16)]
 pub enum RaceType {
-    TrophyRace,
-    CtrOrCrystalChallenge,
-    RelicRaceSapphire,
-    RelicRaceGold,
-    RelicRacePlatinum,
-    BossRace,
-    GemCup,
+    TrophyRace = 98,
+    CtrOrCrystalChallenge = 125,
+    RelicRaceSapphire = 97,
+    RelicRaceGold = 353,
+    RelicRacePlatinum = 609,
+    BossRace = 99,
+    GemCup = 95,
 }
 
 #[derive(Debug)]
+#[repr(u16)]
 pub enum RaceReward {
     Trophy = 98,
     RedCtrToken = 381,

@@ -41,6 +41,7 @@ pub enum WarppadUnlockRequirements {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[repr(u16)]
 pub enum BossGarageRequirements {
     Original4Tracks = 0,
     SameHubTracks = 1,
@@ -48,12 +49,14 @@ pub enum BossGarageRequirements {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[repr(u16)]
 pub enum FinalOxideUnlock {
     SappireRelics18 = 0,
     GoldAndPlatinumRelics18 = 1,
 }
 
 #[derive(Debug, Clone, Copy)]
+#[repr(u16)]
 pub enum RelicTime {
     SapphireTime = 0,
     GoldTime = 1,
