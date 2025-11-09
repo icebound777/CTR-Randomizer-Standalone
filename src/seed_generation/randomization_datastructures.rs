@@ -1,12 +1,8 @@
-use std::collections::HashMap;
-
-use crate::seed_generation::seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime};
+use crate::seed_generation::{game_world::GameWorld, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime}};
 
 #[derive(Debug)]
 pub struct GameSetup {
-    pub warppad_links: HashMap<LevelID, LevelID>,
-    pub warppad_unlocks: Vec<(LevelID, UnlockStage, UnlockRequirement)>,
-    pub race_rewards: Vec<(LevelID, RaceType, RaceReward)>,
+    pub game_world: GameWorld,
     pub settings: Vec<(SettingID, SettingValue)>,
 }
 
@@ -48,13 +44,13 @@ pub enum UnlockStage {
     Two,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct UnlockRequirement {
     pub item_type: RequiredItem,
     pub count: u8,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 #[repr(u32)]
 pub enum RequiredItem {
     Trophy = 98,
@@ -89,7 +85,7 @@ pub enum RaceType {
     GemCup = 95,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 #[repr(u16)]
 pub enum RaceReward {
     Trophy = 98,

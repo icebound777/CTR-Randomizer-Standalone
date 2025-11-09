@@ -1,6 +1,6 @@
 use std::{collections::HashMap, os::unix::fs::FileExt, path::PathBuf};
 
-use crate::seed_generation::randomization_datastructures::{GameSetup, SettingValue, UnlockStage};
+use crate::seed_generation::randomization_datastructures::{GameSetup, RequiredItem, SettingValue, UnlockStage};
 
 pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: GameSetup) -> Result<(), &'a str> {
     // Transform the randomized game into bytes to write
@@ -33,13 +33,13 @@ fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
 
     // Warppad Links
     let db_prefix_levelids: u32 = 0xA000;
-    for (key, value) in randomized_game.warppad_links.into_iter() {
+    for (key, value) in randomized_game.game_world.get_warppad_links().into_iter() {
         key_value_db.insert((db_prefix_levelids | key as u32) << 16, value as u16);
     }
 
     // Race Rewards
     let db_prefix_rewards: u32 = 0xA100;
-    for (level_id, racetype, reward) in randomized_game.race_rewards {
+    for (level_id, racetype, reward) in randomized_game.game_world.get_race_rewards().into_iter() {
         key_value_db.insert(
             ((db_prefix_rewards | level_id as u32) << 16) | racetype as u32,
             reward as u16
@@ -49,7 +49,7 @@ fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
     // Warppad Unlocks
     let db_prefix_unlock_1: u32 = 0xA200;
     let db_prefix_unlock_2: u32 = 0xA300;
-    for (level_id, unlock_stage, requirement) in randomized_game.warppad_unlocks {
+    for (level_id, unlock_stage, requirement) in randomized_game.game_world.get_warppad_unlocks() {
         let cur_db_prefix = if unlock_stage == UnlockStage::Two {
             db_prefix_unlock_2
         } else {
@@ -58,7 +58,10 @@ fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
 
         key_value_db.insert(
             (cur_db_prefix | level_id as u32) << 16,
-            requirement.item_type as u16 | ((requirement.count as u16 & 0x1F) << 11)
+            match requirement {
+                Some(req) => {req.item_type as u16 | ((req.count as u16 & 0x1F) << 11)},
+                None => {RequiredItem::Trophy as u16} // implicit -> count: 0
+            }
         );
     }
 
