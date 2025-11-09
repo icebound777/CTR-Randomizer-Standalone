@@ -1,8 +1,8 @@
-use std::{collections::HashMap, io::Error, os::unix::fs::FileExt, path::PathBuf};
+use std::{collections::HashMap, os::unix::fs::FileExt, path::PathBuf};
 
 use crate::seed_generation::randomization_datastructures::{RandomizedGame, SettingValue, UnlockStage};
 
-pub fn write_db_to_rom(rom_filepath: &PathBuf, randomized_game: RandomizedGame) -> Result<(), Error> {
+pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: RandomizedGame) -> Result<(), &'a str> {
     // Transform the randomized game into bytes to write
     let write_location = 0xF1E8;
 
@@ -14,13 +14,12 @@ pub fn write_db_to_rom(rom_filepath: &PathBuf, randomized_game: RandomizedGame) 
     match filehandle {
         Ok(x) => {
             let write_result = x.write_at(&database, write_location);
-            if write_result.is_ok() {
-                Ok(())
-            } else {
-                Err(write_result.err().unwrap())
+            if write_result.is_err() {
+                return Err("Could not write randomization to patched ROM!");
             }
+            Ok(())
         },
-        _ => todo!()
+        _ => Err("Could not open patched ROM for writing randomization data!")
     }
 }
 
