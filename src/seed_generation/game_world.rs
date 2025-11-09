@@ -156,6 +156,12 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_arena);
+        match self.hub_1.boss_garage.reward {
+            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
+                race_rewards.push((LevelID::RoosTubes, RaceType::BossRace, rew));
+            },
+            _ => {}
+        };
 
         // Hub 2 - Lost Temple
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_1);
@@ -163,6 +169,12 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_arena);
+        match self.hub_2.boss_garage.reward {
+            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
+                race_rewards.push((LevelID::PapusPyramid, RaceType::BossRace, rew));
+            },
+            _ => {}
+        };
 
         // Hub 3 - Glacial Park
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_1);
@@ -170,6 +182,12 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_arena);
+        match self.hub_3.boss_garage.reward {
+            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
+                race_rewards.push((LevelID::DragonMines, RaceType::BossRace, rew));
+            },
+            _ => {}
+        };
 
         // Hub 4 - Citadel City
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_1);
@@ -177,6 +195,12 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_arena);
+        match self.hub_4.boss_garage.reward {
+            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
+                race_rewards.push((LevelID::HotAirSkyway, RaceType::BossRace, rew));
+            },
+            _ => {}
+        };
 
         // Hub 5? - Gem Stone Valley
         add_single_warppad_rewards(&mut race_rewards, self.gemstone_valley.warppad_1);
