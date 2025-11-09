@@ -5,14 +5,14 @@ use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
     randomization_datastructures::{
-        LevelID, RaceReward, RaceType, RandomizedGame, RequiredItem, SettingID, SettingValue,
+        LevelID, RaceReward, RaceType, GameSetup, RequiredItem, SettingID, SettingValue,
         UnlockRequirement, UnlockStage,
     },
     seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings},
 };
 
-fn get_vanilla_game() -> RandomizedGame {
-    RandomizedGame {
+fn get_vanilla_game() -> GameSetup {
+    GameSetup {
         warppad_links: HashMap::from([
             (LevelID::DingoCanyon, LevelID::DingoCanyon),
             (LevelID::DragonMines, LevelID::DragonMines),
@@ -848,7 +848,7 @@ fn get_vanilla_game() -> RandomizedGame {
     }
 }
 
-pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> RandomizedGame {
+pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> GameSetup {
     let vanilla_game = get_vanilla_game();
     let mut new_warppads = vanilla_game.warppad_links;
     let mut new_warppad_unlocks = vanilla_game.warppad_unlocks;
@@ -880,7 +880,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
 
     //todo sort relic from best item to worst, sapphire to plat?
 
-    RandomizedGame {
+    GameSetup {
         warppad_links: new_warppads,
         warppad_unlocks: new_warppad_unlocks,
         race_rewards: new_race_rewards,

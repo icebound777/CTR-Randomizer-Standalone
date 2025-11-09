@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::seed_generation::seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime};
 
 #[derive(Debug)]
-pub struct RandomizedGame {
+pub struct GameSetup {
     pub warppad_links: HashMap<LevelID, LevelID>,
     pub warppad_unlocks: Vec<(LevelID, UnlockStage, UnlockRequirement)>,
     pub race_rewards: Vec<(LevelID, RaceType, RaceReward)>,

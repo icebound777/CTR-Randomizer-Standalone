@@ -1,8 +1,8 @@
 use std::{collections::HashMap, os::unix::fs::FileExt, path::PathBuf};
 
-use crate::seed_generation::randomization_datastructures::{RandomizedGame, SettingValue, UnlockStage};
+use crate::seed_generation::randomization_datastructures::{GameSetup, SettingValue, UnlockStage};
 
-pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: RandomizedGame) -> Result<(), &'a str> {
+pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: GameSetup) -> Result<(), &'a str> {
     // Transform the randomized game into bytes to write
     let write_location = 0xF1E8;
 
@@ -23,7 +23,7 @@ pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: RandomizedGa
     }
 }
 
-fn get_database_vec(randomized_game: RandomizedGame) -> Vec<u8> {
+fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
     // To reference what the resulting vec is supposed to look like, see
     // mod repository, src/CTRRandomizer_database.c file
 
