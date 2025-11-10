@@ -369,7 +369,7 @@ component RomOutputBar inherits Rectangle {
     in property <bool> can_generate;
     in property <int> rom_valid_state;
 
-    out property <bool> write_spoilerlog;
+    out property <bool> write_spoilerlog: true;
 
     HorizontalLayout {
         Rectangle {
