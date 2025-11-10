@@ -37,7 +37,6 @@ fn get_vanilla_game() -> GameSetup {
 
 pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> GameSetup {
     let mut game_world = get_vanilla_game().game_world;
-    let mut new_warppads = &game_world.get_warppad_links();
     let mut new_warppad_unlocks = &game_world.get_warppad_unlocks();
     let mut new_race_rewards = &game_world.get_race_rewards();
 
@@ -50,12 +49,14 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
 
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
-            new_warppads = &get_shuffled_warppads(
+            let new_warppads = get_shuffled_warppads(
                 seed,
-                new_warppads,
+                game_world.get_warppad_links(),
                 warppad_shuffle.include_battle_arenas,
                 warppad_shuffle.include_gem_cups,
             );
+
+            game_world.set_warppad_links(new_warppads);
         }
 
         // Warppad Unlocks
@@ -114,7 +115,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
 
 fn get_shuffled_warppads(
     mut seed: ChaCha8Rng,
-    original_warppads: &HashMap<LevelID, LevelID>,
+    original_warppads: HashMap<LevelID, LevelID>,
     include_battle_arenas: bool,
     include_gem_cups: bool
 ) -> HashMap<LevelID, LevelID> {

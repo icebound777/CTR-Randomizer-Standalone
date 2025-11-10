@@ -201,6 +201,49 @@ impl GameWorld {
 
         race_rewards
     }
+
+    pub fn set_warppad_links(&mut self, new_links: HashMap<LevelID, LevelID>) {
+        for (key, value) in new_links {
+            match key {
+                // Hub 1 - N. Sanity Beach
+                LevelID::CrashCove => {self.hub_1.warppad_1.level_id = value;},
+                LevelID::RoosTubes => {self.hub_1.warppad_2.level_id = value;},
+                LevelID::MysteryCaves => {self.hub_1.warppad_3.level_id = value;},
+                LevelID::SewerSpeedway => {self.hub_1.warppad_4.level_id = value;},
+                LevelID::SkullRock => {self.hub_1.warppad_arena.level_id = value;},
+
+                // Hub 2 - Lost Temple
+                LevelID::CocoPark => {self.hub_2.warppad_1.level_id = value;},
+                LevelID::TigerTemple => {self.hub_2.warppad_2.level_id = value;},
+                LevelID::PapusPyramid => {self.hub_2.warppad_3.level_id = value;},
+                LevelID::DingoCanyon => {self.hub_2.warppad_4.level_id = value;},
+                LevelID::RampageRuins => {self.hub_2.warppad_arena.level_id = value;},
+
+                // Hub 3 - Glacial Park
+                LevelID::BlizzardBluff => {self.hub_3.warppad_1.level_id = value;},
+                LevelID::DragonMines => {self.hub_3.warppad_2.level_id = value;},
+                LevelID::PolarPass => {self.hub_3.warppad_3.level_id = value;},
+                LevelID::TinyArena => {self.hub_3.warppad_4.level_id = value;},
+                LevelID::RockyRoad => {self.hub_3.warppad_arena.level_id = value;},
+
+                // Hub 4 - Citadel City
+                LevelID::NGinLabs => {self.hub_4.warppad_1.level_id = value;},
+                LevelID::CortexCastle => {self.hub_4.warppad_2.level_id = value;},
+                LevelID::HotAirSkyway => {self.hub_4.warppad_3.level_id = value;},
+                LevelID::OxideStation => {self.hub_4.warppad_4.level_id = value;},
+                LevelID::NitroCourt => {self.hub_4.warppad_arena.level_id = value;},
+
+                // Hub 5? - Gem Stone Valley
+                LevelID::TurboTrack => {self.gemstone_valley.warppad_1.level_id = value;},
+                LevelID::SlideColiseum => {self.gemstone_valley.warppad_2.level_id = value;},
+                LevelID::CupRed => {self.gemstone_valley.cup_warppad_1.level_id = value;},
+                LevelID::CupGreen => {self.gemstone_valley.cup_warppad_2.level_id = value;},
+                LevelID::CupBlue => {self.gemstone_valley.cup_warppad_3.level_id = value;},
+                LevelID::CupYellow => {self.gemstone_valley.cup_warppad_4.level_id = value;},
+                LevelID::CupPurple => {self.gemstone_valley.cup_warppad_5.level_id = value;},
+            };
+        }
+    }
 }
 
 #[derive(Debug)]
