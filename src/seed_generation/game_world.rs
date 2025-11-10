@@ -4,11 +4,11 @@ use crate::seed_generation::randomization_datastructures::{LevelID, RaceReward, 
 
 #[derive(Debug)]
 pub struct GameWorld {
-    hub_1: GenericHub,
-    hub_2: GenericHub,
-    hub_3: GenericHub,
-    hub_4: GenericHub,
-    gemstone_valley: GemStoneValleyHub,
+    pub hub_1: GenericHub,
+    pub hub_2: GenericHub,
+    pub hub_3: GenericHub,
+    pub hub_4: GenericHub,
+    pub gemstone_valley: GemStoneValleyHub,
 }
 
 impl GameWorld {
@@ -249,12 +249,12 @@ impl GameWorld {
 #[derive(Debug)]
 pub struct GenericHub {
     requirement: Option<UnlockRequirement>,
-    warppad_1: WarpPad,
-    warppad_2: WarpPad,
-    warppad_3: WarpPad,
-    warppad_4: WarpPad,
-    boss_garage: BossGarage,
-    warppad_arena: WarpPad,
+    pub warppad_1: WarpPad,
+    pub warppad_2: WarpPad,
+    pub warppad_3: WarpPad,
+    pub warppad_4: WarpPad,
+    pub boss_garage: BossGarage,
+    pub warppad_arena: WarpPad,
 }
 
 #[derive(Debug)]
@@ -272,7 +272,7 @@ pub struct GemStoneValleyHub {
 
 #[derive(Debug, Clone, Copy)]
 pub struct WarpPad {
-    level_id: LevelID,
+    pub level_id: LevelID,
     unlock_1: RaceUnlock,
     unlock_2: Option<RaceUnlock>,
 }

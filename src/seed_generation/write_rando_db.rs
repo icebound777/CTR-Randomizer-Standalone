@@ -2,7 +2,7 @@ use std::{collections::HashMap, os::unix::fs::FileExt, path::PathBuf};
 
 use crate::seed_generation::randomization_datastructures::{GameSetup, RequiredItem, SettingValue, UnlockStage};
 
-pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: GameSetup) -> Result<(), &'a str> {
+pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: &GameSetup) -> Result<(), &'a str> {
     // Transform the randomized game into bytes to write
     let write_location = 0xF1E8;
 
@@ -23,7 +23,7 @@ pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: GameSetup) -
     }
 }
 
-fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
+fn get_database_vec(randomized_game: &GameSetup) -> Vec<u8> {
     // To reference what the resulting vec is supposed to look like, see
     // mod repository, src/CTRRandomizer_database.c file
 
@@ -67,16 +67,16 @@ fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
 
     // Settings
     let db_prefix_settings: u32 = 0xAF00;
-    for (setting_id, value) in randomized_game.settings {
+    for (setting_id, value) in &randomized_game.settings {
         let db_value = match value {
-            SettingValue::Boolean(x) => x as u16,
-            SettingValue::RelicDifficulty(x) => x as u16,
-            SettingValue::BossGarageRequirements(x) => x as u16,
-            SettingValue::OxideRequiredRelics(x) => x as u16,
-            SettingValue::SeedHashPart(x) => x,
+            SettingValue::Boolean(x) => *x as u16,
+            SettingValue::RelicDifficulty(x) => *x as u16,
+            SettingValue::BossGarageRequirements(x) => *x as u16,
+            SettingValue::OxideRequiredRelics(x) => *x as u16,
+            SettingValue::SeedHashPart(x) => *x,
         };
 
-        key_value_db.insert((db_prefix_settings | setting_id as u32) << 16, db_value);
+        key_value_db.insert((db_prefix_settings | *setting_id as u32) << 16, db_value);
     }
 
     // Begin u8 vec with RAM marker for client

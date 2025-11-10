@@ -38,6 +38,40 @@ pub enum LevelID {
     CupPurple = 104,
 }
 
+impl ToString for LevelID {
+    fn to_string(&self) -> String {
+        match self {
+            LevelID::DingoCanyon => String::from("DingoCanyon"),
+            LevelID::DragonMines => String::from("DragonMines"),
+            LevelID::BlizzardBluff => String::from("BlizzardBluff"),
+            LevelID::CrashCove => String::from("CrashCove"),
+            LevelID::TigerTemple => String::from("TigerTemple"),
+            LevelID::PapusPyramid => String::from("PapusPyramid"),
+            LevelID::RoosTubes => String::from("RoosTubes"),
+            LevelID::HotAirSkyway => String::from("HotAirSkyway"),
+            LevelID::SewerSpeedway => String::from("SewerSpeedway"),
+            LevelID::MysteryCaves => String::from("MysteryCaves"),
+            LevelID::CortexCastle => String::from("CortexCastle"),
+            LevelID::NGinLabs => String::from("NGinLabs"),
+            LevelID::PolarPass => String::from("PolarPass"),
+            LevelID::OxideStation => String::from("OxideStation"),
+            LevelID::CocoPark => String::from("CocoPark"),
+            LevelID::TinyArena => String::from("TinyArena"),
+            LevelID::SlideColiseum => String::from("SlideColiseum"),
+            LevelID::TurboTrack => String::from("TurboTrack"),
+            LevelID::NitroCourt => String::from("NitroCourt"),
+            LevelID::RampageRuins => String::from("RampageRuins"),
+            LevelID::SkullRock => String::from("SkullRock"),
+            LevelID::RockyRoad => String::from("RockyRoad"),
+            LevelID::CupRed => String::from("RedGemCup"),
+            LevelID::CupGreen => String::from("GreenGemCup"),
+            LevelID::CupBlue => String::from("BlueGemCup"),
+            LevelID::CupYellow => String::from("YellowGemCup"),
+            LevelID::CupPurple => String::from("PurpleGemCup"),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub enum UnlockStage {
     One,
@@ -106,7 +140,7 @@ pub enum RaceReward {
     BeatTheGame = 0,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum SettingID {
     RelicDifficulty = 0,
     RelicNeedsPerfect = 1,
