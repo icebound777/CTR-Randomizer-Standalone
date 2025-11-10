@@ -103,6 +103,7 @@ pub enum RaceReward {
     BlueGem = 607,
     YellowGem = 863,
     PurpleGem = 1119,
+    BeatTheGame = 0,
 }
 
 #[derive(Debug)]
