@@ -1,8 +1,8 @@
 // Prevent console window in addition to Slint window in Windows release builds when, e.g., starting the app via file manager. Ignored on other platforms.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use md5;
-use open;
+use md5::Context as md5_Context;
+use open::that as open_that;
 use rfd::FileDialog;
 use slint::SharedString;
 use std::error::Error;
@@ -33,11 +33,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let main_window = main_ui_weak.unwrap();
 
     ui.on_sources_generator(move || {
-        let _ = open::that("https://github.com/icebound777/CTR-Randomizer-Standalone");
+        let _ = open_that("https://github.com/icebound777/CTR-Randomizer-Standalone");
     });
 
     ui.on_sources_mod(move || {
-        let _ = open::that("https://github.com/icebound777/CTR-Randomizer/");
+        let _ = open_that("https://github.com/icebound777/CTR-Randomizer/");
     });
 
     ui.on_gen_seed(move || {
@@ -95,9 +95,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     ui.on_pick_rom(move || {
         // Open File Picker Dialog
         let files = FileDialog::new().add_filter(".bin", &["bin"]).pick_file();
-        if files.is_some() {
-            let something = files.unwrap();
-            let rom_path_str = something.to_str().unwrap();
+        if let Some(pathbuf) = files {
+            let rom_path_str = pathbuf.to_str().unwrap();
 
             main_window.set_rom_valid_state(RomValidState::NoRom as i32);
 
@@ -106,7 +105,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let f_len = f.metadata().unwrap().len();
             let buf_len = f_len.min(1_000_000) as usize;
             let mut f_buf = BufReader::with_capacity(buf_len, f);
-            let mut context = md5::Context::new();
+            let mut context = md5_Context::new();
             loop {
                 let part = f_buf.fill_buf().unwrap();
                 if part.is_empty() {

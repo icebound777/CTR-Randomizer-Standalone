@@ -29,7 +29,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
             // write randomization to rom
             let write_result = write_db_to_rom(&new_rom, randomized_game);
             if write_result.is_err() {
-                return Err(write_result.err().expect("str type error"));
+                return Err(write_result.expect_err("str type error"));
             }
 
             // if needed, write patch file

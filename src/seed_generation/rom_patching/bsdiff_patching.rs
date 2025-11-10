@@ -38,5 +38,5 @@ pub fn create_patchfile(old_rom_path: &str, new_rom_path: PathBuf) -> Result<Pat
     Bsdiff::new(&old_rom, &new_rom).compare(io::Cursor::new(&mut patch))?;
 
     std::fs::write(&patchfile_path, patch)?;
-    return Ok(patchfile_path)
+    Ok(patchfile_path)
 }

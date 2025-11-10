@@ -52,7 +52,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             new_warppads = &get_shuffled_warppads(
                 seed,
-                &new_warppads,
+                new_warppads,
                 warppad_shuffle.include_battle_arenas,
                 warppad_shuffle.include_gem_cups,
             );
@@ -66,7 +66,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
     }
 
     GameSetup {
-        game_world: game_world,
+        game_world,
         settings: vec![
             (
                 SettingID::RelicDifficulty,

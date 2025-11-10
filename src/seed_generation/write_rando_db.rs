@@ -73,7 +73,7 @@ fn get_database_vec(randomized_game: GameSetup) -> Vec<u8> {
             SettingValue::RelicDifficulty(x) => x as u16,
             SettingValue::BossGarageRequirements(x) => x as u16,
             SettingValue::OxideRequiredRelics(x) => x as u16,
-            SettingValue::SeedHashPart(x) => x as u16,
+            SettingValue::SeedHashPart(x) => x,
         };
 
         key_value_db.insert((db_prefix_settings | setting_id as u32) << 16, db_value);

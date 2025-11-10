@@ -111,10 +111,10 @@ impl GameWorld {
                         all_warppad_rewards.push((level, RaceType::TrophyRace, rew));
                     },
                     Rewards::TokensAndRelicRewards(TokensAndRelicRewards {
-                        token_reward: token_reward,
-                        relic_sapphire_reward: relic_sapphire_reward,
-                        relic_gold_reward: relic_gold_reward,
-                        relic_platinum_reward: relic_platinum_reward
+                        token_reward,
+                        relic_sapphire_reward,
+                        relic_gold_reward,
+                        relic_platinum_reward
                     }) => {
                         all_warppad_rewards.push((level, RaceType::CtrOrCrystalChallenge, token_reward));
                         all_warppad_rewards.push((level, RaceType::RelicRaceSapphire, relic_sapphire_reward));
@@ -128,9 +128,9 @@ impl GameWorld {
                         all_warppad_rewards.push((level, RaceType::BossRace, rew));
                     },
                     Rewards::RelicRaceOnlyRewards(RelicRaceOnlyRewards {
-                        relic_sapphire_reward: relic_sapphire_reward,
-                        relic_gold_reward: relic_gold_reward,
-                        relic_platinum_reward: relic_platinum_reward
+                        relic_sapphire_reward,
+                        relic_gold_reward,
+                        relic_platinum_reward
                     }) => {
                         all_warppad_rewards.push((level, RaceType::RelicRaceSapphire, relic_sapphire_reward));
                         all_warppad_rewards.push((level, RaceType::RelicRaceGold, relic_gold_reward));
@@ -156,11 +156,8 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_arena);
-        match self.hub_1.boss_garage.reward {
-            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
-                race_rewards.push((LevelID::RoosTubes, RaceType::BossRace, rew));
-            },
-            _ => {}
+        if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_1.boss_garage.reward {
+            race_rewards.push((LevelID::RoosTubes, RaceType::BossRace, rew));
         };
 
         // Hub 2 - Lost Temple
@@ -169,11 +166,8 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_arena);
-        match self.hub_2.boss_garage.reward {
-            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
-                race_rewards.push((LevelID::PapusPyramid, RaceType::BossRace, rew));
-            },
-            _ => {}
+        if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_2.boss_garage.reward {
+            race_rewards.push((LevelID::PapusPyramid, RaceType::BossRace, rew));
         };
 
         // Hub 3 - Glacial Park
@@ -182,11 +176,8 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_arena);
-        match self.hub_3.boss_garage.reward {
-            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
-                race_rewards.push((LevelID::DragonMines, RaceType::BossRace, rew));
-            },
-            _ => {}
+        if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_3.boss_garage.reward {
+            race_rewards.push((LevelID::DragonMines, RaceType::BossRace, rew));
         };
 
         // Hub 4 - Citadel City
@@ -195,11 +186,8 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_3);
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_arena);
-        match self.hub_4.boss_garage.reward {
-            Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
-                race_rewards.push((LevelID::HotAirSkyway, RaceType::BossRace, rew));
-            },
-            _ => {}
+        if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_4.boss_garage.reward {
+            race_rewards.push((LevelID::HotAirSkyway, RaceType::BossRace, rew));
         };
 
         // Hub 5? - Gem Stone Valley
