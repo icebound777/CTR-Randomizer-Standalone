@@ -120,7 +120,7 @@ fn get_formatted_reward(reward: Rewards) -> serde_json::Value {
                 "CTR Challenge": token_reward.to_string(),
                 "Sapphire Time": relic_sapphire_reward.to_string(),
                 "Gold Time": relic_gold_reward.to_string(),
-                "Platinum Time": relic_sapphire_reward.to_string(),
+                "Platinum Time": relic_platinum_reward.to_string(),
             })
         },
         Rewards::BossRaceRewards(BossRaceRewards{single_reward}) => {
@@ -137,7 +137,7 @@ fn get_formatted_reward(reward: Rewards) -> serde_json::Value {
             json!({
                 "Sapphire Time": relic_sapphire_reward.to_string(),
                 "Gold Time": relic_gold_reward.to_string(),
-                "Platinum Time": relic_sapphire_reward.to_string(),
+                "Platinum Time": relic_platinum_reward.to_string(),
             })
         },
         Rewards::GemCupRewards(GemCupRewards{single_reward}) => {
