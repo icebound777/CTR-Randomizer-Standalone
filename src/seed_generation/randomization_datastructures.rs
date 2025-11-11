@@ -38,9 +38,9 @@ pub enum LevelID {
     CupPurple = 104,
 }
 
-impl ToString for LevelID {
-    fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for LevelID {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
             LevelID::DingoCanyon => String::from("DingoCanyon"),
             LevelID::DragonMines => String::from("DragonMines"),
             LevelID::BlizzardBluff => String::from("BlizzardBluff"),
@@ -68,7 +68,7 @@ impl ToString for LevelID {
             LevelID::CupBlue => String::from("BlueGemCup"),
             LevelID::CupYellow => String::from("YellowGemCup"),
             LevelID::CupPurple => String::from("PurpleGemCup"),
-        }
+        })
     }
 }
 
@@ -107,9 +107,9 @@ pub enum RequiredItem {
     AnyGem = 1887,
 }
 
-impl ToString for RequiredItem {
-    fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for RequiredItem {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
             RequiredItem::Trophy => String::from("Trophy"),
             RequiredItem::RedCtrToken => String::from("Red CTR Token"),
             RequiredItem::GreenCtrToken => String::from("Green CTR Token"),
@@ -128,7 +128,7 @@ impl ToString for RequiredItem {
             RequiredItem::YellowGem => String::from("Yellow Gem"),
             RequiredItem::PurpleGem => String::from("Purple Gem"),
             RequiredItem::AnyGem => String::from("Any Gem"),
-        }
+        })
     }
 }
 
@@ -165,9 +165,9 @@ pub enum RaceReward {
     BeatTheGame = 0,
 }
 
-impl ToString for RaceReward {
-    fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for RaceReward {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
             RaceReward::Trophy => String::from("Trophy"),
             RaceReward::RedCtrToken => String::from("Red CTR Token"),
             RaceReward::GreenCtrToken => String::from("Green CTR Token"),
@@ -184,7 +184,7 @@ impl ToString for RaceReward {
             RaceReward::YellowGem => String::from("Yellow Gem"),
             RaceReward::PurpleGem => String::from("Purple Gem"),
             RaceReward::BeatTheGame => String::from("YOU WIN"),
-        }
+        })
     }
 }
 

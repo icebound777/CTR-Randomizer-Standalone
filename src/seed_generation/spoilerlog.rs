@@ -65,13 +65,13 @@ fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
         json!({
             "level": warppad.level_id.to_string(),
             "unlock_1": if let Some(x) = warppad.unlock_1.requirement {
-                format!("{} (x{})", x.item_type.to_string(), x.count)
+                format!("{} (x{})", x.item_type, x.count)
             } else {
                 "Open".to_string()
             },
             "reward_1": get_formatted_reward(warppad.unlock_1.reward),
             "unlock_2": if let Some(x) = unlock2.requirement {
-                format!("{} (x{})", x.item_type.to_string(), x.count)
+                format!("{} (x{})", x.item_type, x.count)
             } else {
                 "Open".to_string()
             },
@@ -81,7 +81,7 @@ fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
         json!({
             "level": warppad.level_id.to_string(),
             "unlock_1": if let Some(x) = warppad.unlock_1.requirement {
-                format!("{} (x{})", x.item_type.to_string(), x.count)
+                format!("{} (x{})", x.item_type, x.count)
             } else {
                 "Open".to_string()
             },
@@ -94,7 +94,7 @@ fn get_formatted_bossgarage(bossgarage: BossGarage) -> serde_json::Value {
     match bossgarage.requirement {
         BossRequirement::UnlockRequirement(UnlockRequirement{item_type, count}) => {
             json!({
-                "unlock": format!("{} (x{})", item_type.to_string(), count),
+                "unlock": format!("{} (x{})", item_type, count),
                 "reward": get_formatted_reward(bossgarage.reward)
             })
         },
