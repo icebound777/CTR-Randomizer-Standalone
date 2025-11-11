@@ -260,33 +260,39 @@ pub struct GenericHub {
 #[derive(Debug)]
 pub struct GemStoneValleyHub {
     requirement: Option<UnlockRequirement>,
-    warppad_1: WarpPad,
-    warppad_2: WarpPad,
-    cup_warppad_1: WarpPad,
-    cup_warppad_2: WarpPad,
-    cup_warppad_3: WarpPad,
-    cup_warppad_4: WarpPad,
-    cup_warppad_5: WarpPad,
-    boss_garage: BossGarage,
+    pub warppad_1: WarpPad,
+    pub warppad_2: WarpPad,
+    pub cup_warppad_1: WarpPad,
+    pub cup_warppad_2: WarpPad,
+    pub cup_warppad_3: WarpPad,
+    pub cup_warppad_4: WarpPad,
+    pub cup_warppad_5: WarpPad,
+    pub boss_garage: BossGarage,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct WarpPad {
     pub level_id: LevelID,
-    unlock_1: RaceUnlock,
-    unlock_2: Option<RaceUnlock>,
+    pub unlock_1: RaceUnlock,
+    pub unlock_2: Option<RaceUnlock>,
 }
 
 #[derive(Debug)]
 pub struct BossGarage {
-    requirement: Vec<UnlockRequirement>,
-    reward: Rewards,
+    pub requirement: BossRequirement,
+    pub reward: Rewards,
+}
+
+#[derive(Debug)]
+pub enum BossRequirement {
+    UnlockRequirement(UnlockRequirement),
+    BossRequirement(Vec<LevelID>),
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct RaceUnlock {
-    requirement: Option<UnlockRequirement>,
-    reward: Rewards,
+    pub requirement: Option<UnlockRequirement>,
+    pub reward: Rewards,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -301,37 +307,37 @@ pub enum Rewards {
 
 #[derive(Debug, Clone, Copy)]
 pub struct TrophyRaceRewards {
-    trophy_reward: RaceReward,
+    pub trophy_reward: RaceReward,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct TokensAndRelicRewards {
-    token_reward: RaceReward,
-    relic_sapphire_reward: RaceReward,
-    relic_gold_reward: RaceReward,
-    relic_platinum_reward: RaceReward,
+    pub token_reward: RaceReward,
+    pub relic_sapphire_reward: RaceReward,
+    pub relic_gold_reward: RaceReward,
+    pub relic_platinum_reward: RaceReward,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct BattleArenaRewards {
-    single_reward: RaceReward,
+    pub single_reward: RaceReward,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct BossRaceRewards {
-    single_reward: RaceReward,
+    pub single_reward: RaceReward,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct RelicRaceOnlyRewards {
-    relic_sapphire_reward: RaceReward,
-    relic_gold_reward: RaceReward,
-    relic_platinum_reward: RaceReward,
+    pub relic_sapphire_reward: RaceReward,
+    pub relic_gold_reward: RaceReward,
+    pub relic_platinum_reward: RaceReward,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub struct GemCupRewards {
-    single_reward: RaceReward,
+    pub single_reward: RaceReward,
 }
 
 pub fn get_vanilla_gameworld() -> GameWorld {
@@ -411,16 +417,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 })
             },
             boss_garage: BossGarage {
-                requirement: vec![
-                    UnlockRequirement {
-                        item_type: RequiredItem::Trophy,
-                        count: 1
-                    },
-                    UnlockRequirement {
-                        item_type: RequiredItem::Trophy,
-                        count: 3
-                    }
-                ],
+                requirement: BossRequirement::BossRequirement(
+                    vec![
+                        LevelID::CrashCove,
+                        LevelID::RoosTubes,
+                        LevelID::MysteryCaves,
+                        LevelID::SewerSpeedway
+                    ]
+                ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards {
                     single_reward: RaceReward::Key
                 })
@@ -511,12 +515,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 })
             },
             boss_garage: BossGarage {
-                requirement: vec![
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 4 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 4 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 6 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 7 }
-                ],
+                requirement: BossRequirement::BossRequirement(
+                    vec![
+                        LevelID::CocoPark,
+                        LevelID::TigerTemple,
+                        LevelID::PapusPyramid,
+                        LevelID::DingoCanyon
+                    ]
+                ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::Key })
             },
             warppad_arena: WarpPad {
@@ -605,12 +611,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 })
             },
             boss_garage: BossGarage {
-                requirement: vec![
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 8 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 9 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 10 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 11 }
-                ],
+                requirement: BossRequirement::BossRequirement(
+                    vec![
+                        LevelID::BlizzardBluff,
+                        LevelID::DragonMines,
+                        LevelID::PolarPass,
+                        LevelID::TinyArena
+                    ]
+                ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::Key })
             },
             warppad_arena: WarpPad {
@@ -699,12 +707,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 })
             },
             boss_garage: BossGarage {
-                requirement: vec![
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 12 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 12 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 14 },
-                    UnlockRequirement { item_type: RequiredItem::Trophy, count: 15 }
-                ],
+                requirement: BossRequirement::BossRequirement(
+                    vec![
+                        LevelID::NGinLabs,
+                        LevelID::CortexCastle,
+                        LevelID::HotAirSkyway,
+                        LevelID::OxideStation
+                    ]
+                ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::Key })
             },
             warppad_arena: WarpPad {
@@ -795,9 +805,10 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 unlock_2: None
             },
             boss_garage: BossGarage {
-                requirement: vec![
-                    UnlockRequirement { item_type: RequiredItem::Key, count: 4 }
-                ],
+                requirement: BossRequirement::UnlockRequirement(UnlockRequirement{
+                    item_type: RequiredItem::Key,
+                    count: 4
+                }),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::BeatTheGame })
             },
         },

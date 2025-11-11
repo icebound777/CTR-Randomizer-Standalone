@@ -107,6 +107,31 @@ pub enum RequiredItem {
     AnyGem = 1887,
 }
 
+impl ToString for RequiredItem {
+    fn to_string(&self) -> String {
+        match self {
+            RequiredItem::Trophy => String::from("Trophy"),
+            RequiredItem::RedCtrToken => String::from("Red CTR Token"),
+            RequiredItem::GreenCtrToken => String::from("Green CTR Token"),
+            RequiredItem::BlueCtrToken => String::from("Blue CTR Token"),
+            RequiredItem::YellowCtrToken => String::from("Yellow CTR Token"),
+            RequiredItem::PurpleCtrToken => String::from("Purple CTR Token"),
+            RequiredItem::AnyCtrToken => String::from("Any CTR Token"),
+            RequiredItem::SapphireRelic => String::from("Sapphire Relic"),
+            RequiredItem::GoldRelic => String::from("Gold Relic"),
+            RequiredItem::PlatinumRelic => String::from("Platinum Relic"),
+            RequiredItem::AnyRelic => String::from("Any Relic"),
+            RequiredItem::Key => String::from("Key"),
+            RequiredItem::RedGem => String::from("Red Gem"),
+            RequiredItem::GreenGem => String::from("Green Gem"),
+            RequiredItem::BlueGem => String::from("Blue Gem"),
+            RequiredItem::YellowGem => String::from("Yellow Gem"),
+            RequiredItem::PurpleGem => String::from("Purple Gem"),
+            RequiredItem::AnyGem => String::from("Any Gem"),
+        }
+    }
+}
+
 #[derive(Debug)]
 #[repr(u16)]
 pub enum RaceType {
@@ -138,6 +163,29 @@ pub enum RaceReward {
     YellowGem = 863,
     PurpleGem = 1119,
     BeatTheGame = 0,
+}
+
+impl ToString for RaceReward {
+    fn to_string(&self) -> String {
+        match self {
+            RaceReward::Trophy => String::from("Trophy"),
+            RaceReward::RedCtrToken => String::from("Red CTR Token"),
+            RaceReward::GreenCtrToken => String::from("Green CTR Token"),
+            RaceReward::BlueCtrToken => String::from("Blue CTR Token"),
+            RaceReward::YellowCtrToken => String::from("Yellow CTR Token"),
+            RaceReward::PurpleCtrToken => String::from("Purple CTR Token"),
+            RaceReward::SapphireRelic => String::from("Sapphire Relic"),
+            RaceReward::GoldRelic => String::from("Gold Relic"),
+            RaceReward::PlatinumRelic => String::from("Platinum Relic"),
+            RaceReward::Key => String::from("Key"),
+            RaceReward::RedGem => String::from("Red Gem"),
+            RaceReward::GreenGem => String::from("Green Gem"),
+            RaceReward::BlueGem => String::from("Blue Gem"),
+            RaceReward::YellowGem => String::from("Yellow Gem"),
+            RaceReward::PurpleGem => String::from("Purple Gem"),
+            RaceReward::BeatTheGame => String::from("YOU WIN"),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
