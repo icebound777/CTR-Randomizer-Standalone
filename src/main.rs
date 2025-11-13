@@ -11,8 +11,7 @@ use std::io::{BufRead, BufReader};
 
 use crate::seed_generation::seed_gen_main::generate_seed;
 use crate::seed_generation::seed_settings::{
-    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings,
-    RandomizationSettings, RelicTime, SeedSettings, WarppadShuffle, WarppadUnlockRequirements,
+    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedSettings, WarppadShuffle, WarppadUnlockRequirements
 };
 
 slint::include_modules!();
@@ -44,7 +43,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Collect settings chosen via UI
         let chosen_rando_settings = RandomizationSettings {
             shuffle_adventure: main_window.get_shuffle_adventure() == 1,
-            shuffle_race_rewards: main_window.get_shuffle_race_rewards(),
+            shuffle_race_rewards: if main_window.get_shuffle_race_rewards() {
+                Some(RewardShuffle {
+                    include_keys: main_window.get_shuffle_race_rewards_keys(),
+                    include_gems: main_window.get_shuffle_race_rewards_gems(),
+                })
+            } else {
+                None
+            },
             warppad_shuffle: if main_window.get_shuffle_warppads() {
                 Some(WarppadShuffle {
                     include_battle_arenas: main_window.get_shuffle_warppads_battlearenas(),

@@ -8,7 +8,7 @@ pub struct SeedSettings {
 
 pub struct RandomizationSettings {
     pub shuffle_adventure: bool,
-    pub shuffle_race_rewards: bool,
+    pub shuffle_race_rewards: Option<RewardShuffle>,
     pub warppad_shuffle: Option<WarppadShuffle>,
     pub warppad_unlock_requirements: WarppadUnlockRequirements,
     pub bossgarage_unlock_requirements: BossGarageRequirements,
@@ -25,6 +25,11 @@ pub struct QualityOfLifeSettings {
     pub skip_mask_hints: bool,
     pub autoskip_podium_cutscenes: bool,
     pub skip_mask_congrats: bool,
+}
+
+pub struct RewardShuffle {
+    pub include_keys: bool,
+    pub include_gems: bool,
 }
 
 pub struct WarppadShuffle {

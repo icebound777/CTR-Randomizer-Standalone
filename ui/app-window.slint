@@ -65,6 +65,8 @@ component TitleBar inherits Rectangle {
 component RandomizationSubmenu inherits Rectangle {
     out property <int> shuffle_adventure <=> chosen_randomization.current-index;
     out property <bool> shuffle_race_rewards;
+    out property <bool> shuffle_race_rewards_keys;
+    out property <bool> shuffle_race_rewards_gems;
     out property <bool> shuffle_warppads;
     out property <bool> shuffle_warppads_battlearenas;
     out property <bool> shuffle_warppads_gemcups;
@@ -101,10 +103,30 @@ component RandomizationSubmenu inherits Rectangle {
                 font-weight: 800;
             }
 
-            Switch {
-                y: 40px;
-                text: "Shuffle Race Rewards";
-                toggled => {root.shuffle_race_rewards = self.checked}
+            Rectangle {
+                width: root.width * 0.65;
+                height: 40px;
+                y: 30px;
+                border-width: shuffle_reward.x == (self.width/2)-300px ? 1px : 0px;
+                border-color: black;
+                border-radius: 10px;
+                shuffle_reward := Switch {
+                    x: self.checked ? (parent.width/2)-300px : (parent.width/2)-96px;
+                    animate x {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
+                    text: "Shuffle Race Rewards";
+                    toggled => {root.shuffle_race_rewards = self.checked}
+                }
+                Switch {
+                    text: "Include Keys";
+                    visible: shuffle_reward.x == (parent.width/2)-300px;
+                    toggled => {root.shuffle_race_rewards_keys = self.checked}
+                }
+                Switch {
+                    x: (parent.width/2)+130px;
+                    text: "Include Gems";
+                    visible: shuffle_reward.x == (parent.width/2)-300px;
+                    toggled => {root.shuffle_race_rewards_gems = self.checked}
+                }
             }
             Rectangle {
                 width: root.width * 0.65;
@@ -325,6 +347,8 @@ component SettingsMenu inherits TabWidget {
 
     out property <int> shuffle_adventure <=> randomization.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> randomization.shuffle_race_rewards;
+    out property <bool> shuffle_race_rewards_keys <=> randomization.shuffle_race_rewards_keys;
+    out property <bool> shuffle_race_rewards_gems <=> randomization.shuffle_race_rewards_gems;
     out property <bool> shuffle_warppads <=> randomization.shuffle_warppads;
     out property <bool> shuffle_warppads_battlearenas <=> randomization.shuffle_warppads_battlearenas;
     out property <bool> shuffle_warppads_gemcups <=> randomization.shuffle_warppads_gemcups;
@@ -455,6 +479,8 @@ export component MainWindow inherits Window {
 
     out property <int> shuffle_adventure <=> settings.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> settings.shuffle_race_rewards;
+    out property <bool> shuffle_race_rewards_keys <=> settings.shuffle_race_rewards_keys;
+    out property <bool> shuffle_race_rewards_gems <=> settings.shuffle_race_rewards_gems;
     out property <bool> shuffle_warppads <=> settings.shuffle_warppads;
     out property <bool> shuffle_warppads_battlearenas <=> settings.shuffle_warppads_battlearenas;
     out property <bool> shuffle_warppads_gemcups <=> settings.shuffle_warppads_gemcups;
