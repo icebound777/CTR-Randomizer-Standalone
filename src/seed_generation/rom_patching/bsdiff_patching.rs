@@ -27,7 +27,7 @@ pub fn apply_patchfile(old_rom_path: &str, seed: u32) -> Result<PathBuf, Box<dyn
 pub fn create_patchfile(old_rom_path: &str, new_rom_path: &PathBuf) -> Result<PathBuf, Box<dyn std::error::Error>> {
     let mut patch = Vec::new();
     let old_rom = std::fs::read(old_rom_path)?;
-    let new_rom = std::fs::read(&new_rom_path)?;
+    let new_rom = std::fs::read(new_rom_path)?;
 
     let mut patchfile_path = new_rom_path.clone();
     let file_stem = patchfile_path.clone();

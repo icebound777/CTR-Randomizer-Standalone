@@ -99,7 +99,7 @@ fn get_formatted_bossgarage(bossgarage: BossGarage) -> serde_json::Value {
             })
         },
         BossRequirement::BossRequirement(x) => {
-            let level_list: String = x.iter().map(|r|  r.to_string()).collect::<Vec<_>>().join(", ");
+            let level_list: String = x.iter().map(std::string::ToString::to_string).collect::<Vec<_>>().join(", ");
             json!({
                 "unlock": level_list,
                 "reward": get_formatted_reward(bossgarage.reward)

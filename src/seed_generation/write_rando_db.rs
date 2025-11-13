@@ -33,13 +33,13 @@ fn get_database_vec(randomized_game: &GameSetup) -> Vec<u8> {
 
     // Warppad Links
     let db_prefix_levelids: u32 = 0xA000;
-    for (key, value) in randomized_game.game_world.get_warppad_links().into_iter() {
+    for (key, value) in randomized_game.game_world.get_warppad_links() {
         key_value_db.insert((db_prefix_levelids | key as u32) << 16, value as u16);
     }
 
     // Race Rewards
     let db_prefix_rewards: u32 = 0xA100;
-    for (level_id, racetype, reward) in randomized_game.game_world.get_race_rewards().into_iter() {
+    for (level_id, racetype, reward) in randomized_game.game_world.get_race_rewards() {
         key_value_db.insert(
             ((db_prefix_rewards | level_id as u32) << 16) | racetype as u32,
             reward as u16
@@ -59,7 +59,7 @@ fn get_database_vec(randomized_game: &GameSetup) -> Vec<u8> {
         key_value_db.insert(
             (cur_db_prefix | level_id as u32) << 16,
             match requirement {
-                Some(req) => {req.item_type as u16 | ((req.count as u16 & 0x1F) << 11)},
+                Some(req) => {req.item_type as u16 | ((u16::from(req.count) & 0x1F) << 11)},
                 None => {RequiredItem::Trophy as u16} // implicit -> count: 0
             }
         );
@@ -69,7 +69,7 @@ fn get_database_vec(randomized_game: &GameSetup) -> Vec<u8> {
     let db_prefix_settings: u32 = 0xAF00;
     for (setting_id, value) in &randomized_game.settings {
         let db_value = match value {
-            SettingValue::Boolean(x) => *x as u16,
+            SettingValue::Boolean(x) => u16::from(*x),
             SettingValue::RelicDifficulty(x) => *x as u16,
             SettingValue::BossGarageRequirements(x) => *x as u16,
             SettingValue::OxideRequiredRelics(x) => *x as u16,

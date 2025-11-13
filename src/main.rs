@@ -116,7 +116,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 f_buf.consume(part_len);
             }
             let digest = context.finalize();
-            if format!("{:x}", digest) == "ab95bfca8a4bb3d90daa6519acf6e944" {
+            if format!("{digest:x}") == "ab95bfca8a4bb3d90daa6519acf6e944" {
                 main_window.set_can_generate(true);
                 main_window.set_rom_valid_state(RomValidState::Valid as i32);
             } else {

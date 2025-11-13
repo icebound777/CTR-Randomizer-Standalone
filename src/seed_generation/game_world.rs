@@ -139,7 +139,7 @@ impl GameWorld {
                     Rewards::GemCupRewards(GemCupRewards { single_reward: rew }) => {
                         all_warppad_rewards.push((level, RaceType::GemCup, rew));
                     }
-                };
+                }
             }
 
             add_single_reward(all_warppad_rewards, warp_pad.level_id,  warp_pad.unlock_1);
@@ -158,7 +158,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_1.boss_garage.reward {
             race_rewards.push((LevelID::RoosTubes, RaceType::BossRace, rew));
-        };
+        }
 
         // Hub 2 - Lost Temple
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_1);
@@ -168,7 +168,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_2.boss_garage.reward {
             race_rewards.push((LevelID::PapusPyramid, RaceType::BossRace, rew));
-        };
+        }
 
         // Hub 3 - Glacial Park
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_1);
@@ -178,7 +178,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_3.boss_garage.reward {
             race_rewards.push((LevelID::DragonMines, RaceType::BossRace, rew));
-        };
+        }
 
         // Hub 4 - Citadel City
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_1);
@@ -188,7 +188,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_4.boss_garage.reward {
             race_rewards.push((LevelID::HotAirSkyway, RaceType::BossRace, rew));
-        };
+        }
 
         // Hub 5? - Gem Stone Valley
         add_single_warppad_rewards(&mut race_rewards, self.gemstone_valley.warppad_1);
@@ -241,7 +241,7 @@ impl GameWorld {
                 LevelID::CupBlue => {self.gemstone_valley.cup_warppad_3.level_id = value;},
                 LevelID::CupYellow => {self.gemstone_valley.cup_warppad_4.level_id = value;},
                 LevelID::CupPurple => {self.gemstone_valley.cup_warppad_5.level_id = value;},
-            };
+            }
         }
     }
 }

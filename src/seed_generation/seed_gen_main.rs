@@ -19,7 +19,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
     let seed: u32 = seed;
 
     // randomize game
-    let rng = ChaCha8Rng::seed_from_u64(seed as u64);
+    let rng = ChaCha8Rng::seed_from_u64(u64::from(seed));
     let randomized_game = get_randomized_game(rng, seed, chosen_settings);
 
     // apply base mod patch to rom
