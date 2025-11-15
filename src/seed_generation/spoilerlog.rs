@@ -61,15 +61,15 @@ pub fn write_spoilerlog(new_rom_path: PathBuf, game_setup: GameSetup) -> Result<
 }
 
 fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
-    if let Some(unlock2) = warppad.unlock_2 {
+    if let Some(unlock2) = warppad.get_unlock_2() {
         json!({
-            "level": warppad.level_id.to_string(),
-            "unlock_1": if let Some(x) = warppad.unlock_1.requirement {
+            "level": warppad.get_levelid().to_string(),
+            "unlock_1": if let Some(x) = warppad.get_unlock_1().requirement {
                 format!("{} (x{})", x.item_type, x.count)
             } else {
                 "Open".to_string()
             },
-            "reward_1": get_formatted_reward(warppad.unlock_1.reward),
+            "reward_1": get_formatted_reward(warppad.get_unlock_1().reward),
             "unlock_2": if let Some(x) = unlock2.requirement {
                 format!("{} (x{})", x.item_type, x.count)
             } else {
@@ -79,13 +79,13 @@ fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
         })
     } else {
         json!({
-            "level": warppad.level_id.to_string(),
-            "unlock_1": if let Some(x) = warppad.unlock_1.requirement {
+            "level": warppad.get_levelid().to_string(),
+            "unlock_1": if let Some(x) = warppad.get_unlock_1().requirement {
                 format!("{} (x{})", x.item_type, x.count)
             } else {
                 "Open".to_string()
             },
-            "reward_1": get_formatted_reward(warppad.unlock_1.reward)
+            "reward_1": get_formatted_reward(warppad.get_unlock_1().reward)
         })
     }
 }
