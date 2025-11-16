@@ -36,9 +36,11 @@ fn get_vanilla_game() -> GameSetup {
 }
 
 pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> GameSetup {
-    let mut game_world = get_vanilla_game().game_world;
-    let mut new_warppad_unlocks = &game_world.get_warppad_unlocks();
-    let mut new_race_rewards = &game_world.get_race_rewards();
+    let vanilla_gameworld = get_vanilla_game().game_world;
+
+    let mut new_game_world = vanilla_gameworld.clone();
+    let mut new_warppad_unlocks = &new_game_world.get_warppad_unlocks();
+    let mut new_race_rewards = &new_game_world.get_race_rewards();
 
     let overwrite_seed_hash_1;
     let overwrite_seed_hash_2;
@@ -51,12 +53,12 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             let new_warppads = get_shuffled_warppads(
                 seed,
-                game_world.get_warppad_links(),
+                vanilla_gameworld.get_warppad_links(),
                 warppad_shuffle.include_battle_arenas,
                 warppad_shuffle.include_gem_cups,
             );
 
-            game_world.set_warppad_links(new_warppads);
+            new_game_world.set_warppad_links(new_warppads);
         }
 
         // Warppad Unlocks
@@ -67,7 +69,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
     }
 
     GameSetup {
-        game_world,
+        game_world: new_game_world,
         settings: vec![
             (
                 SettingID::RelicDifficulty,

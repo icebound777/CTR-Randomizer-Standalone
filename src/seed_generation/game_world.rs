@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::seed_generation::randomization_datastructures::{LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockStage};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GameWorld {
     pub hub_1: GenericHub,
     pub hub_2: GenericHub,
@@ -246,7 +246,7 @@ impl GameWorld {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GenericHub {
     requirement: Option<UnlockRequirement>,
     pub warppad_1: WarpPad,
@@ -257,7 +257,7 @@ pub struct GenericHub {
     pub warppad_arena: WarpPad,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GemStoneValleyHub {
     requirement: Option<UnlockRequirement>,
     pub warppad_1: WarpPad,
@@ -434,13 +434,13 @@ impl WarpPad {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BossGarage {
     pub requirement: BossRequirement,
     pub reward: Rewards,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum BossRequirement {
     UnlockRequirement(UnlockRequirement),
     BossRequirement(Vec<LevelID>),
