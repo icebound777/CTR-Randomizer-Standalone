@@ -244,6 +244,136 @@ impl GameWorld {
             }
         }
     }
+
+    pub fn set_warppad_unlocks(
+        &mut self,
+        warppad_unlocks: Vec<(LevelID, UnlockStage, Option<UnlockRequirement>)>
+    ) {
+        // For each tuple in the `warppad_unlocks`-vec, the LevelID does not reference
+        // the actual warp pad level target for which we have to modify the warp pad,
+        // but instead references the warp pad location in the adventure arena.
+        // For example, if the LevelID equals LevelID::CrashCove, then we do not have
+        // to modify the unlock requirements for the CrashCove warp pad no matter
+        // where it is. Instead we have to modify the warp pad that is in the location
+        // where originally CrashCove could be found (no matter which level that
+        // warp pad sends the player to now).
+        //
+        // It can happen that the number of unlock stages differ between the pad we
+        // have to modify and the unlock requirements we want to set (this mostly
+        // happens when trying to set vanilla unlock requirements).
+        // In this case, if the warp pad has only one unlock stage but we try to set
+        // two, then we just drop the second unlock stage.
+        // If the warp pad has two unlock stages but we only have one to set, then
+        // we set the second stage requirements to equal the first stage requirements,
+        // so both unlock stages can be served by that single requirement.
+        let mut modifies_second_unlock: Vec<LevelID> = Vec::new();
+        for (levelid, stage, _) in &warppad_unlocks {
+            if *stage == UnlockStage::Two {
+                modifies_second_unlock.push(*levelid);
+            }
+        }
+
+        for (levelid, stage, unlock_req) in warppad_unlocks {
+            let warppad_to_modify = match levelid {
+                LevelID::CrashCove  => {
+                    &mut self.hub_1.warppad_1
+                },
+                LevelID::RoosTubes  => {
+                    &mut self.hub_1.warppad_2
+                },
+                LevelID::MysteryCaves  => {
+                    &mut self.hub_1.warppad_3
+                },
+                LevelID::SewerSpeedway  => {
+                    &mut self.hub_1.warppad_4
+                },
+                LevelID::SkullRock  => {
+                    &mut self.hub_1.warppad_arena
+                },
+                LevelID::CocoPark  => {
+                    &mut self.hub_2.warppad_1
+                },
+                LevelID::TigerTemple  => {
+                    &mut self.hub_2.warppad_2
+                },
+                LevelID::PapusPyramid  => {
+                    &mut self.hub_2.warppad_3
+                },
+                LevelID::DingoCanyon  => {
+                    &mut self.hub_2.warppad_4
+                },
+                LevelID::RampageRuins  => {
+                    &mut self.hub_2.warppad_arena
+                },
+                LevelID::BlizzardBluff  => {
+                    &mut self.hub_3.warppad_1
+                },
+                LevelID::DragonMines  => {
+                    &mut self.hub_3.warppad_2
+                },
+                LevelID::PolarPass  => {
+                    &mut self.hub_3.warppad_3
+                },
+                LevelID::TinyArena  => {
+                    &mut self.hub_3.warppad_4
+                },
+                LevelID::RockyRoad  => {
+                    &mut self.hub_3.warppad_arena
+                },
+                LevelID::NGinLabs  => {
+                    &mut self.hub_4.warppad_1
+                },
+                LevelID::CortexCastle  => {
+                    &mut self.hub_4.warppad_2
+                },
+                LevelID::HotAirSkyway  => {
+                    &mut self.hub_4.warppad_3
+                },
+                LevelID::OxideStation  => {
+                    &mut self.hub_4.warppad_4
+                },
+                LevelID::NitroCourt  => {
+                    &mut self.hub_4.warppad_arena
+                },
+                LevelID::TurboTrack  => {
+                    &mut self.gemstone_valley.warppad_1
+                },
+                LevelID::SlideColiseum  => {
+                    &mut self.gemstone_valley.warppad_2
+                },
+                LevelID::CupRed  => {
+                    &mut self.gemstone_valley.cup_warppad_1
+                },
+                LevelID::CupGreen  => {
+                    &mut self.gemstone_valley.cup_warppad_2
+                },
+                LevelID::CupBlue  => {
+                    &mut self.gemstone_valley.cup_warppad_3
+                },
+                LevelID::CupYellow  => {
+                    &mut self.gemstone_valley.cup_warppad_4
+                },
+                LevelID::CupPurple  => {
+                    &mut self.gemstone_valley.cup_warppad_5
+                },
+            };
+
+            match stage {
+                UnlockStage::One => {
+                    warppad_to_modify.set_unlock_1(unlock_req.expect("stage one should always exist"));
+
+                    if warppad_to_modify.get_unlock_2().is_some() && !modifies_second_unlock.contains(&levelid) {
+                        warppad_to_modify.set_unlock_2(unlock_req.expect("stage one should always exist"));
+                    }
+                },
+                UnlockStage::Two => {
+                    if warppad_to_modify.get_unlock_2().is_some() {
+                        warppad_to_modify.set_unlock_2(unlock_req.expect("checked by if"));
+                    }
+                }
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -429,8 +559,24 @@ impl WarpPad {
         self.unlock_1
     }
 
+    pub fn set_unlock_1(&mut self, requirement: UnlockRequirement) {
+        self.unlock_1.requirement = Some(requirement);
+    }
+
     pub fn get_unlock_2(&self) -> Option<RaceUnlock> {
         self.unlock_2
+    }
+
+    pub fn set_unlock_2(&mut self, requirement: UnlockRequirement) {
+        if self.unlock_2.is_some()
+        {
+            self.unlock_2.unwrap().requirement = Some(requirement);
+        } else {
+            panic!(
+                "Attempting to set unlock_2 on warppad of levelID {} that doesn't have an unlock_2",
+                self.get_levelid()
+            );
+        }
     }
 }
 

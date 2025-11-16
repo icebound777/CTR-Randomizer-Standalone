@@ -6,7 +6,7 @@ use rand_chacha::ChaCha8Rng;
 use crate::seed_generation::{
     game_world::get_vanilla_gameworld, randomization_datastructures::{
         GameSetup, LevelID, SettingID, SettingValue
-    }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings}
+    }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
 };
 
 fn get_vanilla_game() -> GameSetup {
@@ -39,7 +39,6 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
     let vanilla_gameworld = get_vanilla_game().game_world;
 
     let mut new_game_world = vanilla_gameworld.clone();
-    let mut new_warppad_unlocks = &new_game_world.get_warppad_unlocks();
     let mut new_race_rewards = &new_game_world.get_race_rewards();
 
     let overwrite_seed_hash_1;
@@ -62,6 +61,15 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
         }
 
         // Warppad Unlocks
+        let new_warppad_unlocks = match chosen_settings.randomization.warppad_unlock_requirements {
+            WarppadUnlockRequirements::Vanilla => {
+                vanilla_gameworld.get_warppad_unlocks()
+            },
+            _ => todo!()
+        };
+
+        new_game_world.set_warppad_unlocks(new_warppad_unlocks);
+
         // Race Rewards
     } else {
         overwrite_seed_hash_1 = 0u16;
