@@ -55,6 +55,7 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
                 vanilla_gameworld.get_warppad_links(),
                 warppad_shuffle.include_battle_arenas,
                 warppad_shuffle.include_gem_cups,
+                matches!(chosen_settings.randomization.warppad_unlock_requirements, WarppadUnlockRequirements::Vanilla)
             );
 
             new_game_world.set_warppad_links(new_warppads);
@@ -127,24 +128,51 @@ fn get_shuffled_warppads(
     mut seed: ChaCha8Rng,
     original_warppads: HashMap<LevelID, LevelID>,
     include_battle_arenas: bool,
-    include_gem_cups: bool
+    include_gem_cups: bool,
+    vanilla_unlock_requirements: bool,
 ) -> HashMap<LevelID, LevelID> {
     let mut randomized_levels: HashMap<LevelID, LevelID> = original_warppads.clone();
-
     let mut untouched_levels: HashMap<LevelID, LevelID> = HashMap::new();
+    let mut pre_randomized_levels: HashMap<LevelID, LevelID> = HashMap::new();
 
-    if !include_battle_arenas {
+    if !include_battle_arenas || vanilla_unlock_requirements {
+        let level_map = if !include_battle_arenas {
+            &mut untouched_levels
+        } else {
+            // if vanilla warppad unlocks but warppad shuffle, then
+            // dont put non-trophypads into trophy pads
+            &mut pre_randomized_levels
+        };
+
         for level_key in original_warppads.keys() {
             if *level_key >= LevelID::NitroCourt && *level_key <= LevelID::RockyRoad {
-                untouched_levels.insert(*level_key, *level_key);
+                level_map.insert(*level_key, *level_key);
             }
         }
     }
 
-    if !include_gem_cups {
+    if !include_gem_cups || vanilla_unlock_requirements {
+        let level_map = if !include_gem_cups {
+            &mut untouched_levels
+        } else {
+            // if vanilla warppad unlocks but warppad shuffle, then
+            // dont put non-trophypads into trophy pads
+            &mut pre_randomized_levels
+        };
+
         for level_key in original_warppads.keys() {
             if *level_key >= LevelID::CupRed && *level_key <= LevelID::CupPurple {
-                untouched_levels.insert(*level_key, *level_key);
+                level_map.insert(*level_key, *level_key);
+            }
+        }
+    }
+
+    if vanilla_unlock_requirements {
+        // if vanilla warppad unlocks but warppad shuffle, then
+        // dont put non-trophypads into trophy pads
+        for level_key in original_warppads.keys() {
+            if *level_key == LevelID::TurboTrack || *level_key == LevelID::SlideColiseum {
+                pre_randomized_levels.insert(*level_key, *level_key);
             }
         }
     }
@@ -152,19 +180,47 @@ fn get_shuffled_warppads(
     for level_key in untouched_levels.keys() {
         let _ = randomized_levels.remove(level_key);
     }
+    for level_key in pre_randomized_levels.keys() {
+        let _ = randomized_levels.remove(level_key);
+    }
 
+    // Shuffle pre_randomized level values, but make sure a gem cup does not end
+    // up in the turbo track warp pad (requiring 5 gems to access)
+    if pre_randomized_levels.len() > 0 {
+        loop {
+            let pre_randomized_levels_clone = pre_randomized_levels.clone();
+            let mut level_values: Vec<&LevelID> = pre_randomized_levels_clone.values().collect::<Vec<_>>();
+            level_values.sort();
+            level_values.shuffle(&mut seed);
+
+            let mut level_keys: Vec<&LevelID> = pre_randomized_levels_clone.keys().collect();
+            level_keys.sort();
+            for level_key in level_keys {
+                pre_randomized_levels.insert(*level_key, *level_values.pop().expect("Same size as target vec."));
+            }
+
+            if !vec![LevelID::CupRed, LevelID::CupGreen, LevelID::CupBlue, LevelID::CupYellow, LevelID::CupPurple].contains(pre_randomized_levels.get(&LevelID::TurboTrack).expect("checked by first part of if")) {
+                break
+            }
+            // if we get here: Gem Cup in TT location, reshuffle!
+        };
+    }
+
+    // Shuffle the randomized_levels values
     let randomized_levels_clone = randomized_levels.clone();
     let mut level_values: Vec<&LevelID> = randomized_levels_clone.values().collect::<Vec<_>>();
     level_values.sort();
     level_values.shuffle(&mut seed);
 
-    let mut level_keys: Vec<&LevelID>  = randomized_levels_clone.keys().collect();
+    let mut level_keys: Vec<&LevelID> = randomized_levels_clone.keys().collect();
     level_keys.sort();
     for level_key in level_keys {
         randomized_levels.insert(*level_key, *level_values.pop().expect("Same size as target vec."));
     }
 
+    // Add removed levels back into the full hashmap
     randomized_levels.extend(untouched_levels);
+    randomized_levels.extend(pre_randomized_levels);
 
     randomized_levels
 }
