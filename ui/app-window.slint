@@ -114,7 +114,12 @@ component RandomizationSubmenu inherits Rectangle {
                     x: self.checked ? (parent.width/2)-300px : (parent.width/2)-96px;
                     animate x {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
                     text: "Shuffle Race Rewards";
-                    toggled => {root.shuffle_race_rewards = self.checked}
+                    toggled => {
+                        root.shuffle_race_rewards = self.checked;
+                        if (!self.checked && bossgarage_unlocks.current-index == 0) {
+                            bossgarage_unlocks.current-index = 1;
+                        }
+                    }
                 }
                 Switch {
                     text: "Include Keys";
@@ -173,7 +178,13 @@ component RandomizationSubmenu inherits Rectangle {
             bossgarage_unlocks := ComboBox {
                 y: 162px;
                 x: 530px;
+                current-index: 1;
                 model: ["Original 4 Tracks", "Same Hub Tracks", "4 / 8 / 12 / 16 Trophies"];
+                selected(current-value) => {
+                    if (!shuffle_reward.checked && self.current-index == 0) {
+                        self.current-index = 1;
+                    }
+                }
             }
             Switch {
                 y: 210px;
