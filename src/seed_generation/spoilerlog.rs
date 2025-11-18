@@ -4,50 +4,57 @@ use serde_json::{json, to_string_pretty};
 
 use crate::seed_generation::{game_world::{BattleArenaRewards, BossGarage, BossRaceRewards, BossRequirement, GemCupRewards, RelicRaceOnlyRewards, Rewards, TokensAndRelicRewards, TrophyRaceRewards, WarpPad}, randomization_datastructures::{GameSetup, UnlockRequirement}};
 
-pub fn write_spoilerlog(new_rom_path: PathBuf, game_setup: GameSetup) -> Result<(), io::Error> {
+pub fn write_spoilerlog(
+    new_rom_path: PathBuf,
+    game_setup: GameSetup,
+    seed: u32,
+) -> Result<(), io::Error> {
     let game_world = game_setup.game_world;
     let spoilerlog = json!({
-        "hub_1": {
-            "warppad_1_crashcove": get_formatted_warppad(game_world.hub_1.warppad_1),
-            "warppad_2_roostubes": get_formatted_warppad(game_world.hub_1.warppad_2),
-            "warppad_3_mysterycaves": get_formatted_warppad(game_world.hub_1.warppad_3),
-            "warppad_4_sewerspeedway": get_formatted_warppad(game_world.hub_1.warppad_4),
-            "warppad_5_skullrock": get_formatted_warppad(game_world.hub_1.warppad_arena),
-            "boss_garage": get_formatted_bossgarage(game_world.hub_1.boss_garage)
-        },
-        "hub_2": {
-            "warppad_1_cocopark": get_formatted_warppad(game_world.hub_2.warppad_1),
-            "warppad_2_tigertemple": get_formatted_warppad(game_world.hub_2.warppad_2),
-            "warppad_3_papuspyramid": get_formatted_warppad(game_world.hub_2.warppad_3),
-            "warppad_4_dingocanyon": get_formatted_warppad(game_world.hub_2.warppad_4),
-            "warppad_5_rampageruins": get_formatted_warppad(game_world.hub_2.warppad_arena),
-            "boss_garage": get_formatted_bossgarage(game_world.hub_2.boss_garage)
-        },
-        "hub_3": {
-            "warppad_1_blizzardbluff": get_formatted_warppad(game_world.hub_3.warppad_1),
-            "warppad_2_dragonmines": get_formatted_warppad(game_world.hub_3.warppad_2),
-            "warppad_3_polarpass": get_formatted_warppad(game_world.hub_3.warppad_3),
-            "warppad_4_tinyarena": get_formatted_warppad(game_world.hub_3.warppad_4),
-            "warppad_5_rockyroad": get_formatted_warppad(game_world.hub_3.warppad_arena),
-            "boss_garage": get_formatted_bossgarage(game_world.hub_3.boss_garage)
-        },
-        "hub_4": {
-            "warppad_1_nginlabs": get_formatted_warppad(game_world.hub_4.warppad_1),
-            "warppad_2_cortexcastle": get_formatted_warppad(game_world.hub_4.warppad_2),
-            "warppad_3_hotairskyway": get_formatted_warppad(game_world.hub_4.warppad_3),
-            "warppad_4_oxidestation": get_formatted_warppad(game_world.hub_4.warppad_4),
-            "warppad_5_nitrocourt": get_formatted_warppad(game_world.hub_4.warppad_arena),
-            "boss_garage": get_formatted_bossgarage(game_world.hub_4.boss_garage)
-        },
-        "gemstonevalley": {
-            "warppad_1_turbotrack": get_formatted_warppad(game_world.gemstone_valley.warppad_1),
-            "warppad_2_slidecoliseum": get_formatted_warppad(game_world.gemstone_valley.warppad_2),
-            "warppad_3_redgemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_1),
-            "warppad_4_greengemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_2),
-            "warppad_5_bluegemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_3),
-            "warppad_6_yellowgemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_4),
-            "warppad_7_purplegemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_5),
-            "boss_garage": get_formatted_bossgarage(game_world.gemstone_valley.boss_garage)
+        "seed_hash": get_seed_hash(seed),
+        "adventure": {
+            "hub_1": {
+                "warppad_1_crashcove": get_formatted_warppad(game_world.hub_1.warppad_1),
+                "warppad_2_roostubes": get_formatted_warppad(game_world.hub_1.warppad_2),
+                "warppad_3_mysterycaves": get_formatted_warppad(game_world.hub_1.warppad_3),
+                "warppad_4_sewerspeedway": get_formatted_warppad(game_world.hub_1.warppad_4),
+                "warppad_5_skullrock": get_formatted_warppad(game_world.hub_1.warppad_arena),
+                "boss_garage": get_formatted_bossgarage(game_world.hub_1.boss_garage)
+            },
+            "hub_2": {
+                "warppad_1_cocopark": get_formatted_warppad(game_world.hub_2.warppad_1),
+                "warppad_2_tigertemple": get_formatted_warppad(game_world.hub_2.warppad_2),
+                "warppad_3_papuspyramid": get_formatted_warppad(game_world.hub_2.warppad_3),
+                "warppad_4_dingocanyon": get_formatted_warppad(game_world.hub_2.warppad_4),
+                "warppad_5_rampageruins": get_formatted_warppad(game_world.hub_2.warppad_arena),
+                "boss_garage": get_formatted_bossgarage(game_world.hub_2.boss_garage)
+            },
+            "hub_3": {
+                "warppad_1_blizzardbluff": get_formatted_warppad(game_world.hub_3.warppad_1),
+                "warppad_2_dragonmines": get_formatted_warppad(game_world.hub_3.warppad_2),
+                "warppad_3_polarpass": get_formatted_warppad(game_world.hub_3.warppad_3),
+                "warppad_4_tinyarena": get_formatted_warppad(game_world.hub_3.warppad_4),
+                "warppad_5_rockyroad": get_formatted_warppad(game_world.hub_3.warppad_arena),
+                "boss_garage": get_formatted_bossgarage(game_world.hub_3.boss_garage)
+            },
+            "hub_4": {
+                "warppad_1_nginlabs": get_formatted_warppad(game_world.hub_4.warppad_1),
+                "warppad_2_cortexcastle": get_formatted_warppad(game_world.hub_4.warppad_2),
+                "warppad_3_hotairskyway": get_formatted_warppad(game_world.hub_4.warppad_3),
+                "warppad_4_oxidestation": get_formatted_warppad(game_world.hub_4.warppad_4),
+                "warppad_5_nitrocourt": get_formatted_warppad(game_world.hub_4.warppad_arena),
+                "boss_garage": get_formatted_bossgarage(game_world.hub_4.boss_garage)
+            },
+            "gemstonevalley": {
+                "warppad_1_turbotrack": get_formatted_warppad(game_world.gemstone_valley.warppad_1),
+                "warppad_2_slidecoliseum": get_formatted_warppad(game_world.gemstone_valley.warppad_2),
+                "warppad_3_redgemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_1),
+                "warppad_4_greengemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_2),
+                "warppad_5_bluegemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_3),
+                "warppad_6_yellowgemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_4),
+                "warppad_7_purplegemcup": get_formatted_warppad(game_world.gemstone_valley.cup_warppad_5),
+                "boss_garage": get_formatted_bossgarage(game_world.gemstone_valley.boss_garage)
+            },
         },
     });
 
@@ -58,6 +65,38 @@ pub fn write_spoilerlog(new_rom_path: PathBuf, game_setup: GameSetup) -> Result<
     spoilerlog_path.push(format!("{}{}", file_stem.to_str().unwrap(), "_spoilers.json"));
 
     std::fs::write(&spoilerlog_path, to_string_pretty(&spoilerlog).unwrap())
+}
+
+fn get_seed_hash(seed: u32) -> String {
+    fn get_character(seed_short: u8) -> String {
+        let character_id: u8 = seed_short % 16;
+        match character_id {
+            0 => "Crash",
+            1 => "Cortex",
+            2 => "Tiny",
+            3 => "Coco",
+            4 => "NGin",
+            5 => "Dingodile",
+            6 => "Polar",
+            7 => "Pura",
+            8 => "Pinstripe",
+            9 => "PapuPapu",
+            10 => "RipperRoo",
+            11 => "KomodoJoe",
+            12 => "N.Tropy",
+            13 => "Penta",
+            14 => "FakeCrash",
+            15 => "N.Oxide",
+            _ => panic!()
+        }.to_string()
+    }
+
+    let character_icon_1 = get_character(((seed >> 24) & 0xFF) as u8);
+    let character_icon_2 = get_character(((seed >> 16) & 0xFF) as u8);
+    let character_icon_3 = get_character(((seed >> 8) & 0xFF) as u8);
+    let character_icon_4 = get_character((seed & 0xFF) as u8);
+
+    format!("{character_icon_1}, {character_icon_2}, {character_icon_3}, {character_icon_4}")
 }
 
 fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
