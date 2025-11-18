@@ -47,6 +47,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 Some(RewardShuffle {
                     include_keys: main_window.get_shuffle_race_rewards_keys(),
                     include_gems: main_window.get_shuffle_race_rewards_gems(),
+                    include_platinum_relics: main_window.get_shuffle_race_rewards_plat_relics(),
                 })
             } else {
                 None

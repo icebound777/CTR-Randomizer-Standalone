@@ -30,6 +30,7 @@ pub struct QualityOfLifeSettings {
 pub struct RewardShuffle {
     pub include_keys: bool,
     pub include_gems: bool,
+    pub include_platinum_relics: bool,
 }
 
 pub struct WarppadShuffle {
