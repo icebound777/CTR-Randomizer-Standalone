@@ -174,25 +174,27 @@ component RandomizationSubmenu inherits Rectangle {
             }
             warppad_unlocks_text := Text {
                 y: warppads_box.y + 50px;
-                x: parent.x + 310px;
+                x: 500px;
                 text: "Warp Pad Unlock Requirements";
                 font-size: 10pt;
             }
             warppad_unlocks := ComboBox {
                 y: warppad_unlocks_text.y - 8px;
-                x: 530px;
+                x: 300px;
+                width: 190px;
                 model: ["Vanilla", "Shuffled", "More Choices", "Wild", "Chaotic"];
             }
             bossgarage_unlocks_text := Text {
                 y: warppad_unlocks.y + 48px;
-                x: parent.x + 379px;
+                x: 500px;
                 text: "Boss Garage Unlocks";
                 font-size: 10pt;
             }
             bossgarage_unlocks := ComboBox {
                 y: bossgarage_unlocks_text.y - 8px;
-                x: 530px;
+                x: 300px;
                 current-index: 1;
+                width: 190px;
                 model: ["Original 4 Tracks", "Same Hub Tracks", "4 / 8 / 12 / 16 Trophies"];
                 selected(current-value) => {
                     if (!shuffle_reward.checked && self.current-index == 0) {
@@ -217,31 +219,34 @@ component GeneralSubmenu inherits Rectangle {
     VerticalLayout {
         alignment: start;
         width: 500px;
-        HorizontalBox {
-            height: 60px;
-            Text {
-                vertical-alignment: center;
-                text: "Relic Races: Required Minimum Time";
-            }
-            required_minimum_time := ComboBox {
-                width: 250px;
-                model: ["Any Time", "Gold Time or better", "Platinum Time"];
-            }
-        }
+        padding-top: 10px;
         Switch {
-            x: 6px;
+            height: 40px;
+            width: 250px;
+            x: 10px;
             text: "Relic Races: Require Perfects";
             toggled => {root.rr_require_perfects = self.checked}
         }
         HorizontalBox {
-            height: 60px;
+            height: 50px;
+            required_minimum_time := ComboBox {
+                width: 210px;
+                model: ["Any Time", "Gold Time or better", "Platinum Time"];
+            }
+            Text {
+                vertical-alignment: center;
+                text: "Relic Races: Required Minimum Time";
+            }
+        }
+        HorizontalBox {
+            height: 50px;
+            oxide_final_unlock := ComboBox {
+                width: 210px;
+                model: ["18 Sapphire Relics", "18 Gold+Platinum Relics"];
+            }
             Text {
                 vertical-alignment: center;
                 text: "Oxide's Final Challenge Unlock";
-            }
-            oxide_final_unlock := ComboBox {
-                width: 250px;
-                model: ["18 Sapphire Relics", "18 Gold+Platinum Relics"];
             }
         }
     }
@@ -257,7 +262,7 @@ component QoLSubmenu inherits Rectangle {
     HorizontalLayout {
         VerticalLayout {
             width: parent.width/2;
-            padding: 20px;
+            padding-top: 20px;
 
             Text {
                 text: "Quality of Life";
@@ -267,23 +272,30 @@ component QoLSubmenu inherits Rectangle {
                 horizontal-alignment: center;
             }
             Switch {
+                width: 160px;
                 height: 50px;
+                x: 135px;
                 text: "Skip Mask Hints";
                 toggled => {root.qol_skip_mask_hints = self.checked}
             }
             Switch {
                 height: 50px;
+                width: 250px;
+                x: 135px;
                 text: "Auto-Skip Podium Cutscenes";
                 toggled => {root.qol_skip_podium = self.checked}
             }
             Switch {
                 height: 50px;
+                width: 190px;
+                x: 135px;
                 text: "Skip Mask Congrats";
                 toggled => {root.qol_skip_mask_congrats = self.checked}
             }
         }
         VerticalLayout {
-            padding: 20px;
+            width: parent.width/2;
+            padding-top: 20px;
 
             Text {
                 text: "Tricks";
@@ -294,11 +306,15 @@ component QoLSubmenu inherits Rectangle {
             }
             Switch {
                 height: 50px;
+                width: 160px;
+                x: 172px;
                 text: "Tiziano Helper";
                 toggled => {root.trick_helper_tiziano = self.checked}
             }
             Switch {
                 height: 50px;
+                width: 130px;
+                x: 172px;
                 text: "TA Helper";
                 toggled => {root.trick_helper_ta = self.checked}
             }
