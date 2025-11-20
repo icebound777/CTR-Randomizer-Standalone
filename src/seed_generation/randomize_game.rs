@@ -120,6 +120,14 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
                 SettingID::SeedHash2,
                 SettingValue::SeedHashPart(overwrite_seed_hash_2),
             ),
+            (
+                SettingID::HelperTiziano,
+                SettingValue::Boolean(chosen_settings.tricks.helper_tiziano),
+            ),
+            (
+                SettingID::HelperTA,
+                SettingValue::Boolean(chosen_settings.tricks.helper_ta),
+            ),
         ],
     }
 }

@@ -251,24 +251,58 @@ component QoLSubmenu inherits Rectangle {
     out property <bool> qol_skip_mask_hints;
     out property <bool> qol_skip_podium;
     out property <bool> qol_skip_mask_congrats;
+    out property <bool> trick_helper_tiziano;
+    out property <bool> trick_helper_ta;
 
-    Switch {
-        y: 10px;
-        height: 50px;
-        text: "Skip Mask Hints";
-        toggled => {root.qol_skip_mask_hints = self.checked}
-    }
-    Switch {
-        y: 60px;
-        height: 50px;
-        text: "Auto-Skip Podium Cutscenes";
-        toggled => {root.qol_skip_podium = self.checked}
-    }
-    Switch {
-        y: 110px;
-        height: 50px;
-        text: "Skip Mask Congrats";
-        toggled => {root.qol_skip_mask_congrats = self.checked}
+    HorizontalLayout {
+        VerticalLayout {
+            width: parent.width/2;
+            padding: 20px;
+
+            Text {
+                text: "Quality of Life";
+                height: 20px;
+                font-size: 12pt;
+                font-weight: 800;
+                horizontal-alignment: center;
+            }
+            Switch {
+                height: 50px;
+                text: "Skip Mask Hints";
+                toggled => {root.qol_skip_mask_hints = self.checked}
+            }
+            Switch {
+                height: 50px;
+                text: "Auto-Skip Podium Cutscenes";
+                toggled => {root.qol_skip_podium = self.checked}
+            }
+            Switch {
+                height: 50px;
+                text: "Skip Mask Congrats";
+                toggled => {root.qol_skip_mask_congrats = self.checked}
+            }
+        }
+        VerticalLayout {
+            padding: 20px;
+
+            Text {
+                text: "Tricks";
+                height: 20px;
+                font-size: 12pt;
+                font-weight: 800;
+                horizontal-alignment: center;
+            }
+            Switch {
+                height: 50px;
+                text: "Tiziano Helper";
+                toggled => {root.trick_helper_tiziano = self.checked}
+            }
+            Switch {
+                height: 50px;
+                text: "TA Helper";
+                toggled => {root.trick_helper_ta = self.checked}
+            }
+        }
     }
 }
 
@@ -389,6 +423,8 @@ component SettingsMenu inherits TabWidget {
     out property <bool> qol_skip_mask_hints <=> qolmenu.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> qolmenu.qol_skip_podium;
     out property <bool> qol_skip_mask_congrats <=> qolmenu.qol_skip_mask_congrats;
+    out property <bool> trick_helper_tiziano <=> qolmenu.trick_helper_tiziano;
+    out property <bool> trick_helper_ta <=> qolmenu.trick_helper_ta;
 
     current-index: 0;
     Tab {
@@ -400,7 +436,7 @@ component SettingsMenu inherits TabWidget {
         generalmenu := GeneralSubmenu {}
     }
     Tab {
-        title: "Quality of Life";
+        title: "Quality of Life & Tricks";
         qolmenu := QoLSubmenu {}
     }
     Tab {
@@ -522,6 +558,8 @@ export component MainWindow inherits Window {
     out property <bool> qol_skip_mask_hints <=> settings.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> settings.qol_skip_podium;
     out property <bool> qol_skip_mask_congrats <=> settings.qol_skip_mask_congrats;
+    out property <bool> trick_helper_tiziano <=> settings.trick_helper_tiziano;
+    out property <bool> trick_helper_ta <=> settings.trick_helper_ta;
 
     VerticalLayout {
         TitleBar {

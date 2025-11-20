@@ -2,6 +2,7 @@ pub struct SeedSettings {
     pub randomization: RandomizationSettings,
     pub general: GeneralSettings,
     pub qol: QualityOfLifeSettings,
+    pub tricks: TrickSettings,
     pub write_spoilerlog: bool,
     pub write_patchfile: bool,
 }
@@ -25,6 +26,11 @@ pub struct QualityOfLifeSettings {
     pub skip_mask_hints: bool,
     pub autoskip_podium_cutscenes: bool,
     pub skip_mask_congrats: bool,
+}
+
+pub struct TrickSettings {
+    pub helper_tiziano: bool,
+    pub helper_ta: bool,
 }
 
 pub struct RewardShuffle {

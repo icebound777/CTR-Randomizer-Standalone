@@ -11,7 +11,7 @@ use std::io::{BufRead, BufReader};
 
 use crate::seed_generation::seed_gen_main::generate_seed;
 use crate::seed_generation::seed_settings::{
-    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedSettings, WarppadShuffle, WarppadUnlockRequirements
+    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedSettings, TrickSettings, WarppadShuffle, WarppadUnlockRequirements
 };
 
 slint::include_modules!();
@@ -72,6 +72,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             autoskip_podium_cutscenes: main_window.get_qol_skip_podium(),
             skip_mask_congrats: main_window.get_qol_skip_mask_congrats(),
         };
+        let chosen_trick_settings = TrickSettings {
+            helper_tiziano: main_window.get_trick_helper_tiziano(),
+            helper_ta: main_window.get_trick_helper_ta(),
+        };
         let chosen_general_settings = GeneralSettings {
             rr_required_minimum_time: RelicTime::try_from(
                 main_window.get_rr_required_minimum_time(),
@@ -87,6 +91,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             randomization: chosen_rando_settings,
             general: chosen_general_settings,
             qol: chosen_qol_settings,
+            tricks: chosen_trick_settings,
             write_spoilerlog: main_window.get_write_spoilerlog(),
             write_patchfile: false,
         };

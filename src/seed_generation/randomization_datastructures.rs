@@ -199,6 +199,8 @@ pub enum SettingID {
     OxideRequiredRelics = 6,
     SeedHash1 = 7,
     SeedHash2 = 8,
+    HelperTiziano = 9,
+    HelperTA = 10,
 }
 
 #[derive(Debug)]
