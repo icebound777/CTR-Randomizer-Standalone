@@ -47,9 +47,7 @@ pub struct WarppadShuffle {
 pub enum WarppadUnlockRequirements {
     Vanilla = 0,
     Shuffled = 1,
-    MoreChoices = 2,
-    Wild = 3,
-    Chaotic = 4,
+    Chaotic = 2,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -86,10 +84,6 @@ impl TryFrom<i32> for WarppadUnlockRequirements {
             x if x == WarppadUnlockRequirements::Shuffled as i32 => {
                 Ok(WarppadUnlockRequirements::Shuffled)
             }
-            x if x == WarppadUnlockRequirements::MoreChoices as i32 => {
-                Ok(WarppadUnlockRequirements::MoreChoices)
-            }
-            x if x == WarppadUnlockRequirements::Wild as i32 => Ok(WarppadUnlockRequirements::Wild),
             x if x == WarppadUnlockRequirements::Chaotic as i32 => {
                 Ok(WarppadUnlockRequirements::Chaotic)
             }
