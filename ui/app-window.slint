@@ -1,4 +1,57 @@
-import {LineEdit, Button, VerticalBox, HorizontalBox, CheckBox, TabWidget, AboutSlint, ComboBox, Switch, Spinner}from "std-widgets.slint";
+import {LineEdit, Button, VerticalBox, HorizontalBox, CheckBox, TabWidget, AboutSlint, ComboBox, Switch, Spinner, Palette}from "std-widgets.slint";
+
+export component ToolTip inherits Window {
+    in property <string> text  <=> text.text;
+    in property <bool> user_is_hovering;
+
+    property <bool> has_waited;
+    z: 100;
+
+    visible: has_waited && user_is_hovering;
+    Rectangle {
+        visible: parent.visible;
+        background: Palette.background;
+        border-radius: 0.5rem;
+        border-color: black;
+        border-width: 1px;
+        drop-shadow-color: gray;
+        drop-shadow-blur: 3px;
+        drop-shadow-offset-x: 5px;
+        drop-shadow-offset-y: 5px;
+
+        text := Text {
+            width: parent.width - 1rem;
+            height: parent.height - 1rem;
+            font-size: root.default-font-size * 0.9;
+            horizontal-alignment: left;
+            vertical-alignment: top;
+            wrap: word-wrap;
+        }
+    }
+
+    Timer {
+        // Delay until tooltip appears.
+        interval: 0.5s;
+        running: parent.user_is_hovering || self.needs_resetting;
+        // The resetting property allows the timer to reset to the default state
+        // where it has not waited to show the tooltip yet. This is needed
+        // because we can not listen to a "not hovering anymore" event. Thus, we
+        // let the timer run a little bit longer and reset the state before
+        // stopping `running`.
+        property <bool> needs_resetting : false;
+        triggered() => {
+            if needs_resetting && !parent.user_is_hovering {
+                // User is not hovering anymore.
+                parent.has_waited = false;
+                needs_resetting = false;
+            } else {
+                // User is hovering and waited, so tooltip can be shown.
+                parent.has_waited = true;
+                needs_resetting = true;
+            }
+        }
+    }
+}
 
 component TitleBar inherits Rectangle {
     border-color: black;
@@ -271,26 +324,39 @@ component QoLSubmenu inherits Rectangle {
                 font-weight: 800;
                 horizontal-alignment: center;
             }
-            Switch {
+
+            skipmaskhint_touch := TouchArea {
                 width: 160px;
                 height: 50px;
                 x: 135px;
+                Switch {
+                    width: parent.width;
+                    height: parent.height;
                 text: "Skip Mask Hints";
                 toggled => {root.qol_skip_mask_hints = self.checked}
+                }
             }
-            Switch {
-                height: 50px;
+            skippodium_touch := TouchArea {
                 width: 250px;
+                height: 50px;
                 x: 135px;
+                Switch {
+                    width: parent.width;
+                    height: parent.height;
                 text: "Auto-Skip Podium Cutscenes";
                 toggled => {root.qol_skip_podium = self.checked}
+                }
             }
-            Switch {
-                height: 50px;
+            skipmaskcongrats_touch := TouchArea {
                 width: 190px;
+                height: 50px;
                 x: 135px;
+                Switch {
+                    width: parent.width;
+                    height: parent.height;
                 text: "Skip Mask Congrats";
                 toggled => {root.qol_skip_mask_congrats = self.checked}
+                }
             }
         }
         VerticalLayout {
@@ -304,21 +370,80 @@ component QoLSubmenu inherits Rectangle {
                 font-weight: 800;
                 horizontal-alignment: center;
             }
-            Switch {
-                height: 50px;
+            helper_tiziano_touch := TouchArea {
                 width: 160px;
+                height: 50px;
                 x: 172px;
+                Switch {
+                    width: parent.width;
+                    height: parent.height;
                 text: "Tiziano Helper";
                 toggled => {root.trick_helper_tiziano = self.checked}
+                }
             }
-            Switch {
-                height: 50px;
+            helper_ta_touch := TouchArea {
                 width: 130px;
+                height: 50px;
                 x: 172px;
+                Switch {
+                    width: parent.width;
+                    height: parent.height;
                 text: "TA Helper";
                 toggled => {root.trick_helper_ta = self.checked}
             }
         }
+        }
+    }
+
+    ToolTip {
+        x: skipmaskhint_touch.x + 100px;
+        y: skipmaskhint_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 8rem;
+        width: 25rem;
+        text: "OFF: The adventure mode mask hint cutscenes will play as usual.\n\n"
+        + "ON: Sets all adventure mode mask hint cutscenes as 'already seen', "
+        + "effectively skipping them.";
+        user_is_hovering: skipmaskhint_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: skippodium_touch.x + 100px;
+        y: skippodium_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "OFF: The podium cutscenes will play as usual.\n\n"
+        + "ON: Automatically inputs the Start-button at the start of each "
+        + "podium cutscene, effectively skipping it.";
+        user_is_hovering: skippodium_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: skipmaskcongrats_touch.x + 100px;
+        y: skipmaskcongrats_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 9rem;
+        width: 25rem;
+        text: "OFF: The adventure mode voice clips of masks congratulating you for your race prize play as usual.\n\n"
+        + "ON: The voice clips of masks will be muted, making it behave as if "
+        + "the PAL-exclusive language glitch was active.";
+        user_is_hovering: skipmaskcongrats_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: helper_tiziano_touch.x + (parent.width/2) + 20px;
+        y: helper_tiziano_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "ON: Modifies the item boxes while performing the 'Tiziano' shortcut.\n"
+        + "During regular races on Papu's Pyramid, if the player is in 7th or 8th place, "
+        + "every item box is a guaranteed mask item.";
+        user_is_hovering: helper_tiziano_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: helper_ta_touch.x + (parent.width/2) + 20px;
+        y: helper_ta_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "ON: Modifies the item boxes while performing the 'TA' super-shortcut.\n"
+        + "During regular races on Tiny Arena, if the player is in 1st place, "
+        + "every item box is a guaranteed TNT/Nitro item.";
+        user_is_hovering: helper_ta_touch.has-hover; // <-- references one or more TouchArea below
     }
 }
 
