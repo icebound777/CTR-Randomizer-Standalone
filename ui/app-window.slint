@@ -273,35 +273,76 @@ component GeneralSubmenu inherits Rectangle {
         alignment: start;
         width: 500px;
         padding-top: 10px;
-        Switch {
-            height: 40px;
+        requireperfects_touch := TouchArea {
             width: 250px;
+            height: 50px;
             x: 10px;
-            text: "Relic Races: Require Perfects";
-            toggled => {root.rr_require_perfects = self.checked}
-        }
-        HorizontalBox {
-            height: 50px;
-            required_minimum_time := ComboBox {
-                width: 210px;
-                model: ["Any Time", "Gold Time or better", "Platinum Time"];
-            }
-            Text {
-                vertical-alignment: center;
-                text: "Relic Races: Required Minimum Time";
+            Switch {
+                width: parent.width;
+                height: parent.height;
+                text: "Relic Races: Require Perfects";
+                toggled => {root.rr_require_perfects = self.checked}
             }
         }
-        HorizontalBox {
-            height: 50px;
-            oxide_final_unlock := ComboBox {
-                width: 210px;
-                model: ["18 Sapphire Relics", "18 Gold+Platinum Relics"];
-            }
-            Text {
-                vertical-alignment: center;
-                text: "Oxide's Final Challenge Unlock";
+
+        minimumtime_touch := TouchArea {
+            HorizontalBox {
+                height: 50px;
+                required_minimum_time := ComboBox {
+                    width: 210px;
+                    model: ["Any Time", "Gold Time or better", "Platinum Time"];
+                }
+                Text {
+                    vertical-alignment: center;
+                    text: "Relic Races: Required Minimum Time";
+                }
             }
         }
+        finalchallenge_touch := TouchArea {
+            HorizontalBox {
+                height: 50px;
+                oxide_final_unlock := ComboBox {
+                    width: 210px;
+                    model: ["18 Sapphire Relics", "18 Gold+Platinum Relics"];
+                }
+                Text {
+                    vertical-alignment: center;
+                    text: "Oxide's Final Challenge Unlock";
+                }
+            }
+        }
+    }
+
+    ToolTip {
+        x: requireperfects_touch.x + 300px;
+        y: requireperfects_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 9rem;
+        width: 25rem;
+        text: "OFF: Reaching the required relic time suffices to get one or more prizes.\n\n"
+        + "ON: To get one or more prizes from a relic race, not only do the relic times need "
+        + "to be bested, but all time boxes have to be broken during that run as well.";
+        user_is_hovering: requireperfects_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: minimumtime_touch.x + 400px;
+        y: minimumtime_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "Choose the required minimum relic time to beat to get any prizes.\n"
+        + "If you choose Gold or Platinum as minimum time, then upon reaching that "
+        + "time the lower rank prize(s) will also be awarded.";
+        user_is_hovering: minimumtime_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: finalchallenge_touch.x + 400px;
+        y: finalchallenge_touch.y + 50px; // <-- references any or no component, not necessarily a TouchArea
+        height: 12rem;
+        width: 25rem;
+        text: "Choose what types of relics are required to turn Oxide's Challenge into "
+        + "Oxide's Final Challenge.\n\n"
+        + "18 Sapphire Relics: You need all 18 Sapphire relics (Golds and Platinums are ignored).\n\n"
+        + "18 Gold+Platinum Relics: You need at least a combined total of 18 Gold relics and Platinum relics.";
+        user_is_hovering: finalchallenge_touch.has-hover; // <-- references one or more TouchArea below
     }
 }
 
@@ -332,8 +373,8 @@ component QoLSubmenu inherits Rectangle {
                 Switch {
                     width: parent.width;
                     height: parent.height;
-                text: "Skip Mask Hints";
-                toggled => {root.qol_skip_mask_hints = self.checked}
+                    text: "Skip Mask Hints";
+                    toggled => {root.qol_skip_mask_hints = self.checked}
                 }
             }
             skippodium_touch := TouchArea {
@@ -343,8 +384,8 @@ component QoLSubmenu inherits Rectangle {
                 Switch {
                     width: parent.width;
                     height: parent.height;
-                text: "Auto-Skip Podium Cutscenes";
-                toggled => {root.qol_skip_podium = self.checked}
+                    text: "Auto-Skip Podium Cutscenes";
+                    toggled => {root.qol_skip_podium = self.checked}
                 }
             }
             skipmaskcongrats_touch := TouchArea {
@@ -354,8 +395,8 @@ component QoLSubmenu inherits Rectangle {
                 Switch {
                     width: parent.width;
                     height: parent.height;
-                text: "Skip Mask Congrats";
-                toggled => {root.qol_skip_mask_congrats = self.checked}
+                    text: "Skip Mask Congrats";
+                    toggled => {root.qol_skip_mask_congrats = self.checked}
                 }
             }
         }
@@ -377,8 +418,8 @@ component QoLSubmenu inherits Rectangle {
                 Switch {
                     width: parent.width;
                     height: parent.height;
-                text: "Tiziano Helper";
-                toggled => {root.trick_helper_tiziano = self.checked}
+                    text: "Tiziano Helper";
+                    toggled => {root.trick_helper_tiziano = self.checked}
                 }
             }
             helper_ta_touch := TouchArea {
@@ -388,10 +429,10 @@ component QoLSubmenu inherits Rectangle {
                 Switch {
                     width: parent.width;
                     height: parent.height;
-                text: "TA Helper";
-                toggled => {root.trick_helper_ta = self.checked}
+                    text: "TA Helper";
+                    toggled => {root.trick_helper_ta = self.checked}
+                }
             }
-        }
         }
     }
 
