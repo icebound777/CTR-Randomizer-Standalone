@@ -71,6 +71,17 @@ pub fn get_randomized_game(seed: ChaCha8Rng, seed_as_number: u32, chosen_setting
 
         new_game_world.set_warppad_unlocks(new_warppad_unlocks);
 
+        // Boss Garage requirements
+        // Don't modify if Original4Tracks, as we expect that to be set by default
+        if !matches!(chosen_settings.randomization.bossgarage_unlock_requirements, BossGarageRequirements::Original4Tracks) {
+            let new_garage_unlocks = get_modified_garage_unlocks(
+                chosen_settings.randomization.bossgarage_unlock_requirements,
+                new_game_world.get_warppad_links(),
+            );
+
+            new_game_world.set_garage_unlocks(new_garage_unlocks);
+        }
+
         // Race Rewards
     } else {
         overwrite_seed_hash_1 = 0u16;
@@ -231,4 +242,96 @@ fn get_shuffled_warppads(
     randomized_levels.extend(pre_randomized_levels);
 
     randomized_levels
+}
+
+fn get_modified_garage_unlocks(
+    garage_unlock: BossGarageRequirements,
+    level_links: HashMap<LevelID, LevelID>,
+) -> HashMap<BossCharacter, BossRequirement> {
+    let mut new_garage_unlocks;
+
+    match garage_unlock {
+        BossGarageRequirements::Original4Tracks => panic!("this function is not supposed to get called with this value"),
+        BossGarageRequirements::SameHubTracks => {
+            new_garage_unlocks = HashMap::new();
+            new_garage_unlocks.insert(
+                BossCharacter::RipperRoo,
+                BossRequirement::BossRequirement(
+                    vec![
+                        *level_links.get(&LevelID::CrashCove).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::RoosTubes).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::MysteryCaves).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::SewerSpeedway).expect("every level needs to be present in the level links"),
+                    ]
+                )
+            );
+            new_garage_unlocks.insert(
+                BossCharacter::PapuPapu,
+                BossRequirement::BossRequirement(
+                    vec![
+                        *level_links.get(&LevelID::TigerTemple).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::CocoPark).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::PapusPyramid).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::DingoCanyon).expect("every level needs to be present in the level links"),
+                    ]
+                )
+            );
+            new_garage_unlocks.insert(
+                BossCharacter::KomodoJoe,
+                BossRequirement::BossRequirement(
+                    vec![
+                        *level_links.get(&LevelID::BlizzardBluff).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::DragonMines).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::PolarPass).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::TinyArena).expect("every level needs to be present in the level links"),
+                    ]
+                )
+            );
+            new_garage_unlocks.insert(
+                BossCharacter::Pinstripe,
+                BossRequirement::BossRequirement(
+                    vec![
+                        *level_links.get(&LevelID::NGinLabs).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::CortexCastle).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::HotAirSkyway).expect("every level needs to be present in the level links"),
+                        *level_links.get(&LevelID::OxideStation).expect("every level needs to be present in the level links"),
+                    ]
+                )
+            );
+        },
+        BossGarageRequirements::Trophies => {
+            new_garage_unlocks = HashMap::from([
+                (
+                    BossCharacter::RipperRoo,
+                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                        item_type: RequiredItem::Trophy,
+                        count: 4
+                    })
+                ),
+                (
+                    BossCharacter::PapuPapu,
+                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                        item_type: RequiredItem::Trophy,
+                        count: 8
+                    })
+                ),
+                (
+                    BossCharacter::KomodoJoe,
+                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                        item_type: RequiredItem::Trophy,
+                        count: 12
+                    })
+                ),
+                (
+                    BossCharacter::Pinstripe,
+                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                        item_type: RequiredItem::Trophy,
+                        count: 16
+                    })
+                )
+            ]);
+        },
+    };
+
+    new_garage_unlocks
 }

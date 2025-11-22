@@ -374,6 +374,28 @@ impl GameWorld {
             }
         }
     }
+
+    pub fn set_garage_unlocks(&mut self, garage_unlocks: HashMap<BossCharacter, BossRequirement>) {
+        for (boss, req) in garage_unlocks {
+            match boss {
+                BossCharacter::RipperRoo => {
+                    self.hub_1.boss_garage.requirement = req;
+                },
+                BossCharacter::PapuPapu => {
+                    self.hub_2.boss_garage.requirement = req;
+                },
+                BossCharacter::KomodoJoe => {
+                    self.hub_3.boss_garage.requirement = req;
+                },
+                BossCharacter::Pinstripe => {
+                    self.hub_4.boss_garage.requirement = req;
+                },
+                BossCharacter::NOxide => {
+                    self.gemstone_valley.boss_garage.requirement = req;
+                },
+            };
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -582,8 +604,18 @@ impl WarpPad {
 
 #[derive(Debug, Clone)]
 pub struct BossGarage {
+    pub boss: BossCharacter,
     pub requirement: BossRequirement,
     pub reward: Rewards,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum BossCharacter {
+    RipperRoo,
+    PapuPapu,
+    KomodoJoe,
+    Pinstripe,
+    NOxide,
 }
 
 #[derive(Debug, Clone)]
@@ -652,6 +684,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_3: WarpPad::new(LevelID::MysteryCaves),
             warppad_4: WarpPad::new(LevelID::SewerSpeedway),
             boss_garage: BossGarage {
+                boss: BossCharacter::RipperRoo,
                 requirement: BossRequirement::BossRequirement(
                     vec![
                         LevelID::CrashCove,
@@ -673,6 +706,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_3: WarpPad::new(LevelID::PapusPyramid),
             warppad_4: WarpPad::new(LevelID::DingoCanyon),
             boss_garage: BossGarage {
+                boss: BossCharacter::PapuPapu,
                 requirement: BossRequirement::BossRequirement(
                     vec![
                         LevelID::CocoPark,
@@ -692,6 +726,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_3: WarpPad::new(LevelID::PolarPass),
             warppad_4: WarpPad::new(LevelID::TinyArena),
             boss_garage: BossGarage {
+                boss: BossCharacter::KomodoJoe,
                 requirement: BossRequirement::BossRequirement(
                     vec![
                         LevelID::BlizzardBluff,
@@ -711,6 +746,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_3: WarpPad::new(LevelID::HotAirSkyway),
             warppad_4: WarpPad::new(LevelID::OxideStation),
             boss_garage: BossGarage {
+                boss: BossCharacter::Pinstripe,
                 requirement: BossRequirement::BossRequirement(
                     vec![
                         LevelID::NGinLabs,
@@ -733,6 +769,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             cup_warppad_4: WarpPad::new(LevelID::CupYellow),
             cup_warppad_5: WarpPad::new(LevelID::CupPurple),
             boss_garage: BossGarage {
+                boss: BossCharacter::NOxide,
                 requirement: BossRequirement::UnlockRequirement(UnlockRequirement{
                     item_type: RequiredItem::Key,
                     count: 4
