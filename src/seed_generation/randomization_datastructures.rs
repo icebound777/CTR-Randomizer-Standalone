@@ -72,7 +72,7 @@ impl std::fmt::Display for LevelID {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum UnlockStage {
     One,
     Two,

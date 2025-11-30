@@ -53,15 +53,21 @@ impl GameWorld {
         ])
     }
 
-    pub fn get_warppad_unlocks(&self) -> Vec<(LevelID, UnlockStage, Option<UnlockRequirementItem>)> {
-        fn add_single_warppad_unlocks(all_unlocks: &mut Vec<(LevelID, UnlockStage, Option<UnlockRequirementItem>)>, warp_pad: WarpPad) {
-            all_unlocks.push((warp_pad.level_id, UnlockStage::One, warp_pad.unlock_1.requirement));
+    pub fn get_warppad_unlocks(&self) -> HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> {
+        fn add_single_warppad_unlocks(
+            all_unlocks: &mut HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
+            warp_pad: WarpPad
+        ) {
+            all_unlocks.insert((warp_pad.level_id, UnlockStage::One), warp_pad.unlock_1.requirement);
             if warp_pad.unlock_2.is_some() {
-                all_unlocks.push((warp_pad.level_id, UnlockStage::Two, warp_pad.unlock_2.expect("checked by if").requirement));
+                all_unlocks.insert(
+                    (warp_pad.level_id, UnlockStage::Two),
+                    warp_pad.unlock_2.expect("checked by if").requirement
+                );
             }
         }
 
-        let mut warppad_unlocks = Vec::new();
+        let mut warppad_unlocks = HashMap::new();
 
         // Hub 1 - N. Sanity Beach
         add_single_warppad_unlocks(&mut warppad_unlocks, self.hub_1.warppad_1);
@@ -247,7 +253,7 @@ impl GameWorld {
 
     pub fn set_warppad_unlocks(
         &mut self,
-        warppad_unlocks: Vec<(LevelID, UnlockStage, Option<UnlockRequirementItem>)>
+        warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>
     ) {
         // For each tuple in the `warppad_unlocks`-vec, the LevelID does not reference
         // the actual warp pad level target for which we have to modify the warp pad,
@@ -267,13 +273,13 @@ impl GameWorld {
         // we set the second stage requirements to equal the first stage requirements,
         // so both unlock stages can be served by that single requirement.
         let mut modifies_second_unlock: Vec<LevelID> = Vec::new();
-        for (levelid, stage, _) in &warppad_unlocks {
-            if *stage == UnlockStage::Two {
-                modifies_second_unlock.push(*levelid);
+        for ((levelid, stage), _) in warppad_unlocks.clone().into_iter() {
+            if stage == UnlockStage::Two {
+                modifies_second_unlock.push(levelid);
             }
         }
 
-        for (levelid, stage, unlock_req) in warppad_unlocks {
+        for ((levelid, stage), unlock_req) in warppad_unlocks.into_iter() {
             let warppad_to_modify = match levelid {
                 LevelID::CrashCove  => {
                     &mut self.hub_1.warppad_1
