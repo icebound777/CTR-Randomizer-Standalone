@@ -415,6 +415,12 @@ pub struct GenericHub {
     pub warppad_arena: WarpPad,
 }
 
+impl GenericHub {
+    pub fn get_requirement(&self) -> Option<UnlockRequirementItem> {
+        self.requirement
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct GemStoneValleyHub {
     requirement: Option<UnlockRequirementItem>,
@@ -426,6 +432,12 @@ pub struct GemStoneValleyHub {
     pub cup_warppad_4: WarpPad,
     pub cup_warppad_5: WarpPad,
     pub boss_garage: BossGarage,
+}
+
+impl GemStoneValleyHub {
+    pub fn get_requirement(&self) -> Option<UnlockRequirementItem> {
+        self.requirement
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
