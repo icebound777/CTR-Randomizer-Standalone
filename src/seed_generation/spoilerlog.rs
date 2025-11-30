@@ -2,7 +2,7 @@ use std::{io, path::PathBuf};
 
 use serde_json::{json, to_string_pretty};
 
-use crate::seed_generation::{game_world::{BattleArenaRewards, BossGarage, BossRaceRewards, BossRequirement, GemCupRewards, RelicRaceOnlyRewards, Rewards, TokensAndRelicRewards, TrophyRaceRewards, WarpPad}, randomization_datastructures::{GameSetup, UnlockRequirement}};
+use crate::seed_generation::{game_world::{BattleArenaRewards, BossGarage, BossRaceRewards, GemCupRewards, RelicRaceOnlyRewards, Rewards, TokensAndRelicRewards, TrophyRaceRewards, WarpPad}, randomization_datastructures::{GameSetup, UnlockRequirement, UnlockRequirementItem}};
 
 pub fn write_spoilerlog(
     new_rom_path: PathBuf,
@@ -131,13 +131,13 @@ fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
 
 fn get_formatted_bossgarage(bossgarage: BossGarage) -> serde_json::Value {
     match bossgarage.requirement {
-        BossRequirement::UnlockRequirement(UnlockRequirement{item_type, count}) => {
+        UnlockRequirement::Item(UnlockRequirementItem{item_type, count}) => {
             json!({
                 "unlock": format!("{} (x{})", item_type, count),
                 "reward": get_formatted_reward(bossgarage.reward)
             })
         },
-        BossRequirement::BossRequirement(x) => {
+        UnlockRequirement::LevelList(x) => {
             let level_list: String = x.iter().map(std::string::ToString::to_string).collect::<Vec<_>>().join(", ");
             json!({
                 "unlock": level_list,

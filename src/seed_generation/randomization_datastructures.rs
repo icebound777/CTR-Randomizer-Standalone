@@ -78,8 +78,14 @@ pub enum UnlockStage {
     Two,
 }
 
+#[derive(Debug, Clone)]
+pub enum UnlockRequirement {
+    Item(UnlockRequirementItem),
+    LevelList(Vec<LevelID>)
+}
+
 #[derive(Debug, Clone, Copy)]
-pub struct UnlockRequirement {
+pub struct UnlockRequirementItem {
     pub item_type: RequiredItem,
     pub count: u8,
 }

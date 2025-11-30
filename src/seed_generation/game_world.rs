@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::seed_generation::randomization_datastructures::{LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockStage};
+use crate::seed_generation::randomization_datastructures::{LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockRequirementItem, UnlockStage};
 
 #[derive(Debug, Clone)]
 pub struct GameWorld {
@@ -53,8 +53,8 @@ impl GameWorld {
         ])
     }
 
-    pub fn get_warppad_unlocks(&self) -> Vec<(LevelID, UnlockStage, Option<UnlockRequirement>)> {
-        fn add_single_warppad_unlocks(all_unlocks: &mut Vec<(LevelID, UnlockStage, Option<UnlockRequirement>)>, warp_pad: WarpPad) {
+    pub fn get_warppad_unlocks(&self) -> Vec<(LevelID, UnlockStage, Option<UnlockRequirementItem>)> {
+        fn add_single_warppad_unlocks(all_unlocks: &mut Vec<(LevelID, UnlockStage, Option<UnlockRequirementItem>)>, warp_pad: WarpPad) {
             all_unlocks.push((warp_pad.level_id, UnlockStage::One, warp_pad.unlock_1.requirement));
             if warp_pad.unlock_2.is_some() {
                 all_unlocks.push((warp_pad.level_id, UnlockStage::Two, warp_pad.unlock_2.expect("checked by if").requirement));
@@ -247,7 +247,7 @@ impl GameWorld {
 
     pub fn set_warppad_unlocks(
         &mut self,
-        warppad_unlocks: Vec<(LevelID, UnlockStage, Option<UnlockRequirement>)>
+        warppad_unlocks: Vec<(LevelID, UnlockStage, Option<UnlockRequirementItem>)>
     ) {
         // For each tuple in the `warppad_unlocks`-vec, the LevelID does not reference
         // the actual warp pad level target for which we have to modify the warp pad,
@@ -375,7 +375,7 @@ impl GameWorld {
         }
     }
 
-    pub fn set_garage_unlocks(&mut self, garage_unlocks: HashMap<BossCharacter, BossRequirement>) {
+    pub fn set_garage_unlocks(&mut self, garage_unlocks: HashMap<BossCharacter, UnlockRequirement>) {
         for (boss, req) in garage_unlocks {
             match boss {
                 BossCharacter::RipperRoo => {
@@ -400,7 +400,7 @@ impl GameWorld {
 
 #[derive(Debug, Clone)]
 pub struct GenericHub {
-    requirement: Option<UnlockRequirement>,
+    requirement: Option<UnlockRequirementItem>,
     pub warppad_1: WarpPad,
     pub warppad_2: WarpPad,
     pub warppad_3: WarpPad,
@@ -411,7 +411,7 @@ pub struct GenericHub {
 
 #[derive(Debug, Clone)]
 pub struct GemStoneValleyHub {
-    requirement: Option<UnlockRequirement>,
+    requirement: Option<UnlockRequirementItem>,
     pub warppad_1: WarpPad,
     pub warppad_2: WarpPad,
     pub cup_warppad_1: WarpPad,
@@ -435,38 +435,38 @@ impl WarpPad {
             // Cups
             LevelID::CupRed => {
                 RaceUnlock {
-                    requirement: Some(UnlockRequirement { item_type:RequiredItem::RedCtrToken, count: 4 }),
+                    requirement: Some(UnlockRequirementItem { item_type:RequiredItem::RedCtrToken, count: 4 }),
                     reward: Rewards::GemCupRewards(GemCupRewards { single_reward:RaceReward::RedGem })
                 }
             },
             LevelID::CupGreen => {
                 RaceUnlock {
-                    requirement: Some(UnlockRequirement { item_type:RequiredItem::GreenCtrToken, count: 4 }),
+                    requirement: Some(UnlockRequirementItem { item_type:RequiredItem::GreenCtrToken, count: 4 }),
                     reward: Rewards::GemCupRewards(GemCupRewards { single_reward:RaceReward::GreenGem })
                 }
             },
             LevelID::CupBlue => {
                 RaceUnlock {
-                    requirement: Some(UnlockRequirement { item_type:RequiredItem::BlueCtrToken, count: 4 }),
+                    requirement: Some(UnlockRequirementItem { item_type:RequiredItem::BlueCtrToken, count: 4 }),
                     reward: Rewards::GemCupRewards(GemCupRewards { single_reward:RaceReward::BlueGem })
                 }
             },
             LevelID::CupYellow => {
                 RaceUnlock {
-                    requirement: Some(UnlockRequirement { item_type:RequiredItem::YellowCtrToken, count: 4 }),
+                    requirement: Some(UnlockRequirementItem { item_type:RequiredItem::YellowCtrToken, count: 4 }),
                     reward: Rewards::GemCupRewards(GemCupRewards { single_reward:RaceReward::YellowGem })
                 }
             },
             LevelID::CupPurple => {
                 RaceUnlock {
-                    requirement: Some(UnlockRequirement { item_type:RequiredItem::PurpleCtrToken, count: 4 }),
+                    requirement: Some(UnlockRequirementItem { item_type:RequiredItem::PurpleCtrToken, count: 4 }),
                     reward: Rewards::GemCupRewards(GemCupRewards { single_reward:RaceReward::PurpleGem })
                 }
             },
             // Battle Arenas
             x @ (LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt) => {
                 RaceUnlock {
-                    requirement: Some(UnlockRequirement {
+                    requirement: Some(UnlockRequirementItem {
                         item_type: RequiredItem::Key,
                         count: if x == LevelID::SkullRock {
                             1
@@ -485,9 +485,9 @@ impl WarpPad {
             x @ (LevelID::TurboTrack | LevelID::SlideColiseum) => {
                 RaceUnlock {
                     requirement: if x == LevelID::TurboTrack {
-                        Some(UnlockRequirement { item_type:RequiredItem::AnyGem, count: 5 })
+                        Some(UnlockRequirementItem { item_type:RequiredItem::AnyGem, count: 5 })
                     } else {
-                        Some(UnlockRequirement { item_type:RequiredItem::SapphireRelic, count: 10 })
+                        Some(UnlockRequirementItem { item_type:RequiredItem::SapphireRelic, count: 10 })
                     },
                     reward: Rewards::RelicRaceOnlyRewards(RelicRaceOnlyRewards {
                         relic_sapphire_reward: RaceReward::SapphireRelic,
@@ -500,7 +500,7 @@ impl WarpPad {
             x => {
                 RaceUnlock {
                     reward: Rewards::TrophyRaceRewards(TrophyRaceRewards { trophy_reward: RaceReward::Trophy }),
-                    requirement: Some(UnlockRequirement { item_type: RequiredItem::Trophy, count:
+                    requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count:
                         if x == LevelID::CrashCove || x == LevelID::RoosTubes {
                             0
                         } else if x == LevelID::MysteryCaves {
@@ -559,7 +559,7 @@ impl WarpPad {
                 };
 
                 Some(RaceUnlock {
-                    requirement: Some(UnlockRequirement { item_type: RequiredItem::Key, count: key_count }),
+                    requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: key_count }),
                     reward: Rewards::TokensAndRelicRewards(TokensAndRelicRewards{
                         token_reward: token_color,
                         relic_sapphire_reward: RaceReward::SapphireRelic,
@@ -581,7 +581,7 @@ impl WarpPad {
         self.unlock_1
     }
 
-    pub fn set_unlock_1(&mut self, requirement: UnlockRequirement) {
+    pub fn set_unlock_1(&mut self, requirement: UnlockRequirementItem) {
         self.unlock_1.requirement = Some(requirement);
     }
 
@@ -589,7 +589,7 @@ impl WarpPad {
         self.unlock_2
     }
 
-    pub fn set_unlock_2(&mut self, requirement: UnlockRequirement) {
+    pub fn set_unlock_2(&mut self, requirement: UnlockRequirementItem) {
         if self.unlock_2.is_some()
         {
             self.unlock_2.unwrap().requirement = Some(requirement);
@@ -605,7 +605,7 @@ impl WarpPad {
 #[derive(Debug, Clone)]
 pub struct BossGarage {
     pub boss: BossCharacter,
-    pub requirement: BossRequirement,
+    pub requirement: UnlockRequirement,
     pub reward: Rewards,
 }
 
@@ -618,15 +618,9 @@ pub enum BossCharacter {
     NOxide,
 }
 
-#[derive(Debug, Clone)]
-pub enum BossRequirement {
-    UnlockRequirement(UnlockRequirement),
-    BossRequirement(Vec<LevelID>),
-}
-
 #[derive(Debug, Clone, Copy)]
 pub struct RaceUnlock {
-    pub requirement: Option<UnlockRequirement>,
+    pub requirement: Option<UnlockRequirementItem>,
     pub reward: Rewards,
 }
 
@@ -685,7 +679,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_4: WarpPad::new(LevelID::SewerSpeedway),
             boss_garage: BossGarage {
                 boss: BossCharacter::RipperRoo,
-                requirement: BossRequirement::BossRequirement(
+                requirement: UnlockRequirement::LevelList(
                     vec![
                         LevelID::CrashCove,
                         LevelID::RoosTubes,
@@ -700,14 +694,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_arena: WarpPad::new(LevelID::SkullRock),
         },
         hub_2: GenericHub {
-            requirement: Some(UnlockRequirement { item_type: RequiredItem::Key, count: 1 }),
+            requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 1 }),
             warppad_1: WarpPad::new(LevelID::CocoPark),
             warppad_2: WarpPad::new(LevelID::TigerTemple),
             warppad_3: WarpPad::new(LevelID::PapusPyramid),
             warppad_4: WarpPad::new(LevelID::DingoCanyon),
             boss_garage: BossGarage {
                 boss: BossCharacter::PapuPapu,
-                requirement: BossRequirement::BossRequirement(
+                requirement: UnlockRequirement::LevelList(
                     vec![
                         LevelID::CocoPark,
                         LevelID::TigerTemple,
@@ -720,14 +714,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_arena: WarpPad::new(LevelID::RampageRuins)
         },
         hub_3: GenericHub {
-            requirement: Some(UnlockRequirement { item_type: RequiredItem::Key, count: 2 }),
+            requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 2 }),
             warppad_1: WarpPad::new(LevelID::BlizzardBluff),
             warppad_2: WarpPad::new(LevelID::DragonMines),
             warppad_3: WarpPad::new(LevelID::PolarPass),
             warppad_4: WarpPad::new(LevelID::TinyArena),
             boss_garage: BossGarage {
                 boss: BossCharacter::KomodoJoe,
-                requirement: BossRequirement::BossRequirement(
+                requirement: UnlockRequirement::LevelList(
                     vec![
                         LevelID::BlizzardBluff,
                         LevelID::DragonMines,
@@ -740,14 +734,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_arena: WarpPad::new(LevelID::RockyRoad)
         },
         hub_4: GenericHub {
-            requirement: Some(UnlockRequirement { item_type: RequiredItem::Key, count: 3 }),
+            requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 3 }),
             warppad_1: WarpPad::new(LevelID::NGinLabs),
             warppad_2: WarpPad::new(LevelID::CortexCastle),
             warppad_3: WarpPad::new(LevelID::HotAirSkyway),
             warppad_4: WarpPad::new(LevelID::OxideStation),
             boss_garage: BossGarage {
                 boss: BossCharacter::Pinstripe,
-                requirement: BossRequirement::BossRequirement(
+                requirement: UnlockRequirement::LevelList(
                     vec![
                         LevelID::NGinLabs,
                         LevelID::CortexCastle,
@@ -760,7 +754,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             warppad_arena: WarpPad::new(LevelID::NitroCourt)
         },
         gemstone_valley: GemStoneValleyHub {
-            requirement: Some(UnlockRequirement { item_type: RequiredItem::Key, count: 1 }),
+            requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 1 }),
             warppad_1: WarpPad::new(LevelID::TurboTrack),
             warppad_2: WarpPad::new(LevelID::SlideColiseum),
             cup_warppad_1: WarpPad::new(LevelID::CupRed),
@@ -770,7 +764,7 @@ pub fn get_vanilla_gameworld() -> GameWorld {
             cup_warppad_5: WarpPad::new(LevelID::CupPurple),
             boss_garage: BossGarage {
                 boss: BossCharacter::NOxide,
-                requirement: BossRequirement::UnlockRequirement(UnlockRequirement{
+                requirement: UnlockRequirement::Item(UnlockRequirementItem{
                     item_type: RequiredItem::Key,
                     count: 4
                 }),

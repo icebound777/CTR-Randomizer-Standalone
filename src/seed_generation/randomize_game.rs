@@ -4,8 +4,8 @@ use rand::seq::SliceRandom;
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
-    game_world::{BossCharacter, BossRequirement, get_vanilla_gameworld}, randomization_datastructures::{
-        GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement
+    game_world::{BossCharacter, get_vanilla_gameworld}, randomization_datastructures::{
+        GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement, UnlockRequirementItem
     }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
 };
 
@@ -247,7 +247,7 @@ fn get_shuffled_warppads(
 fn get_modified_garage_unlocks(
     garage_unlock: BossGarageRequirements,
     level_links: HashMap<LevelID, LevelID>,
-) -> HashMap<BossCharacter, BossRequirement> {
+) -> HashMap<BossCharacter, UnlockRequirement> {
     let mut new_garage_unlocks;
 
     match garage_unlock {
@@ -256,7 +256,7 @@ fn get_modified_garage_unlocks(
             new_garage_unlocks = HashMap::new();
             new_garage_unlocks.insert(
                 BossCharacter::RipperRoo,
-                BossRequirement::BossRequirement(
+                UnlockRequirement::LevelList(
                     vec![
                         *level_links.get(&LevelID::CrashCove).expect("every level needs to be present in the level links"),
                         *level_links.get(&LevelID::RoosTubes).expect("every level needs to be present in the level links"),
@@ -267,7 +267,7 @@ fn get_modified_garage_unlocks(
             );
             new_garage_unlocks.insert(
                 BossCharacter::PapuPapu,
-                BossRequirement::BossRequirement(
+                UnlockRequirement::LevelList(
                     vec![
                         *level_links.get(&LevelID::TigerTemple).expect("every level needs to be present in the level links"),
                         *level_links.get(&LevelID::CocoPark).expect("every level needs to be present in the level links"),
@@ -278,7 +278,7 @@ fn get_modified_garage_unlocks(
             );
             new_garage_unlocks.insert(
                 BossCharacter::KomodoJoe,
-                BossRequirement::BossRequirement(
+                UnlockRequirement::LevelList(
                     vec![
                         *level_links.get(&LevelID::BlizzardBluff).expect("every level needs to be present in the level links"),
                         *level_links.get(&LevelID::DragonMines).expect("every level needs to be present in the level links"),
@@ -289,7 +289,7 @@ fn get_modified_garage_unlocks(
             );
             new_garage_unlocks.insert(
                 BossCharacter::Pinstripe,
-                BossRequirement::BossRequirement(
+                UnlockRequirement::LevelList(
                     vec![
                         *level_links.get(&LevelID::NGinLabs).expect("every level needs to be present in the level links"),
                         *level_links.get(&LevelID::CortexCastle).expect("every level needs to be present in the level links"),
@@ -303,28 +303,28 @@ fn get_modified_garage_unlocks(
             new_garage_unlocks = HashMap::from([
                 (
                     BossCharacter::RipperRoo,
-                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                    UnlockRequirement::Item(UnlockRequirementItem{
                         item_type: RequiredItem::Trophy,
                         count: 4
                     })
                 ),
                 (
                     BossCharacter::PapuPapu,
-                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                    UnlockRequirement::Item(UnlockRequirementItem{
                         item_type: RequiredItem::Trophy,
                         count: 8
                     })
                 ),
                 (
                     BossCharacter::KomodoJoe,
-                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                    UnlockRequirement::Item(UnlockRequirementItem{
                         item_type: RequiredItem::Trophy,
                         count: 12
                     })
                 ),
                 (
                     BossCharacter::Pinstripe,
-                    BossRequirement::UnlockRequirement(UnlockRequirement{
+                    UnlockRequirement::Item(UnlockRequirementItem{
                         item_type: RequiredItem::Trophy,
                         count: 16
                     })
