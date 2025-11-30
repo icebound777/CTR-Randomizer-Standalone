@@ -4,8 +4,8 @@ use rand::seq::SliceRandom;
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
-    game_world::get_vanilla_gameworld, randomization_datastructures::{
-        GameSetup, LevelID, SettingID, SettingValue
+    game_world::{BossCharacter, BossRequirement, get_vanilla_gameworld}, randomization_datastructures::{
+        GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement
     }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
 };
 
