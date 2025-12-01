@@ -15,41 +15,41 @@ impl GameWorld {
     pub fn get_warppad_links(&self) -> HashMap<LevelID, LevelID> {
         HashMap::from([
             // Hub 1 - N. Sanity Beach
-            (LevelID::CrashCove, self.hub_1.warppad_1.level_id),
-            (LevelID::RoosTubes, self.hub_1.warppad_2.level_id),
-            (LevelID::MysteryCaves, self.hub_1.warppad_3.level_id),
-            (LevelID::SewerSpeedway, self.hub_1.warppad_4.level_id),
-            (LevelID::SkullRock, self.hub_1.warppad_arena.level_id),
+            (self.hub_1.warppad_1.original_level_id, self.hub_1.warppad_1.current_level_id),
+            (self.hub_1.warppad_2.original_level_id, self.hub_1.warppad_2.current_level_id),
+            (self.hub_1.warppad_3.original_level_id, self.hub_1.warppad_3.current_level_id),
+            (self.hub_1.warppad_4.original_level_id, self.hub_1.warppad_4.current_level_id),
+            (self.hub_1.warppad_arena.original_level_id, self.hub_1.warppad_arena.current_level_id),
 
             // Hub 2 - Lost Temple
-            (LevelID::CocoPark, self.hub_2.warppad_1.level_id),
-            (LevelID::TigerTemple, self.hub_2.warppad_2.level_id),
-            (LevelID::PapusPyramid, self.hub_2.warppad_3.level_id),
-            (LevelID::DingoCanyon, self.hub_2.warppad_4.level_id),
-            (LevelID::RampageRuins, self.hub_2.warppad_arena.level_id),
+            (self.hub_2.warppad_1.original_level_id, self.hub_2.warppad_1.current_level_id),
+            (self.hub_2.warppad_2.original_level_id, self.hub_2.warppad_2.current_level_id),
+            (self.hub_2.warppad_3.original_level_id, self.hub_2.warppad_3.current_level_id),
+            (self.hub_2.warppad_4.original_level_id, self.hub_2.warppad_4.current_level_id),
+            (self.hub_2.warppad_arena.original_level_id, self.hub_2.warppad_arena.current_level_id),
 
             // Hub 3 - Glacial Park
-            (LevelID::BlizzardBluff, self.hub_3.warppad_1.level_id),
-            (LevelID::DragonMines, self.hub_3.warppad_2.level_id),
-            (LevelID::PolarPass, self.hub_3.warppad_3.level_id),
-            (LevelID::TinyArena, self.hub_3.warppad_4.level_id),
-            (LevelID::RockyRoad, self.hub_3.warppad_arena.level_id),
+            (self.hub_3.warppad_1.original_level_id, self.hub_3.warppad_1.current_level_id),
+            (self.hub_3.warppad_2.original_level_id, self.hub_3.warppad_2.current_level_id),
+            (self.hub_3.warppad_3.original_level_id, self.hub_3.warppad_3.current_level_id),
+            (self.hub_3.warppad_4.original_level_id, self.hub_3.warppad_4.current_level_id),
+            (self.hub_3.warppad_arena.original_level_id, self.hub_3.warppad_arena.current_level_id),
 
             // Hub 4 - Citadel City
-            (LevelID::NGinLabs, self.hub_4.warppad_1.level_id),
-            (LevelID::CortexCastle, self.hub_4.warppad_2.level_id),
-            (LevelID::HotAirSkyway, self.hub_4.warppad_3.level_id),
-            (LevelID::OxideStation, self.hub_4.warppad_4.level_id),
-            (LevelID::NitroCourt, self.hub_4.warppad_arena.level_id),
+            (self.hub_4.warppad_1.original_level_id, self.hub_4.warppad_1.current_level_id),
+            (self.hub_4.warppad_2.original_level_id, self.hub_4.warppad_2.current_level_id),
+            (self.hub_4.warppad_3.original_level_id, self.hub_4.warppad_3.current_level_id),
+            (self.hub_4.warppad_4.original_level_id, self.hub_4.warppad_4.current_level_id),
+            (self.hub_4.warppad_arena.original_level_id, self.hub_4.warppad_arena.current_level_id),
 
             // Hub 5? - Gem Stone Valley
-            (LevelID::TurboTrack, self.gemstone_valley.warppad_1.level_id),
-            (LevelID::SlideColiseum, self.gemstone_valley.warppad_2.level_id),
-            (LevelID::CupRed, self.gemstone_valley.cup_warppad_1.level_id),
-            (LevelID::CupGreen, self.gemstone_valley.cup_warppad_2.level_id),
-            (LevelID::CupBlue, self.gemstone_valley.cup_warppad_3.level_id),
-            (LevelID::CupYellow, self.gemstone_valley.cup_warppad_4.level_id),
-            (LevelID::CupPurple, self.gemstone_valley.cup_warppad_5.level_id),
+            (self.gemstone_valley.warppad_1.original_level_id, self.gemstone_valley.warppad_1.current_level_id),
+            (self.gemstone_valley.warppad_2.original_level_id, self.gemstone_valley.warppad_2.current_level_id),
+            (self.gemstone_valley.cup_warppad_1.original_level_id, self.gemstone_valley.cup_warppad_1.current_level_id),
+            (self.gemstone_valley.cup_warppad_2.original_level_id, self.gemstone_valley.cup_warppad_2.current_level_id),
+            (self.gemstone_valley.cup_warppad_3.original_level_id, self.gemstone_valley.cup_warppad_3.current_level_id),
+            (self.gemstone_valley.cup_warppad_4.original_level_id, self.gemstone_valley.cup_warppad_4.current_level_id),
+            (self.gemstone_valley.cup_warppad_5.original_level_id, self.gemstone_valley.cup_warppad_5.current_level_id),
         ])
     }
 
@@ -58,10 +58,10 @@ impl GameWorld {
             all_unlocks: &mut HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
             warp_pad: WarpPad
         ) {
-            all_unlocks.insert((warp_pad.level_id, UnlockStage::One), warp_pad.unlock_1.requirement);
+            all_unlocks.insert((warp_pad.current_level_id, UnlockStage::One), warp_pad.unlock_1.requirement);
             if warp_pad.unlock_2.is_some() {
                 all_unlocks.insert(
-                    (warp_pad.level_id, UnlockStage::Two),
+                    (warp_pad.current_level_id, UnlockStage::Two),
                     warp_pad.unlock_2.expect("checked by if").requirement
                 );
             }
@@ -148,9 +148,9 @@ impl GameWorld {
                 }
             }
 
-            add_single_reward(all_warppad_rewards, warp_pad.level_id,  warp_pad.unlock_1);
+            add_single_reward(all_warppad_rewards, warp_pad.current_level_id,  warp_pad.unlock_1);
             if warp_pad.unlock_2.is_some() {
-                add_single_reward(all_warppad_rewards, warp_pad.level_id,  warp_pad.unlock_2.expect("checked by if"));
+                add_single_reward(all_warppad_rewards, warp_pad.current_level_id,  warp_pad.unlock_2.expect("checked by if"));
             }
         }
 
@@ -212,41 +212,41 @@ impl GameWorld {
         for (key, value) in new_links {
             match key {
                 // Hub 1 - N. Sanity Beach
-                LevelID::CrashCove => {self.hub_1.warppad_1 = WarpPad::new(value)},
-                LevelID::RoosTubes => {self.hub_1.warppad_2 = WarpPad::new(value)},
-                LevelID::MysteryCaves => {self.hub_1.warppad_3 = WarpPad::new(value)},
-                LevelID::SewerSpeedway => {self.hub_1.warppad_4 = WarpPad::new(value)},
-                LevelID::SkullRock => {self.hub_1.warppad_arena = WarpPad::new(value)},
+                LevelID::CrashCove => {self.hub_1.warppad_1 = WarpPad::new(LevelID::CrashCove, value)},
+                LevelID::RoosTubes => {self.hub_1.warppad_2 = WarpPad::new(LevelID::RoosTubes, value)},
+                LevelID::MysteryCaves => {self.hub_1.warppad_3 = WarpPad::new(LevelID::MysteryCaves, value)},
+                LevelID::SewerSpeedway => {self.hub_1.warppad_4 = WarpPad::new(LevelID::SewerSpeedway, value)},
+                LevelID::SkullRock => {self.hub_1.warppad_arena = WarpPad::new(LevelID::SkullRock, value)},
 
                 // Hub 2 - Lost Temple
-                LevelID::CocoPark => {self.hub_2.warppad_1 = WarpPad::new(value)},
-                LevelID::TigerTemple => {self.hub_2.warppad_2 = WarpPad::new(value)},
-                LevelID::PapusPyramid => {self.hub_2.warppad_3 = WarpPad::new(value)},
-                LevelID::DingoCanyon => {self.hub_2.warppad_4 = WarpPad::new(value)},
-                LevelID::RampageRuins => {self.hub_2.warppad_arena = WarpPad::new(value)},
+                LevelID::CocoPark => {self.hub_2.warppad_1 = WarpPad::new(LevelID::CocoPark, value)},
+                LevelID::TigerTemple => {self.hub_2.warppad_2 = WarpPad::new(LevelID::TigerTemple, value)},
+                LevelID::PapusPyramid => {self.hub_2.warppad_3 = WarpPad::new(LevelID::PapusPyramid, value)},
+                LevelID::DingoCanyon => {self.hub_2.warppad_4 = WarpPad::new(LevelID::DingoCanyon, value)},
+                LevelID::RampageRuins => {self.hub_2.warppad_arena = WarpPad::new(LevelID::RampageRuins, value)},
 
                 // Hub 3 - Glacial Park
-                LevelID::BlizzardBluff => {self.hub_3.warppad_1 = WarpPad::new(value)},
-                LevelID::DragonMines => {self.hub_3.warppad_2 = WarpPad::new(value)},
-                LevelID::PolarPass => {self.hub_3.warppad_3 = WarpPad::new(value)},
-                LevelID::TinyArena => {self.hub_3.warppad_4 = WarpPad::new(value)},
-                LevelID::RockyRoad => {self.hub_3.warppad_arena = WarpPad::new(value)},
+                LevelID::BlizzardBluff => {self.hub_3.warppad_1 = WarpPad::new(LevelID::BlizzardBluff, value)},
+                LevelID::DragonMines => {self.hub_3.warppad_2 = WarpPad::new(LevelID::DragonMines, value)},
+                LevelID::PolarPass => {self.hub_3.warppad_3 = WarpPad::new(LevelID::PolarPass, value)},
+                LevelID::TinyArena => {self.hub_3.warppad_4 = WarpPad::new(LevelID::TinyArena, value)},
+                LevelID::RockyRoad => {self.hub_3.warppad_arena = WarpPad::new(LevelID::RockyRoad, value)},
 
                 // Hub 4 - Citadel City
-                LevelID::NGinLabs => {self.hub_4.warppad_1 = WarpPad::new(value)},
-                LevelID::CortexCastle => {self.hub_4.warppad_2 = WarpPad::new(value)},
-                LevelID::HotAirSkyway => {self.hub_4.warppad_3 = WarpPad::new(value)},
-                LevelID::OxideStation => {self.hub_4.warppad_4 = WarpPad::new(value)},
-                LevelID::NitroCourt => {self.hub_4.warppad_arena = WarpPad::new(value)},
+                LevelID::NGinLabs => {self.hub_4.warppad_1 = WarpPad::new(LevelID::NGinLabs, value)},
+                LevelID::CortexCastle => {self.hub_4.warppad_2 = WarpPad::new(LevelID::CortexCastle, value)},
+                LevelID::HotAirSkyway => {self.hub_4.warppad_3 = WarpPad::new(LevelID::HotAirSkyway, value)},
+                LevelID::OxideStation => {self.hub_4.warppad_4 = WarpPad::new(LevelID::OxideStation, value)},
+                LevelID::NitroCourt => {self.hub_4.warppad_arena = WarpPad::new(LevelID::NitroCourt, value)},
 
                 // Hub 5? - Gem Stone Valley
-                LevelID::TurboTrack => {self.gemstone_valley.warppad_1 = WarpPad::new(value)},
-                LevelID::SlideColiseum => {self.gemstone_valley.warppad_2 = WarpPad::new(value)},
-                LevelID::CupRed => {self.gemstone_valley.cup_warppad_1 = WarpPad::new(value)},
-                LevelID::CupGreen => {self.gemstone_valley.cup_warppad_2 = WarpPad::new(value)},
-                LevelID::CupBlue => {self.gemstone_valley.cup_warppad_3 = WarpPad::new(value)},
-                LevelID::CupYellow => {self.gemstone_valley.cup_warppad_4 = WarpPad::new(value)},
-                LevelID::CupPurple => {self.gemstone_valley.cup_warppad_5 = WarpPad::new(value)},
+                LevelID::TurboTrack => {self.gemstone_valley.warppad_1 = WarpPad::new(LevelID::TurboTrack, value)},
+                LevelID::SlideColiseum => {self.gemstone_valley.warppad_2 = WarpPad::new(LevelID::SlideColiseum, value)},
+                LevelID::CupRed => {self.gemstone_valley.cup_warppad_1 = WarpPad::new(LevelID::CupRed, value)},
+                LevelID::CupGreen => {self.gemstone_valley.cup_warppad_2 = WarpPad::new(LevelID::CupGreen, value)},
+                LevelID::CupBlue => {self.gemstone_valley.cup_warppad_3 = WarpPad::new(LevelID::CupBlue, value)},
+                LevelID::CupYellow => {self.gemstone_valley.cup_warppad_4 = WarpPad::new(LevelID::CupYellow, value)},
+                LevelID::CupPurple => {self.gemstone_valley.cup_warppad_5 = WarpPad::new(LevelID::CupPurple, value)},
             }
         }
     }
@@ -442,14 +442,15 @@ impl GemStoneValleyHub {
 
 #[derive(Debug, Clone, Copy)]
 pub struct WarpPad {
-    level_id: LevelID,
+    original_level_id: LevelID,
+    current_level_id: LevelID,
     unlock_1: RaceUnlock,
     unlock_2: Option<RaceUnlock>,
 }
 
 impl WarpPad {
-    pub fn new(level_id: LevelID) -> Self {
-        let unlock_1 = match level_id {
+    pub fn new(original_level_id: LevelID, current_level_id: LevelID) -> Self {
+        let unlock_1 = match current_level_id {
             // Cups
             LevelID::CupRed => {
                 RaceUnlock {
@@ -551,7 +552,7 @@ impl WarpPad {
             }
         };
 
-        let unlock_2 = match level_id {
+        let unlock_2 = match current_level_id {
             // Gem Cups, Battle Arenas, TT / SC
             LevelID::SlideColiseum | LevelID::TurboTrack | LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt | LevelID::CupRed | LevelID::CupGreen | LevelID::CupBlue | LevelID::CupYellow | LevelID::CupPurple => None,
 
@@ -588,11 +589,11 @@ impl WarpPad {
             },
         };
 
-        WarpPad { level_id, unlock_1, unlock_2 }
+        WarpPad { original_level_id, current_level_id, unlock_1, unlock_2 }
     }
 
     pub fn get_levelid(&self) -> LevelID {
-        self.level_id
+        self.current_level_id
     }
 
     pub fn get_unlock_1(&self) -> RaceUnlock {
@@ -691,10 +692,10 @@ pub fn get_vanilla_gameworld() -> GameWorld {
     GameWorld {
         hub_1: GenericHub {
             requirement: None,
-            warppad_1: WarpPad::new(LevelID::CrashCove),
-            warppad_2: WarpPad::new(LevelID::RoosTubes),
-            warppad_3: WarpPad::new(LevelID::MysteryCaves),
-            warppad_4: WarpPad::new(LevelID::SewerSpeedway),
+            warppad_1: WarpPad::new(LevelID::CrashCove, LevelID::CrashCove),
+            warppad_2: WarpPad::new(LevelID::RoosTubes, LevelID::RoosTubes),
+            warppad_3: WarpPad::new(LevelID::MysteryCaves, LevelID::MysteryCaves),
+            warppad_4: WarpPad::new(LevelID::SewerSpeedway, LevelID::SewerSpeedway),
             boss_garage: BossGarage {
                 boss: BossCharacter::RipperRoo,
                 requirement: UnlockRequirement::LevelList(
@@ -709,14 +710,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                     single_reward: RaceReward::Key
                 })
             },
-            warppad_arena: WarpPad::new(LevelID::SkullRock),
+            warppad_arena: WarpPad::new(LevelID::SkullRock, LevelID::SkullRock),
         },
         hub_2: GenericHub {
             requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 1 }),
-            warppad_1: WarpPad::new(LevelID::CocoPark),
-            warppad_2: WarpPad::new(LevelID::TigerTemple),
-            warppad_3: WarpPad::new(LevelID::PapusPyramid),
-            warppad_4: WarpPad::new(LevelID::DingoCanyon),
+            warppad_1: WarpPad::new(LevelID::CocoPark, LevelID::CocoPark),
+            warppad_2: WarpPad::new(LevelID::TigerTemple, LevelID::TigerTemple),
+            warppad_3: WarpPad::new(LevelID::PapusPyramid, LevelID::PapusPyramid),
+            warppad_4: WarpPad::new(LevelID::DingoCanyon, LevelID::DingoCanyon),
             boss_garage: BossGarage {
                 boss: BossCharacter::PapuPapu,
                 requirement: UnlockRequirement::LevelList(
@@ -729,14 +730,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::Key })
             },
-            warppad_arena: WarpPad::new(LevelID::RampageRuins)
+            warppad_arena: WarpPad::new(LevelID::RampageRuins, LevelID::RampageRuins)
         },
         hub_3: GenericHub {
             requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 2 }),
-            warppad_1: WarpPad::new(LevelID::BlizzardBluff),
-            warppad_2: WarpPad::new(LevelID::DragonMines),
-            warppad_3: WarpPad::new(LevelID::PolarPass),
-            warppad_4: WarpPad::new(LevelID::TinyArena),
+            warppad_1: WarpPad::new(LevelID::BlizzardBluff, LevelID::BlizzardBluff),
+            warppad_2: WarpPad::new(LevelID::DragonMines, LevelID::DragonMines),
+            warppad_3: WarpPad::new(LevelID::PolarPass, LevelID::PolarPass),
+            warppad_4: WarpPad::new(LevelID::TinyArena, LevelID::TinyArena),
             boss_garage: BossGarage {
                 boss: BossCharacter::KomodoJoe,
                 requirement: UnlockRequirement::LevelList(
@@ -749,14 +750,14 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::Key })
             },
-            warppad_arena: WarpPad::new(LevelID::RockyRoad)
+            warppad_arena: WarpPad::new(LevelID::RockyRoad, LevelID::RockyRoad)
         },
         hub_4: GenericHub {
             requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 3 }),
-            warppad_1: WarpPad::new(LevelID::NGinLabs),
-            warppad_2: WarpPad::new(LevelID::CortexCastle),
-            warppad_3: WarpPad::new(LevelID::HotAirSkyway),
-            warppad_4: WarpPad::new(LevelID::OxideStation),
+            warppad_1: WarpPad::new(LevelID::NGinLabs, LevelID::NGinLabs),
+            warppad_2: WarpPad::new(LevelID::CortexCastle, LevelID::CortexCastle),
+            warppad_3: WarpPad::new(LevelID::HotAirSkyway, LevelID::HotAirSkyway),
+            warppad_4: WarpPad::new(LevelID::OxideStation, LevelID::OxideStation),
             boss_garage: BossGarage {
                 boss: BossCharacter::Pinstripe,
                 requirement: UnlockRequirement::LevelList(
@@ -769,17 +770,17 @@ pub fn get_vanilla_gameworld() -> GameWorld {
                 ),
                 reward: Rewards::BossRaceRewards(BossRaceRewards { single_reward: RaceReward::Key })
             },
-            warppad_arena: WarpPad::new(LevelID::NitroCourt)
+            warppad_arena: WarpPad::new(LevelID::NitroCourt, LevelID::NitroCourt)
         },
         gemstone_valley: GemStoneValleyHub {
             requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Key, count: 1 }),
-            warppad_1: WarpPad::new(LevelID::TurboTrack),
-            warppad_2: WarpPad::new(LevelID::SlideColiseum),
-            cup_warppad_1: WarpPad::new(LevelID::CupRed),
-            cup_warppad_2: WarpPad::new(LevelID::CupGreen),
-            cup_warppad_3: WarpPad::new(LevelID::CupBlue),
-            cup_warppad_4: WarpPad::new(LevelID::CupYellow),
-            cup_warppad_5: WarpPad::new(LevelID::CupPurple),
+            warppad_1: WarpPad::new(LevelID::TurboTrack, LevelID::TurboTrack),
+            warppad_2: WarpPad::new(LevelID::SlideColiseum, LevelID::SlideColiseum),
+            cup_warppad_1: WarpPad::new(LevelID::CupRed, LevelID::CupRed),
+            cup_warppad_2: WarpPad::new(LevelID::CupGreen, LevelID::CupGreen),
+            cup_warppad_3: WarpPad::new(LevelID::CupBlue, LevelID::CupBlue),
+            cup_warppad_4: WarpPad::new(LevelID::CupYellow, LevelID::CupYellow),
+            cup_warppad_5: WarpPad::new(LevelID::CupPurple, LevelID::CupPurple),
             boss_garage: BossGarage {
                 boss: BossCharacter::NOxide,
                 requirement: UnlockRequirement::Item(UnlockRequirementItem{
