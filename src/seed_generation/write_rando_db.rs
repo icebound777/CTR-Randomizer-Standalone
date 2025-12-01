@@ -49,7 +49,7 @@ fn get_database_vec(randomized_game: &GameSetup) -> Vec<u8> {
     // Warppad Unlocks
     let db_prefix_unlock_1: u32 = 0xA200;
     let db_prefix_unlock_2: u32 = 0xA300;
-    for (level_id, unlock_stage, requirement) in randomized_game.game_world.get_warppad_unlocks() {
+    for ((level_id, unlock_stage), requirement) in randomized_game.game_world.get_warppad_unlocks() {
         let cur_db_prefix = if unlock_stage == UnlockStage::Two {
             db_prefix_unlock_2
         } else {
