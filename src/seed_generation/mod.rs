@@ -1,3 +1,4 @@
+pub mod item_randomization;
 pub mod randomization_datastructures;
 pub mod randomize_game;
 pub mod rom_patching;

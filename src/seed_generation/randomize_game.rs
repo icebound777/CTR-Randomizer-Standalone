@@ -4,7 +4,7 @@ use rand::seq::SliceRandom;
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
-    game_world::{BossCharacter, get_vanilla_gameworld}, randomization_datastructures::{
+    game_world::{BossCharacter, get_vanilla_gameworld}, item_randomization::randomize_items::get_shuffled_rewards, randomization_datastructures::{
         GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement, UnlockRequirementItem
     }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
 };
@@ -38,7 +38,6 @@ fn get_vanilla_game() -> GameSetup {
 pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> GameSetup {
     let vanilla_gameworld = get_vanilla_game().game_world;
     let mut new_game_world = vanilla_gameworld.clone();
-    let mut new_race_rewards = &new_game_world.get_race_rewards();
 
     let overwrite_seed_hash_1;
     let overwrite_seed_hash_2;
@@ -82,6 +81,18 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
         }
 
         // Race Rewards
+        if let Some(reward_shuffle) = &chosen_settings.randomization.shuffle_race_rewards {
+            let new_reward_placement = get_shuffled_rewards(
+                &mut seed,
+                reward_shuffle,
+                new_game_world.get_warppad_links(),
+                new_game_world.get_warppad_unlocks(),
+                new_game_world.get_garage_unlocks(),
+                new_game_world.get_hub_requirements(),
+            );
+
+            //new_game_world.set_rewards(new_reward_placement);
+        }
     } else {
         overwrite_seed_hash_1 = 0u16;
         overwrite_seed_hash_2 = 0u16;
@@ -156,7 +167,7 @@ fn get_shuffled_warppads(
     if !include_battle_arenas || vanilla_unlock_requirements {
         let level_map = if !include_battle_arenas {
             &mut untouched_levels
-        } else {
+        } else { // vanilla_unlock_requirements
             // if vanilla warppad unlocks but warppad shuffle, then
             // dont put non-trophypads into trophy pads
             &mut pre_randomized_levels
@@ -204,7 +215,7 @@ fn get_shuffled_warppads(
 
     // Shuffle pre_randomized level values, but make sure a gem cup does not end
     // up in the turbo track warp pad (requiring 5 gems to access)
-    if pre_randomized_levels.len() > 0 {
+    if !pre_randomized_levels.is_empty() {
         loop {
             let pre_randomized_levels_clone = pre_randomized_levels.clone();
             let mut level_values: Vec<&LevelID> = pre_randomized_levels_clone.values().collect::<Vec<_>>();
@@ -217,7 +228,11 @@ fn get_shuffled_warppads(
                 pre_randomized_levels.insert(*level_key, *level_values.pop().expect("Same size as target vec."));
             }
 
-            if !vec![LevelID::CupRed, LevelID::CupGreen, LevelID::CupBlue, LevelID::CupYellow, LevelID::CupPurple].contains(pre_randomized_levels.get(&LevelID::TurboTrack).expect("checked by first part of if")) {
+            if ![LevelID::CupRed, LevelID::CupGreen, LevelID::CupBlue, LevelID::CupYellow, LevelID::CupPurple]
+                .contains(pre_randomized_levels
+                    .get(&LevelID::TurboTrack)
+                    .expect("checked by first part of if"))
+            {
                 break
             }
             // if we get here: Gem Cup in TT location, reshuffle!

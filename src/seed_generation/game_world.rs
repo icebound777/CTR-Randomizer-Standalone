@@ -381,6 +381,31 @@ impl GameWorld {
         }
     }
 
+    pub fn get_garage_unlocks(&self) -> HashMap<BossCharacter, UnlockRequirement> {
+        HashMap::from([
+            (
+                BossCharacter::RipperRoo,
+                self.hub_1.boss_garage.requirement.clone()
+            ),
+            (
+                BossCharacter::PapuPapu,
+                self.hub_2.boss_garage.requirement.clone()
+            ),
+            (
+                BossCharacter::KomodoJoe,
+                self.hub_3.boss_garage.requirement.clone()
+            ),
+            (
+                BossCharacter::Pinstripe,
+                self.hub_4.boss_garage.requirement.clone()
+            ),
+            (
+                BossCharacter::NOxide,
+                self.gemstone_valley.boss_garage.requirement.clone()
+            ),
+        ])
+    }
+
     pub fn set_garage_unlocks(&mut self, garage_unlocks: HashMap<BossCharacter, UnlockRequirement>) {
         for (boss, req) in garage_unlocks {
             match boss {
@@ -402,6 +427,25 @@ impl GameWorld {
             };
         }
     }
+
+    pub fn get_hub_requirements(&self) -> HashMap<Hubs, Option<UnlockRequirementItem>> {
+        HashMap::from([
+            (Hubs::NSanityBeach, self.hub_1.requirement),
+            (Hubs::GemStoneValley, self.gemstone_valley.requirement),
+            (Hubs::TheLostRuins, self.hub_2.requirement),
+            (Hubs::GlacierPark, self.hub_3.requirement),
+            (Hubs::CitadelCity, self.hub_4.requirement),
+        ])
+    }
+}
+
+#[derive(PartialEq, Eq, Hash)]
+pub enum Hubs {
+    NSanityBeach,
+    GemStoneValley,
+    TheLostRuins,
+    GlacierPark,
+    CitadelCity,
 }
 
 #[derive(Debug, Clone)]
@@ -415,12 +459,6 @@ pub struct GenericHub {
     pub warppad_arena: WarpPad,
 }
 
-impl GenericHub {
-    pub fn get_requirement(&self) -> Option<UnlockRequirementItem> {
-        self.requirement
-    }
-}
-
 #[derive(Debug, Clone)]
 pub struct GemStoneValleyHub {
     requirement: Option<UnlockRequirementItem>,
@@ -432,12 +470,6 @@ pub struct GemStoneValleyHub {
     pub cup_warppad_4: WarpPad,
     pub cup_warppad_5: WarpPad,
     pub boss_garage: BossGarage,
-}
-
-impl GemStoneValleyHub {
-    pub fn get_requirement(&self) -> Option<UnlockRequirementItem> {
-        self.requirement
-    }
 }
 
 #[derive(Debug, Clone, Copy)]

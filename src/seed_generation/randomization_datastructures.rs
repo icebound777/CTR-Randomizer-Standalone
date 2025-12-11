@@ -138,7 +138,7 @@ impl std::fmt::Display for RequiredItem {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 #[repr(u16)]
 pub enum RaceType {
     TrophyRace = 98,
