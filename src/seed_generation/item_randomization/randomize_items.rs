@@ -492,7 +492,8 @@ fn get_item_placement(
         }
 
         // Pick one random empty location, and place our new item there
-        let reachable_empty_locations_clone = reachable_empty_locations.clone();
+        let mut reachable_empty_locations_clone = reachable_empty_locations.clone();
+        reachable_empty_locations_clone.sort();
         let chosen_location = reachable_empty_locations_clone.choose(seed).unwrap();
         println!("{chosen_location:?}: {item_to_place}");
         item_placement.get_mut(chosen_location).unwrap().1 = Some(item_to_place);
