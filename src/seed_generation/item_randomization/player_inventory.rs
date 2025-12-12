@@ -2,6 +2,7 @@ use crate::seed_generation::randomization_datastructures::{
     LevelID, RaceReward, RequiredItem, UnlockRequirement
 };
 
+#[derive(Debug)]
 pub struct PlayerInventory {
     num_trophies: u8,
     num_ctr_tokens_red: u8,
@@ -174,6 +175,7 @@ impl Default for PlayerInventory {
     }
 }
 
+#[derive(Debug)]
 struct GemFlags {
     red_gem: bool,
     green_gem: bool,

@@ -132,7 +132,14 @@ pub fn get_shuffled_rewards(
     );
 
     // run and return item placement
-    get_item_placement(seed, item_pool, reward_shuffle, location_list)
+    for attempts in 0..11 {
+        let placement_result = get_item_placement(seed, item_pool.clone(), reward_shuffle, location_list.clone());
+        if let Ok(x) = placement_result {
+            println!("Item placement needed {attempts} attempts.");
+            return x;
+        }
+    }
+    panic!()
 }
 
 fn get_location_list(
@@ -382,7 +389,7 @@ fn get_item_placement(
     mut item_pool: Vec<RaceReward>,
     reward_shuffle: &RewardShuffle,
     location_list: HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
-) -> HashMap<(LevelID, RaceType), RaceReward> {
+) -> Result<(HashMap<(LevelID, RaceType), RaceReward>), String> {
     let mut item_placement: HashMap<(LevelID, RaceType), (Vec<UnlockRequirement>, Option<RaceReward>)> = HashMap::new();
 
     // Enrich location data with an empty slot for items
@@ -390,6 +397,8 @@ fn get_item_placement(
         item_placement.insert(k, (v, None));
     }
 
+    // Pre-place items that cannot be shuffled
+    item_placement.get_mut(&(LevelID::OxideStation, RaceType::BossRace)).unwrap().1 = Some(RaceReward::BeatTheGame);
     // Pre-place items that the player does not want shuffled
     if !reward_shuffle.include_platinum_relics {
         item_placement.get_mut(&(LevelID::CrashCove, RaceType::RelicRacePlatinum)).unwrap().1 = Some(RaceReward::PlatinumRelic);
@@ -428,12 +437,17 @@ fn get_item_placement(
     }
 
     item_pool.shuffle(seed);
+    // Guarantee keys and trophies are placed first
+    item_pool.sort_by_key(|k| matches!(k, RaceReward::Trophy));
+    item_pool.sort_by_key(|k| matches!(k, RaceReward::Key));
 
     let mut num_placed_items = 0;
+    let mut item_placement_success = true;
 
     // While there are any unfilled item locations left, attempt placing items
     while item_placement.iter().any(|x| x.1.1.is_none()) && !item_pool.is_empty() {
         let item_to_place = item_pool.pop().expect("checked by while");
+        println!("{item_to_place:?}");
 
         // Initialize player inventory with all items yet to be placed, except
         // for the one item we want to place right now
@@ -470,34 +484,47 @@ fn get_item_placement(
         if reachable_empty_locations.is_empty() {
             print!("{num_placed_items} placed before abort - ");
             print!("reachable_empty_locations.is_empty()");
-            panic!()
+            println!("{inventory:?}");
+            println!("{item_pool:?}");
+            println!("{item_placement:?}");
+            item_placement_success = false;
+            break;
         }
 
         // Pick one random empty location, and place our new item there
         let reachable_empty_locations_clone = reachable_empty_locations.clone();
         let chosen_location = reachable_empty_locations_clone.choose(seed).unwrap();
+        println!("{chosen_location:?}: {item_to_place}");
         item_placement.get_mut(chosen_location).unwrap().1 = Some(item_to_place);
 
         num_placed_items += 1;
     }
 
-    if !item_pool.is_empty() {
-        print!("{num_placed_items} placed before abort - ");
-        print!("!item_pool.is_empty()");
-        panic!()
-    }
-    if item_placement.iter().any(|x| x.1.1.is_none()) {
-        print!("{num_placed_items} placed before abort - ");
-        print!("item_placement still has empty item locations");
-        panic!()
-    }
+    if item_placement_success {
+        if !item_pool.is_empty() {
+            print!("{num_placed_items} placed before abort - ");
+            print!("!item_pool.is_empty()");
+            println!("{item_pool:?}");
+            println!("{item_placement:?}");
+            panic!()
+        }
+        if item_placement.iter().any(|x| x.1.1.is_none()) {
+            print!("{num_placed_items} placed before abort - ");
+            print!("item_placement still has empty item locations");
+            println!("{item_pool:?}");
+            println!("{item_placement:?}");
+            panic!()
+        }
 
-    // Throw out the requirements; we no longer need them
-    let mut filtered_item_placement = HashMap::new();
+        // Throw out the requirements; we no longer need them
+        let mut filtered_item_placement = HashMap::new();
 
-    for (k, (_, reward)) in item_placement {
-        filtered_item_placement.insert(k, reward.expect("checked by if above"));
+        for (k, (_, reward)) in item_placement {
+            filtered_item_placement.insert(k, reward.expect("checked by if above"));
+        }
+
+        Ok(filtered_item_placement)
+    } else {
+        Err("Item placement failed.".to_string())
     }
-
-    filtered_item_placement
 }

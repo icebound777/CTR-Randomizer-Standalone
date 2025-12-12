@@ -7,7 +7,12 @@ use crate::seed_generation::seed_settings::SeedSettings;
 use crate::seed_generation::spoilerlog::write_spoilerlog;
 use crate::seed_generation::write_rando_db::write_db_to_rom;
 
+use std::time::Instant;
+
+
 pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<(), &'a str> {
+    let now = Instant::now();
+
     let mut seed: u32;
     loop {
         seed = rand::random::<u32>();
@@ -21,6 +26,9 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
     // randomize game
     let rng = ChaCha8Rng::seed_from_u64(u64::from(seed));
     let randomized_game = get_randomized_game(rng, seed, chosen_settings);
+
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
 
     // apply base mod patch to rom
     let filepath_new_rom = apply_patchfile(rom_filepath, seed);
