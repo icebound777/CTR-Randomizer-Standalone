@@ -643,7 +643,12 @@ impl WarpPad {
     pub fn set_unlock_2(&mut self, requirement: UnlockRequirementItem) {
         if self.unlock_2.is_some()
         {
-            self.unlock_2.unwrap().requirement = Some(requirement);
+            self.unlock_2 = Some(
+                RaceUnlock{
+                    requirement: Some(requirement),
+                    reward: self.unlock_2.expect("checked by if").reward
+                }
+            );
         } else {
             panic!(
                 "Attempting to set unlock_2 on warppad of levelID {} that doesn't have an unlock_2",
