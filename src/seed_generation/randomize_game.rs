@@ -91,7 +91,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 new_game_world.get_hub_requirements(),
             );
 
-            //new_game_world.set_rewards(new_reward_placement);
+            new_game_world.set_rewards(new_reward_placement);
         }
     } else {
         overwrite_seed_hash_1 = 0u16;

@@ -437,6 +437,309 @@ impl GameWorld {
             (Hubs::CitadelCity, self.hub_4.requirement),
         ])
     }
+
+    pub fn set_rewards(&mut self, reward_placement: HashMap<(LevelID, RaceType), RaceReward>) {
+        let current_warppad_links = self.get_warppad_links();
+        let inverted_warppad_links: HashMap<LevelID, LevelID> = current_warppad_links.iter().map(|(k, v)| (*v, *k)).collect();
+
+        for ((level, race), new_reward) in reward_placement {
+            let race_location = inverted_warppad_links.get(&level).unwrap();
+            let warppad_to_edit = match race_location {
+                LevelID::CrashCove  => {
+                    &mut self.hub_1.warppad_1
+                },
+                LevelID::RoosTubes  => {
+                    &mut self.hub_1.warppad_2
+                },
+                LevelID::MysteryCaves  => {
+                    &mut self.hub_1.warppad_3
+                },
+                LevelID::SewerSpeedway  => {
+                    &mut self.hub_1.warppad_4
+                },
+                LevelID::SkullRock  => {
+                    &mut self.hub_1.warppad_arena
+                },
+                LevelID::CocoPark  => {
+                    &mut self.hub_2.warppad_1
+                },
+                LevelID::TigerTemple  => {
+                    &mut self.hub_2.warppad_2
+                },
+                LevelID::PapusPyramid  => {
+                    &mut self.hub_2.warppad_3
+                },
+                LevelID::DingoCanyon  => {
+                    &mut self.hub_2.warppad_4
+                },
+                LevelID::RampageRuins  => {
+                    &mut self.hub_2.warppad_arena
+                },
+                LevelID::BlizzardBluff  => {
+                    &mut self.hub_3.warppad_1
+                },
+                LevelID::DragonMines  => {
+                    &mut self.hub_3.warppad_2
+                },
+                LevelID::PolarPass  => {
+                    &mut self.hub_3.warppad_3
+                },
+                LevelID::TinyArena  => {
+                    &mut self.hub_3.warppad_4
+                },
+                LevelID::RockyRoad  => {
+                    &mut self.hub_3.warppad_arena
+                },
+                LevelID::NGinLabs  => {
+                    &mut self.hub_4.warppad_1
+                },
+                LevelID::CortexCastle  => {
+                    &mut self.hub_4.warppad_2
+                },
+                LevelID::HotAirSkyway  => {
+                    &mut self.hub_4.warppad_3
+                },
+                LevelID::OxideStation  => {
+                    &mut self.hub_4.warppad_4
+                },
+                LevelID::NitroCourt  => {
+                    &mut self.hub_4.warppad_arena
+                },
+                LevelID::TurboTrack  => {
+                    &mut self.gemstone_valley.warppad_1
+                },
+                LevelID::SlideColiseum  => {
+                    &mut self.gemstone_valley.warppad_2
+                },
+                LevelID::CupRed  => {
+                    &mut self.gemstone_valley.cup_warppad_1
+                },
+                LevelID::CupGreen  => {
+                    &mut self.gemstone_valley.cup_warppad_2
+                },
+                LevelID::CupBlue  => {
+                    &mut self.gemstone_valley.cup_warppad_3
+                },
+                LevelID::CupYellow  => {
+                    &mut self.gemstone_valley.cup_warppad_4
+                },
+                LevelID::CupPurple  => {
+                    &mut self.gemstone_valley.cup_warppad_5
+                },
+            };
+
+            match race {
+                RaceType::TrophyRace => {
+                    warppad_to_edit.unlock_1.reward = Rewards::TrophyRaceRewards(
+                        TrophyRaceRewards{
+                            trophy_reward: new_reward
+                        }
+                    );
+                },
+                RaceType::GemCup => {
+                    warppad_to_edit.unlock_1.reward = Rewards::GemCupRewards(
+                        GemCupRewards{
+                            single_reward: new_reward
+                        }
+                    )
+                },
+                RaceType::CtrOrCrystalChallenge => {
+                    match level {
+                        LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt => {
+                            warppad_to_edit.unlock_1.reward = Rewards::BattleArenaRewards(
+                                BattleArenaRewards{
+                                    single_reward: new_reward
+                                }
+                            )
+                        }
+                        LevelID::CupRed | LevelID::CupGreen | LevelID::CupBlue | LevelID::CupYellow | LevelID::CupPurple
+                        | LevelID::TurboTrack | LevelID::SlideColiseum => {
+                            panic!()
+                        },
+                        _ => {
+                            let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
+                            match current_rewards {
+                                Rewards::TokensAndRelicRewards(x) => {
+                                    warppad_to_edit.unlock_2 = Some(
+                                        RaceUnlock {
+                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                            reward: Rewards::TokensAndRelicRewards(
+                                                TokensAndRelicRewards {
+                                                    token_reward: new_reward,
+                                                    relic_sapphire_reward: x.relic_sapphire_reward,
+                                                    relic_gold_reward: x.relic_gold_reward,
+                                                    relic_platinum_reward: x.relic_platinum_reward
+                                                }
+                                            )
+                                        }
+                                    );
+                                },
+                                _ => panic!()
+                            }
+                        }
+                    }
+                },
+                RaceType::RelicRaceSapphire => {
+                    match level {
+                        LevelID::TurboTrack | LevelID::SlideColiseum => {
+                            let current_rewards = warppad_to_edit.unlock_1.reward;
+                            match current_rewards {
+                                Rewards::RelicRaceOnlyRewards(x) => {
+                                    warppad_to_edit.unlock_1.reward = Rewards::RelicRaceOnlyRewards(
+                                        RelicRaceOnlyRewards {
+                                            relic_sapphire_reward: new_reward,
+                                            relic_gold_reward: x.relic_gold_reward,
+                                            relic_platinum_reward: x.relic_platinum_reward
+                                        }
+                                    );
+                                },
+                                _ => panic!()
+                            };
+                        }
+                        LevelID::CupRed | LevelID::CupGreen | LevelID::CupBlue | LevelID::CupYellow | LevelID::CupPurple
+                        | LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt => {
+                            panic!()
+                        },
+                        _ => {
+                            let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
+                            match current_rewards {
+                                Rewards::TokensAndRelicRewards(x) => {
+                                    warppad_to_edit.unlock_2 = Some(
+                                        RaceUnlock {
+                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                            reward: Rewards::TokensAndRelicRewards(
+                                                TokensAndRelicRewards {
+                                                    token_reward: x.token_reward,
+                                                    relic_sapphire_reward: new_reward,
+                                                    relic_gold_reward: x.relic_gold_reward,
+                                                    relic_platinum_reward: x.relic_platinum_reward
+                                                }
+                                            )
+                                        }
+                                    );
+                                },
+                                _ => {}
+                            }
+                        }
+                    }
+                },
+                RaceType::RelicRaceGold => {
+                    match level {
+                        LevelID::TurboTrack | LevelID::SlideColiseum => {
+                            let current_rewards = warppad_to_edit.unlock_1.reward;
+                            match current_rewards {
+                                Rewards::RelicRaceOnlyRewards(x) => {
+                                    warppad_to_edit.unlock_1.reward = Rewards::RelicRaceOnlyRewards(
+                                        RelicRaceOnlyRewards {
+                                            relic_sapphire_reward: x.relic_sapphire_reward,
+                                            relic_gold_reward: new_reward,
+                                            relic_platinum_reward: x.relic_platinum_reward
+                                        }
+                                    );
+                                },
+                                _ => panic!()
+                            };
+                        }
+                        LevelID::CupRed | LevelID::CupGreen | LevelID::CupBlue | LevelID::CupYellow | LevelID::CupPurple
+                        | LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt => {
+                            panic!()
+                        },
+                        _ => {
+                            let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
+                            match current_rewards {
+                                Rewards::TokensAndRelicRewards(x) => {
+                                    warppad_to_edit.unlock_2 = Some(
+                                        RaceUnlock {
+                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                            reward: Rewards::TokensAndRelicRewards(
+                                                TokensAndRelicRewards {
+                                                    token_reward: x.token_reward,
+                                                    relic_sapphire_reward: x.relic_sapphire_reward,
+                                                    relic_gold_reward: new_reward,
+                                                    relic_platinum_reward: x.relic_platinum_reward
+                                                }
+                                            )
+                                        }
+                                    );
+                                },
+                                _ => {}
+                            }
+                        }
+                    }
+                },
+                RaceType::RelicRacePlatinum => {
+                    match level {
+                        LevelID::TurboTrack | LevelID::SlideColiseum => {
+                            let current_rewards = warppad_to_edit.unlock_1.reward;
+                            match current_rewards {
+                                Rewards::RelicRaceOnlyRewards(x) => {
+                                    warppad_to_edit.unlock_1.reward = Rewards::RelicRaceOnlyRewards(
+                                        RelicRaceOnlyRewards {
+                                            relic_sapphire_reward: x.relic_sapphire_reward,
+                                            relic_gold_reward: x.relic_gold_reward,
+                                            relic_platinum_reward: new_reward
+                                        }
+                                    );
+                                },
+                                _ => panic!()
+                            };
+                        }
+                        LevelID::CupRed | LevelID::CupGreen | LevelID::CupBlue | LevelID::CupYellow | LevelID::CupPurple
+                        | LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt => {
+                            panic!()
+                        },
+                        _ => {
+                            let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
+                            match current_rewards {
+                                Rewards::TokensAndRelicRewards(x) => {
+                                    warppad_to_edit.unlock_2 = Some(
+                                        RaceUnlock {
+                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                            reward: Rewards::TokensAndRelicRewards(
+                                                TokensAndRelicRewards {
+                                                    token_reward: x.token_reward,
+                                                    relic_sapphire_reward: x.relic_sapphire_reward,
+                                                    relic_gold_reward: x.relic_gold_reward,
+                                                    relic_platinum_reward: new_reward
+                                                }
+                                            )
+                                        }
+                                    );
+                                },
+                                _ => {}
+                            }
+                        }
+                    }
+                }
+                RaceType::BossRace => {
+                    let boss_location = match level {
+                        LevelID::RoosTubes => {
+                            &mut self.hub_1.boss_garage
+                        },
+                        LevelID::PapusPyramid => {
+                            &mut self.hub_2.boss_garage
+                        },
+                        LevelID::DragonMines => {
+                            &mut self.hub_3.boss_garage
+                        },
+                        LevelID::HotAirSkyway => {
+                            &mut self.hub_4.boss_garage
+                        },
+                        LevelID::OxideStation => {
+                            &mut self.gemstone_valley.boss_garage
+                        },
+                        _ => panic!()
+                    };
+
+                    boss_location.reward = Rewards::BossRaceRewards(
+                        BossRaceRewards {
+                            single_reward: new_reward
+                        }
+                    )
+                }
+            };
+        }
+    }
 }
 
 #[derive(PartialEq, Eq, Hash)]
