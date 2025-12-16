@@ -139,6 +139,7 @@ pub fn get_shuffled_rewards(
             return x;
         }
     }
+    println!("Item placement failed after 10 attempts.");
     panic!()
 }
 
@@ -330,7 +331,7 @@ fn get_location_list(
             LevelID::CrashCove | LevelID::RoosTubes | LevelID::MysteryCaves | LevelID::SewerSpeedway | LevelID::SkullRock => {
                 let hubreq = hub_requirements.get(&Hubs::NSanityBeach).expect("has to exist");
                 if hubreq.is_some() {
-                    vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                     vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
                 } else {
                     Vec::new()
                 }
