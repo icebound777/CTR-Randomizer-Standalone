@@ -284,7 +284,7 @@ fn get_location_list(
     fn insert_boss_garage(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         bossgarage_requirements: &HashMap<BossCharacter, UnlockRequirement>,
-        hub_requirements: &Vec<UnlockRequirement>,
+        hub_requirements: &HashMap<Hubs, Option<UnlockRequirementItem>>,
         level_id: LevelID
     ) {
         let mut req_list = vec![
@@ -301,7 +301,22 @@ fn get_location_list(
             .clone()
         ];
 
-        req_list.append(&mut hub_requirements.clone());
+        let hub_req = hub_requirements.get(
+            match level_id {
+                LevelID::RoosTubes => &Hubs::NSanityBeach,
+                LevelID::PapusPyramid => &Hubs::TheLostRuins,
+                LevelID::DragonMines => &Hubs::GlacierPark,
+                LevelID::HotAirSkyway => &Hubs::CitadelCity,
+                LevelID::OxideStation => &Hubs::GemStoneValley,
+                _ => panic!("should never happen")
+            }
+        ).unwrap();
+
+        if let Some(x) = hub_req {
+            req_list.push(
+                UnlockRequirement::Item(*x)
+            );
+        }
 
         location_list.insert(
             (level_id, RaceType::BossRace),
@@ -360,13 +375,9 @@ fn get_location_list(
 
         // get race type and unlock stages based on current level
         match current_level {
-            x @ (LevelID::RoosTubes | LevelID::PapusPyramid | LevelID::DragonMines | LevelID::HotAirSkyway | LevelID::OxideStation) => {
-                insert_boss_garage(&mut location_list, &bossgarage_requirements, &current_hub_requirements, x);
-                insert_trophy_warppad(&mut location_list, &warppad_unlocks, current_hub_requirements, x);
-            }
-            x @ (LevelID::CrashCove | LevelID::MysteryCaves | LevelID::SewerSpeedway | LevelID::TigerTemple
-            | LevelID::CocoPark | LevelID::DingoCanyon | LevelID::BlizzardBluff | LevelID::PolarPass
-            | LevelID::TinyArena | LevelID::NGinLabs | LevelID::CortexCastle) => {
+            x @ (LevelID::CrashCove | LevelID::RoosTubes | LevelID::MysteryCaves | LevelID::SewerSpeedway | LevelID::TigerTemple
+            | LevelID::CocoPark | LevelID::PapusPyramid | LevelID::DingoCanyon | LevelID::BlizzardBluff | LevelID::DragonMines | LevelID::PolarPass
+            | LevelID::TinyArena | LevelID::NGinLabs | LevelID::CortexCastle | LevelID::HotAirSkyway | LevelID::OxideStation) => {
                 insert_trophy_warppad(&mut location_list, &warppad_unlocks, current_hub_requirements, x);
             },
             x @ (LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt) => {
@@ -380,6 +391,13 @@ fn get_location_list(
             }
         }
     }
+
+    // Boss garages
+    insert_boss_garage(&mut location_list, &bossgarage_requirements, &hub_requirements, LevelID::RoosTubes);
+    insert_boss_garage(&mut location_list, &bossgarage_requirements, &hub_requirements, LevelID::PapusPyramid);
+    insert_boss_garage(&mut location_list, &bossgarage_requirements, &hub_requirements, LevelID::DragonMines);
+    insert_boss_garage(&mut location_list, &bossgarage_requirements, &hub_requirements, LevelID::HotAirSkyway);
+    insert_boss_garage(&mut location_list, &bossgarage_requirements, &hub_requirements, LevelID::OxideStation);
 
     location_list
 }
