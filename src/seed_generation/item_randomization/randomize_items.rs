@@ -465,7 +465,7 @@ fn get_item_placement(
     // While there are any unfilled item locations left, attempt placing items
     while item_placement.iter().any(|x| x.1.1.is_none()) && !item_pool.is_empty() {
         let item_to_place = item_pool.pop().expect("checked by while");
-        println!("{item_to_place:?}");
+        //println!("{item_to_place:?}");
 
         // Initialize player inventory with all items yet to be placed, except
         // for the one item we want to place right now
@@ -501,10 +501,10 @@ fn get_item_placement(
         }
         if reachable_empty_locations.is_empty() {
             print!("{num_placed_items} placed before abort - ");
-            print!("reachable_empty_locations.is_empty()");
-            println!("{inventory:?}");
-            println!("{item_pool:?}");
-            println!("{item_placement:?}");
+            println!("reachable_empty_locations.is_empty()");
+            //println!("{inventory:?}");
+            //println!("{item_pool:?}");
+            //println!("{item_placement:?}");
             item_placement_success = false;
             break;
         }
@@ -522,16 +522,16 @@ fn get_item_placement(
     if item_placement_success {
         if !item_pool.is_empty() {
             print!("{num_placed_items} placed before abort - ");
-            print!("!item_pool.is_empty()");
-            println!("{item_pool:?}");
-            println!("{item_placement:?}");
+            println!("!item_pool.is_empty()");
+            //println!("{item_pool:?}");
+            //println!("{item_placement:?}");
             panic!()
         }
         if item_placement.iter().any(|x| x.1.1.is_none()) {
             print!("{num_placed_items} placed before abort - ");
-            print!("item_placement still has empty item locations");
-            println!("{item_pool:?}");
-            println!("{item_placement:?}");
+            println!("item_placement still has empty item locations");
+            //println!("{item_pool:?}");
+            //println!("{item_placement:?}");
             panic!()
         }
 
