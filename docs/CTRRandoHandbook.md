@@ -58,10 +58,12 @@ The minimum difficulty value is zero.
 
 ## Items
 
-The following items are only available in battle mode:
+### Item Roulette
 
-* Super Engine
-* Invisibility
+The item roulette quickly swapping between items is purely for show.  
+The item you get is actually determined the moment the roulette stops by itself, or when the player manually stops the roulette by pressing Circle.  
+There is no difference in the item chances between manually stopping the roulette and having the roulette stop on its own.  
+However, since the item is determined the moment the roulette stops, one can break an item box to start the roulette, then get overtaken by another driver, and then stop the roulette to get a better item by having a worse position in the race.
 
 ### Dynamic item system
 
@@ -80,6 +82,11 @@ Available items in adventure mode:
 * Turbo
 * N. Tropy Clock
 * Warp Orb
+
+The following items are only available in battle mode:
+
+* Super Engine
+* Invisibility
 
 #### Item chances
 
@@ -185,3 +192,11 @@ If lost to the boss 5 or more times (adds N. Tropy Clock):
 * 5% - Tracking Missile x3
 
 Furthermore, you can never get 3x Tracking Missiles while racing Komodo Joe, and will always be given a single Tracking Missile instead.
+
+Finally, if a Warp Orb is currently on the map, or any racer currently holds a Warp Orb, no more Warp Orbs can be acquired from item boxes. In this case, if the game rolls a Warp Orb to give to the player, it will instead always swap it for a Tracking Missile x3 item.
+
+## Wumpa Fruit
+
+The player can collect up to 10 Wumpa Fruit by collecting single Wumpas on the track or by smashing Wumpa crates, which randomly give 5 to 8 Wumpa each.  
+Wumpas 1 through 9 each increase the kart's speed.  
+The 10th Wumpa does not increase the speed further, but "juices up" the currently held item.
