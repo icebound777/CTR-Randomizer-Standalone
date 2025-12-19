@@ -4,7 +4,7 @@ use crate::seed_generation::randomization_datastructures::{GameSetup, RequiredIt
 
 pub fn write_db_to_rom<'a>(rom_filepath: &PathBuf, randomized_game: &GameSetup) -> Result<(), &'a str> {
     // Transform the randomized game into bytes to write
-    let write_location = 0xF1E8;
+    let write_location = 0xF228;
 
     let database = get_database_vec(randomized_game);
 
