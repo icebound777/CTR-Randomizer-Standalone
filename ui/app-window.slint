@@ -232,6 +232,7 @@ component RandomizationSubmenu inherits Rectangle {
                 font-size: 10pt;
             }
             warppad_unlocks := ComboBox {
+                enabled: false;
                 y: warppad_unlocks_text.y - 8px;
                 x: 300px;
                 width: 190px;
@@ -256,6 +257,7 @@ component RandomizationSubmenu inherits Rectangle {
                 }
             }
             Switch {
+                enabled: false;
                 y: bossgarage_unlocks.y + 48px;
                 text: "Auto-Unlock CTR Challenge & Relic Race";
                 toggled => {root.autounlock_ctrchallenge_relicrace = self.checked}
