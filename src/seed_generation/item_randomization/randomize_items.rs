@@ -643,7 +643,11 @@ fn get_item_placement(
                         .contains(&location)
                 {
                     if let Some(x) = placed_item {
-                        inventory.add_item(*x);
+                        if !matches!(*x, RaceReward::PlatinumRelic) || reward_shuffle.include_platinum_relics {
+                            // Found a plat relic, but we didn't shuffle them:
+                            // Assume the player does not want to do plat relics
+                            inventory.add_item(*x);
+                        }
                         found_placed_item = true;
                     } else {
                         reachable_empty_locations.push(*location);
