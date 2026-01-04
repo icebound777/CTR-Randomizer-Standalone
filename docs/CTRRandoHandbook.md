@@ -231,3 +231,44 @@ The 10th Wumpa does not increase the speed further, but "juices up" the currentl
 \* Sewer Speedway has six "double 3 crates" in the first half-pipe area and shortcut, where two 3-second time crates are placed in the exact same location, as well as one "double 1 crate" inside of the shortcut area.
 \*\*Dingo Canyon has a "double 1 crate" near the start, where two 1-second time crates are placed in the exact same location.
 \*\*\* Slide Coliseum has a "double 2 crate" about 20 seconds into the track, where two 2-seconds time crates are placed in the exact same location.
+
+## Randomizer
+
+### General randomizer changes
+
+The randomizer makes several changes to the game, which apply no matter which randomization settings are chosen.
+
+#### Randomizer version display
+
+The current version of the randomizer is shown in the bottom left of the screen at almost all times.  
+This is supposed to help with debugging the game.  
+Once the randomizer leaves the early development stages, the version will instead only appear during the title screen, and no longer during gameplay.
+
+#### No boss cutscenes in Adventure Mode
+
+All boss cutscenes in the Adventure Mode are removed, and the player no longer gets teleported to in front of boss garages once those become available.
+
+#### Relics split into three distinct items
+
+The progressive relics of the base game have been replaced by three new, specific items for sapphire, gold, and platinum relics respectively.  
+This makes it so every relic race can hold up to three different items.  
+The items swirling in the warp pads will show these different items by having one of the item models slowly cycle through the three relic race rewards. If one or more of that relic race's rewards have already been earned, then the coressponding models will instead turn invisible inside the warp pad.  
+Warp pads that require relics to unlock will now show the actual type of relic required: If a warp pad only shows sapphire relics, then specifically sapphire relics are required to open that warp pad. If a total of any of the three relic types opens the warp pad, then the relic model in the warp pad will slowly cycle through all three relic types.
+
+#### Single save file
+
+The adventure mode only offers a single save file slot.  
+The reason for this is that the randomizer requires way more data to be saved to the memory card, so save slots 2 through 4 are all assigned to hold randomizer-specific data.
+
+#### No save file deletion
+
+The player can no longer delete their save file at the green save screens in the adventure arena. An error sound will play instead. Deleting the save file can mess with the randomizer data stored, leading to unpredictable results, so it was decided to just disallow deleting the save.  
+However, a new save file can still be created by overwriting an existing file from the 'new adventure' menues.
+
+#### Randomizer Credits
+
+A bit of text has been added to the in-game credits scene.
+
+### Title screen seed hash
+
+If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash. Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.
