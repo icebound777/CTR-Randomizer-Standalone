@@ -39,13 +39,26 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
     let vanilla_gameworld = get_vanilla_game().game_world;
     let mut new_game_world = vanilla_gameworld.clone();
 
-    let overwrite_seed_hash_1;
-    let overwrite_seed_hash_2;
+    // Only set seed to write to the ROM (and thus draw the title screen
+    // seed hash) when we actually have some randomization going on
+    let (overwrite_seed_hash_1, overwrite_seed_hash_2) =
+        if chosen_settings.randomization.shuffle_adventure
+            && (chosen_settings.randomization.shuffle_race_rewards.is_some()
+                || chosen_settings.randomization.warppad_shuffle.is_some()
+                || !matches!(
+                    chosen_settings.randomization.warppad_unlock_requirements,
+                    WarppadUnlockRequirements::Vanilla
+                ))
+        {
+            (
+                (seed_as_number >> 16) as u16,
+                (seed_as_number & 0xFFFF) as u16,
+            )
+        } else {
+            (0u16, 0u16)
+        };
 
     if chosen_settings.randomization.shuffle_adventure {
-        overwrite_seed_hash_1 = (seed_as_number >> 16) as u16;
-        overwrite_seed_hash_2 = (seed_as_number & 0xFFFF) as u16;
-
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             let limit_arena_gemcup_shuffle =
@@ -100,9 +113,6 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
 
             new_game_world.set_rewards(new_reward_placement);
         }
-    } else {
-        overwrite_seed_hash_1 = 0u16;
-        overwrite_seed_hash_2 = 0u16;
     }
 
     GameSetup {
