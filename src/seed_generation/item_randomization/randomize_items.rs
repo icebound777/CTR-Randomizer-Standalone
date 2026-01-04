@@ -472,7 +472,7 @@ fn get_item_placement(
     mut item_pool: Vec<RaceReward>,
     reward_shuffle: &RewardShuffle,
     location_list: HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
-) -> Result<(HashMap<(LevelID, RaceType), RaceReward>), String> {
+) -> Result<HashMap<(LevelID, RaceType), RaceReward>, String> {
     let mut item_placement: HashMap<
         (LevelID, RaceType),
         (Vec<UnlockRequirement>, Option<RaceReward>),
