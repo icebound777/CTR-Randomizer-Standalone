@@ -1,6 +1,8 @@
 import {LineEdit, Button, VerticalBox, HorizontalBox, CheckBox, TabWidget, AboutSlint, ComboBox, Switch, Spinner, Palette}from "std-widgets.slint";
 
 export component ToolTip inherits Window {
+    // Blatently yoink'd from github issues discussion on missing tooltip
+    // functionality on the slint repo
     in property <string> text  <=> text.text;
     in property <bool> user_is_hovering;
 
@@ -72,7 +74,7 @@ component TitleBar inherits Rectangle {
         }
 
         Text {
-            text: "CTR Randomizer (pre-alpha)";
+            text: "CTR-Randomizer (alpha 1)";
             font-weight: 800;
             font-size: 40pt;
             horizontal-alignment: center;
@@ -157,7 +159,7 @@ component RandomizationSubmenu inherits Rectangle {
                 font-weight: 800;
             }
 
-            Rectangle {
+            shuffle_reward_box := Rectangle {
                 width: root.width * 0.55;
                 height: shuffle_reward.checked ? 80px : 40px;
                 animate height {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
@@ -165,38 +167,64 @@ component RandomizationSubmenu inherits Rectangle {
                 border-width: self.height == 80px ? 1px : 0px;
                 border-color: black;
                 border-radius: 10px;
-                shuffle_reward := Switch {
-                    x: (parent.width/2)-96px;
-                    y: 10px;
-                    //animate x {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
-                    text: "Shuffle Race Rewards";
-                    toggled => {
-                        root.shuffle_race_rewards = self.checked;
-                        if (!self.checked && bossgarage_unlocks.current-index == 0) {
-                            bossgarage_unlocks.current-index = 1;
+                shuffle_reward_touch := TouchArea {
+                    y: 0px;
+                    width: 200px;
+                    height: 38px;
+                    shuffle_reward := Switch {
+                        x: (parent.width/2)-96px;
+                        y: 10px;
+                        //animate x {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
+                        text: "Shuffle Race Rewards";
+                        toggled => {
+                            root.shuffle_race_rewards = self.checked;
+                            if (!self.checked && bossgarage_unlocks.current-index == 0) {
+                                bossgarage_unlocks.current-index = 1;
+                            }
                         }
                     }
                 }
-                Switch {
-                    text: "Include Keys";
-                    x: (parent.width/2) - 250px;
+                include_keys_touch := TouchArea {
+                    x: (shuffle_reward_box.width/2) - 250px;
                     y: 45px;
-                    visible: parent.height == 80px;
-                    toggled => {root.shuffle_race_rewards_keys = self.checked}
+                    width: 140px;
+                    height: 28px;
+                    enabled: shuffle_reward_box.height == 80px;
+                    Switch {
+                        text: "Include Keys";
+                        x: 0px;
+                        y: 0px;
+                        visible: shuffle_reward_box.height == 80px;
+                        toggled => {root.shuffle_race_rewards_keys = self.checked}
+                    }
                 }
-                Switch {
-                    x: (parent.width/2) - 100px;
+                include_gems_touch := TouchArea {
+                    x: (shuffle_reward_box.width/2) - 100px;
                     y: 45px;
-                    text: "Include Gems";
-                    visible: parent.height == 80px;
-                    toggled => {root.shuffle_race_rewards_gems = self.checked}
+                    width: 140px;
+                    height: 28px;
+                    enabled: shuffle_reward_box.height == 80px;
+                    Switch {
+                        x: 0px;
+                        y: 0px;
+                        text: "Include Gems";
+                        visible: shuffle_reward_box.height == 80px;
+                        toggled => {root.shuffle_race_rewards_gems = self.checked}
+                    }
                 }
-                Switch {
-                    x: (parent.width/2) + 50px;
+                include_plats_touch := TouchArea {
+                    x: (shuffle_reward_box.width/2) + 50px;
                     y: 45px;
-                    text: "Include Platinum Relics";
-                    visible: parent.height == 80px;
-                    toggled => {root.shuffle_race_rewards_plat_relics = self.checked}
+                    width: 210px;
+                    height: 28px;
+                    enabled: shuffle_reward_box.height == 80px;
+                    Switch {
+                        x: 0px;
+                        y: 0px;
+                        text: "Include Platinum Relics";
+                        visible: shuffle_reward_box.height == 80px;
+                        toggled => {root.shuffle_race_rewards_plat_relics = self.checked}
+                    }
                 }
             }
             warppads_box := Rectangle {
@@ -204,63 +232,197 @@ component RandomizationSubmenu inherits Rectangle {
                 height: 40px;
                 y: shuffle_reward.checked ? 120px : 80px;
                 animate y {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
-                border-width: shuffle_warppads.x == (self.width/2)-300px ? 1px : 0px;
+                border-width: shuffle_warppads_touch.x == (self.width/2)-310px ? 1px : 0px;
                 border-color: black;
                 border-radius: 10px;
-                shuffle_warppads := Switch {
-                    x: self.checked ? (parent.width/2)-300px : (parent.width/2)-84px;
+                shuffle_warppads_touch := TouchArea {
+                    width: 190px;
+                    height: 28px;
+                    x: shuffle_warppads.checked ? (parent.width/2)-310px : (parent.width/2)-94px;
                     animate x {duration: 300ms; delay: 100ms; easing: ease-in-out-quad;}
-                    text: "Shuffle Warp Pads";
-                    toggled => {root.shuffle_warppads = self.checked}
+                    shuffle_warppads := Switch {
+                        text: "Shuffle Warp Pads";
+                        toggled => {root.shuffle_warppads = self.checked}
+                    }
                 }
-                Switch {
-                    text: "Include Battle Arenas";
-                    visible: shuffle_warppads.x == (parent.width/2)-300px;
-                    toggled => {root.shuffle_warppads_battlearenas = self.checked}
+                include_battlearenas_touch := TouchArea {
+                    width: 190px;
+                    height: 28px;
+                    enabled: shuffle_warppads_touch.x == (warppads_box.width/2)-310px;
+                    Switch {
+                        text: "Include Battle Arenas";
+                        visible: shuffle_warppads_touch.x == (warppads_box.width/2)-310px;
+                        toggled => {root.shuffle_warppads_battlearenas = self.checked}
+                    }
                 }
-                Switch {
-                    x: (parent.width/2)+130px;
-                    text: "Include Gem Cups";
-                    visible: shuffle_warppads.x == (parent.width/2)-300px;
-                    toggled => {root.shuffle_warppads_gemcups = self.checked}
-                }
-            }
-            warppad_unlocks_text := Text {
-                y: warppads_box.y + 50px;
-                x: 500px;
-                text: "Warp Pad Unlock Requirements";
-                font-size: 10pt;
-            }
-            warppad_unlocks := ComboBox {
-                y: warppad_unlocks_text.y - 8px;
-                x: 300px;
-                width: 190px;
-                model: ["Vanilla", "Shuffled", "Chaotic"];
-            }
-            bossgarage_unlocks_text := Text {
-                y: warppad_unlocks.y + 48px;
-                x: 500px;
-                text: "Boss Garage Unlocks";
-                font-size: 10pt;
-            }
-            bossgarage_unlocks := ComboBox {
-                y: bossgarage_unlocks_text.y - 8px;
-                x: 300px;
-                current-index: 1;
-                width: 190px;
-                model: ["Original 4 Tracks", "Same Hub Tracks", "4 / 8 / 12 / 16 Trophies"];
-                selected(current-value) => {
-                    if (!shuffle_reward.checked && self.current-index == 0) {
-                        self.current-index = 1;
+                include_gemcups_touch := TouchArea {
+                    width: 190px;
+                    height: 28px;
+                    x: (warppads_box.width/2)+130px;
+                    enabled: shuffle_warppads_touch.x == (warppads_box.width/2)-310px;
+                    Switch {
+                        x: 0px;
+                        text: "Include Gem Cups";
+                        visible: shuffle_warppads_touch.x == (warppads_box.width/2)-310px;
+                        toggled => {root.shuffle_warppads_gemcups = self.checked}
                     }
                 }
             }
-            Switch {
-                y: bossgarage_unlocks.y + 48px;
-                text: "Auto-Unlock CTR Challenge & Relic Race";
-                toggled => {root.autounlock_ctrchallenge_relicrace = self.checked}
+            warppad_unlocks_touch := TouchArea {
+                width: 420px;
+                height: 34px;
+                y: warppads_box.y + 41px;
+                warppad_unlocks_text := Text {
+                    x: warppad_unlocks.x + 200px;
+                    text: "Warp Pad Unlock Requirements";
+                    font-size: 10pt;
+                }
+                warppad_unlocks := ComboBox {
+                    enabled: false;
+                    y: warppad_unlocks_text.y - 8px;
+                    x: 10px;
+                    width: 190px;
+                    model: ["Vanilla", "Shuffled", "Chaotic"];
+                }
+            }
+            bossgarage_unlocks_touch := TouchArea {
+                width: 420px;
+                height: 34px;
+                y: warppad_unlocks_touch.y + 38px;
+                bossgarage_unlocks_text := Text {
+                    x: bossgarage_unlocks.x + 200px;
+                    text: "Boss Garage Unlocks";
+                    font-size: 10pt;
+                }
+                bossgarage_unlocks := ComboBox {
+                    y: bossgarage_unlocks_text.y - 8px;
+                    x: 10px;
+                    current-index: 1;
+                    width: 190px;
+                    model: ["Original 4 Tracks", "Same Hub Tracks", "4 / 8 / 12 / 16 Trophies"];
+                    selected(current-value) => {
+                        if (!shuffle_reward.checked && self.current-index == 0) {
+                            self.current-index = 1;
+                        }
+                    }
+                }
+            }
+            auto_unlock_stagetwo_touch := TouchArea {
+                width: 340px;
+                height: 34px;
+                y: bossgarage_unlocks_touch.y + 42px;
+                Switch {
+                    enabled: false;
+                    text: "Auto-Unlock CTR Challenge & Relic Race";
+                    toggled => {root.autounlock_ctrchallenge_relicrace = self.checked}
+                }
             }
         }
+    }
+
+    ToolTip {
+        x: shuffle_reward_touch.x + 340px;
+        y: shuffle_reward_touch.y + 140px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "OFF: All race rewards will be unchanged.\n\n"
+        + "ON: All Trophies, CTR Tokens, Sapphire Relics, and Gold Relics will "
+        + "be shuffled. Also opens up more race reward options.";
+        user_is_hovering: shuffle_reward_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: include_keys_touch.x + 320px;
+        y: include_keys_touch.y + 130px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "OFF: Keys are always rewards for beating bosses.\n\n"
+        + "ON: Keys will be shuffled together with the other rewards.";
+        user_is_hovering: include_keys_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: include_gems_touch.x + 320px;
+        y: include_gems_touch.y + 130px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "OFF: Gems are always rewards for winning gem cups.\n\n"
+        + "ON: Gems will be shuffled together with the other rewards.";
+        user_is_hovering: include_gems_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: include_plats_touch.x + 320px;
+        y: include_plats_touch.y + 130px; // <-- references any or no component, not necessarily a TouchArea
+        height: 9rem;
+        width: 25rem;
+        text: "OFF: Platinum Relics are always rewards for beating platinum times.\n"
+        + "Additionally, beating platinum times will never be required to beat the game.\n\n"
+        + "ON: Platinum Relics will be shuffled together with the other rewards.";
+        user_is_hovering: include_plats_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: shuffle_warppads_touch.x + 300px;
+        y: shuffle_warppads_touch.y + 170px; // <-- references any or no component, not necessarily a TouchArea
+        height: 7rem;
+        width: 25rem;
+        text: "OFF: All warp pads lead to their original levels.\n\n"
+        + "ON: All trophy-race and relic-race warp pads will be shuffled. "
+        + "Also opens up more warp pad options.";
+        user_is_hovering: shuffle_warppads_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: include_battlearenas_touch.x + 300px;
+        y: include_battlearenas_touch.y + 170px; // <-- references any or no component, not necessarily a TouchArea
+        height: 14rem;
+        width: 25rem;
+        text: "OFF: The four battle arena warp pads (Crystal Challenges) lead "
+        + "to their original levels.\n\n"
+        + "ON: The battle arena warp pads will be shuffled with the other warp "
+        + "pads.\n\n"
+        + "Note: If 'Warp Pad Unlock Requirements' are set to 'Vanilla' and "
+        + "'Shuffle Race Rewards' is turned off, then these warp pads can only "
+        + "shuffle among themselves (or with gem cup pads, if those are "
+        + "shuffled as well).";
+        user_is_hovering: include_battlearenas_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: include_gemcups_touch.x + 240px;
+        y: include_gemcups_touch.y + 170px; // <-- references any or no component, not necessarily a TouchArea
+        height: 14rem;
+        width: 25rem;
+        text: "OFF: The five gem cup warp pads lead to their original levels.\n\n"
+        + "ON: The gem cup warp pads will be shuffled with the other warp "
+        + "pads.\n\n"
+        + "Note: If 'Warp Pad Unlock Requirements' are set to 'Vanilla' and "
+        + "'Shuffle Race Rewards' is turned off, then these warp pads can only "
+        + "shuffle among themselves (or with battle arena pads, if those are "
+        + "shuffled as well).";
+        user_is_hovering: include_gemcups_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: warppad_unlocks_touch.x + 240px;
+        y: warppad_unlocks_touch.y + 100px; // <-- references any or no component, not necessarily a TouchArea
+        height: 2rem;
+        width: 16rem;
+        text: "NYI: NOT YET IMPLEMENTED";
+        user_is_hovering: warppad_unlocks_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: bossgarage_unlocks_touch.x + 240px;
+        y: bossgarage_unlocks_touch.y + 100px; // <-- references any or no component, not necessarily a TouchArea
+        height: 10rem;
+        width: 25rem;
+        text: "Choose how the regular boss garages get unlocked.\n"
+        + "'Original 4 Tracks' and 'Same Hub Tracks' behave the same if the "
+        + "warp pads are not shuffled.\n\n"
+        + "Note: 'Original 4 Tracks' requires rewards to be shuffled.";
+        user_is_hovering: bossgarage_unlocks_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: auto_unlock_stagetwo_touch.x + 220px;
+        y: auto_unlock_stagetwo_touch.y + 90px; // <-- references any or no component, not necessarily a TouchArea
+        height: 2rem;
+        width: 16rem;
+        text: "NYI: NOT YET IMPLEMENTED";
+        user_is_hovering: auto_unlock_stagetwo_touch.has-hover; // <-- references one or more TouchArea below
     }
 }
 

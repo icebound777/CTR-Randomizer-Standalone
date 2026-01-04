@@ -1,38 +1,17 @@
-# Slint Rust Template
+# CTR-Randomizer Standalone
 
-A template for a Rust application that's using [Slint](https://slint.rs/) for the user interface.
+This tool is a standalone seed generator for the [CTR-Randomizer](https://github.com/icebound777/CTR-Randomizer) mod that randomizes the videogame Crash Team Racing, originally released in 1999 for Sony Playstation.
 
-## About
+## Playing the randomizer
 
-This template helps you get started developing a Rust application with Slint as toolkit
-for the user interface. It demonstrates the integration between the `.slint` UI markup and
-Rust code, how to react to callbacks, get and set properties, and use basic widgets.
+To play the randomizer, you will need a ROM of the NTSC-U version of CTR in `.bin` format, as well as an emulator for the Playstation (or a modded PSX / PS2 console).
 
-## Usage
+To generate your own randomizer seeds, head over to the [releases](https://github.com/icebound777/CTR-Randomizer-Standalone/releases) and download the latest executable applicable to your operating system.
 
-1. Install Rust by following its [getting-started guide](https://www.rust-lang.org/learn/get-started).
-   Once this is done, you should have the `rustc` compiler and the `cargo` build system installed in your `PATH`.
-2. Download and extract the [ZIP archive of this repository](https://github.com/slint-ui/slint-rust-template/archive/refs/heads/main.zip).
-3. Rename the extracted directory and change into it:
-    ```
-    mv slint-rust-template-main my-project
-    cd my-project    
-    ```
-4. Build with `cargo`:
-    ```
-    cargo build
-    ```
-5. Run the application binary:
-    ```
-    cargo run
-    ```
+The tool will allow you to verify you have the correct ROM, lets you choose your preferred randomization settings, and creates the seed for you. Your original ROM will stay untouched, and instead a copy of it will get placed into the same directory and will be patched into your randomized ROM.
 
-We recommend using an IDE for development, along with our [LSP-based IDE integration for `.slint` files](https://github.com/slint-ui/slint/blob/master/tools/lsp/README.md). You can also load this project directly in [Visual Studio Code](https://code.visualstudio.com) and install our [Slint extension](https://marketplace.visualstudio.com/items?itemName=Slint.slint).
+Then just load the randomized ROM into your emulator (or console) of choice, and start your engines!
 
-## Next Steps
+## Related repositories
 
-We hope that this template helps you get started, and that you enjoy exploring making user interfaces with Slint. To learn more
-about the Slint APIs and the `.slint` markup language, check out our [online documentation](https://slint.dev/docs).
-
-Don't forget to edit this readme to replace it by yours, and edit the `name =` field in `Cargo.toml` to match the name of your
-project.
+* [Github: Randomizer base mod](https://github.com/icebound777/CTR-Randomizer)

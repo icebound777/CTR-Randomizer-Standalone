@@ -22,6 +22,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
         }
     }
     let seed: u32 = seed;
+    println!("seed: {seed}");
 
     // randomize game
     let rng = ChaCha8Rng::seed_from_u64(u64::from(seed));

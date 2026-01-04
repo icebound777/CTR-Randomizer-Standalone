@@ -1,6 +1,10 @@
 # CTR Randomizer Handbook
 
-## Adventure Difficulty
+This handbook gives a deeper look into several mechanics of the base game, and goes into detail on several changes specific to the randomizer.
+
+## Base game
+
+### Adventure Difficulty
 
 The adventure mode has dynamic difficulty.  
 In regular races, bots will scale with your current number of trophies.  
@@ -56,20 +60,20 @@ This also affects the items the player can get during a boss race (see further b
 
 The minimum difficulty value is zero.
 
-## Items
+### Items
 
-### Item Roulette
+#### Item Roulette
 
 The item roulette quickly swapping between items is purely for show.  
 The item you get is actually determined the moment the roulette stops by itself, or when the player manually stops the roulette by pressing Circle.  
 There is no difference in the item chances between manually stopping the roulette and having the roulette stop on its own.  
 However, since the item is determined the moment the roulette stops, one can break an item box to start the roulette, then get overtaken by another driver, and then stop the roulette to get a better item by having a worse position in the race.
 
-### Dynamic item system
+#### Dynamic item system
 
 Races have a dynamic item system, changing the available items based on a few criteria, like current position in the race, current lap, and race type.
 
-Available items in adventure mode:
+Available items in adventure mode (names taken from the official CTR manual):
 
 * Tracking Missile x1
 * Tracking Missile x3
@@ -195,8 +199,76 @@ Furthermore, you can never get 3x Tracking Missiles while racing Komodo Joe, and
 
 Finally, if a Warp Orb is currently on the map, or any racer currently holds a Warp Orb, no more Warp Orbs can be acquired from item boxes. In this case, if the game rolls a Warp Orb to give to the player, it will instead always swap it for a Tracking Missile x3 item.
 
-## Wumpa Fruit
+### Wumpa Fruit
 
 The player can collect up to 10 Wumpa Fruit by collecting single Wumpas on the track or by smashing Wumpa crates, which randomly give 5 to 8 Wumpa each.  
 Wumpas 1 through 9 each increase the kart's speed.  
 The 10th Wumpa does not increase the speed further, but "juices up" the currently held item.
+
+## Relic Races
+
+| Track | Sapphire Time | Gold Time | Platinum Time | Boxes (Total Time Save) |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+| Crash Cove | 1:17:00 | 1:05:00 | 0:52:00 | 32 (0:57:00 + 10:00) |
+| Roo's Tubes | 1:15:00 | 1:05:00 | 0:55:00 | 32 (0:48:00 + 10:00) |
+| Mystery Caves | 1:55:00 | 1:44:00 | 1:32:00 | 40 (1:02:00 + 10:00) |
+| Sewer Speedway | 1:33:00 | 1:05:00 | 0:37:00 | 65* (2:01:00 + 10:00) |
+| Tiger Temple | 1:20:00 | 1:02:00 | 0:43:00 | 52 (1:41:00 + 10:00) |
+| Coco Park | 1:35:00 | 1:12:00 | 0:49:00 | 40 (1:04:00 + 10:00) |
+| Papu's Pyramid | 1:34:00 | 1:09:00 | 0:42:00 | 48 (1:34:00 + 10:00) |
+| Dingo Canyon | 1:25:00 | 1:09:00 | 0:53:00 | 38** (1:00:00 + 10:00) |
+| Blizzard Bluff | 1:30:00 | 1:08:00 | 0:45:00 | 40 (1:10:00 + 10:00) |
+| Dragon Mines | 1:28:00 | 1:11:00 | 0:54:00 | 39 (1:06:00 + 10:00) |
+| Polar Pass | 3:00:00 | 2:33:00 | 2:05:00 | 38 (1:08:00 + 10:00) |
+| Tiny Arena | 3:45:00 | 3:22:00 | 2:58:00 | 60 (1:30:00 + 10:00) |
+| N.Gin Labs | 2:15:00 | 1:34:00 | 0:53:00 | 70 (2:04:00 + 10:00) |
+| Cortex Castle | 2:35:00 | 2:04:00 | 1:32:00 | 62 (1:40:00 + 10:00) |
+| Hot Air Skyway | 3:05:00 | 2:34:00 | 2:02:00 | 56 (1:28:00 + 10:00) |
+| Oxide Station | 3:17:00 | 2:56:00 | 2:34:00 | 49 (1:15:00 + 10:00) |
+| Slide Coliseum | 1:55:00 | 1:45:00 | 1:40:00 | 45*** (1:11:00 + 10:00) |
+| Turbo Track | 1:45:00 | 1:32:00 | 1:19:00 | 52 (1:25:00 + 10:00) |
+
+\* Sewer Speedway has six "double 3 crates" in the first half-pipe area and shortcut, where two 3-second time crates are placed in the exact same location, as well as one "double 1 crate" inside of the shortcut area.  
+\*\*Dingo Canyon has a "double 1 crate" near the start, where two 1-second time crates are placed in the exact same location.  
+\*\*\* Slide Coliseum has a "double 2 crate" about 20 seconds into the track, where two 2-seconds time crates are placed in the exact same location.
+
+## Randomizer
+
+### General randomizer changes
+
+The randomizer makes several changes to the game, which apply no matter which randomization settings are chosen.
+
+#### Randomizer version display
+
+The current version of the randomizer is shown in the bottom left of the screen at almost all times.  
+This is supposed to help with debugging the game.  
+Once the randomizer leaves the early development stages, the version will instead only appear during the title screen, and no longer during gameplay.
+
+#### No boss cutscenes in Adventure Mode
+
+All boss cutscenes in the Adventure Mode are removed, and the player no longer gets teleported to in front of boss garages once those become available.
+
+#### Relics split into three distinct items
+
+The progressive relics of the base game have been replaced by three new, specific items for sapphire, gold, and platinum relics respectively.  
+This makes it so every relic race can hold up to three different items.  
+The items swirling in the warp pads will show these different items by having one of the item models slowly cycle through the three relic race rewards. If one or more of that relic race's rewards have already been earned, then the coressponding models will instead turn invisible inside the warp pad.  
+Warp pads that require relics to unlock will now show the actual type of relic required: If a warp pad only shows sapphire relics, then specifically sapphire relics are required to open that warp pad. If a total of any of the three relic types opens the warp pad, then the relic model in the warp pad will slowly cycle through all three relic types.
+
+#### Single save file
+
+The adventure mode only offers a single save file slot.  
+The reason for this is that the randomizer requires way more data to be saved to the memory card, so save slots 2 through 4 are all assigned to hold randomizer-specific data.
+
+#### No save file deletion
+
+The player can no longer delete their save file at the green save screens in the adventure arena. An error sound will play instead. Deleting the save file can mess with the randomizer data stored, leading to unpredictable results, so it was decided to just disallow deleting the save.  
+However, a new save file can still be created by overwriting an existing file from the 'new adventure' menues.
+
+#### Randomizer Credits
+
+A bit of text has been added to the in-game credits scene.
+
+### Title screen seed hash
+
+If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash. Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.

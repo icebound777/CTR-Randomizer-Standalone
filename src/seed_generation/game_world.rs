@@ -602,23 +602,20 @@ impl GameWorld {
                         },
                         _ => {
                             let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
-                            match current_rewards {
-                                Rewards::TokensAndRelicRewards(x) => {
-                                    warppad_to_edit.unlock_2 = Some(
-                                        RaceUnlock {
-                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
-                                            reward: Rewards::TokensAndRelicRewards(
-                                                TokensAndRelicRewards {
-                                                    token_reward: x.token_reward,
-                                                    relic_sapphire_reward: new_reward,
-                                                    relic_gold_reward: x.relic_gold_reward,
-                                                    relic_platinum_reward: x.relic_platinum_reward
-                                                }
-                                            )
-                                        }
-                                    );
-                                },
-                                _ => {}
+                            if let Rewards::TokensAndRelicRewards(x) = current_rewards {
+                                warppad_to_edit.unlock_2 = Some(
+                                    RaceUnlock {
+                                        requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                        reward: Rewards::TokensAndRelicRewards(
+                                            TokensAndRelicRewards {
+                                                token_reward: x.token_reward,
+                                                relic_sapphire_reward: new_reward,
+                                                relic_gold_reward: x.relic_gold_reward,
+                                                relic_platinum_reward: x.relic_platinum_reward
+                                            }
+                                        )
+                                    }
+                                );
                             }
                         }
                     }
@@ -646,23 +643,20 @@ impl GameWorld {
                         },
                         _ => {
                             let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
-                            match current_rewards {
-                                Rewards::TokensAndRelicRewards(x) => {
-                                    warppad_to_edit.unlock_2 = Some(
-                                        RaceUnlock {
-                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
-                                            reward: Rewards::TokensAndRelicRewards(
-                                                TokensAndRelicRewards {
-                                                    token_reward: x.token_reward,
-                                                    relic_sapphire_reward: x.relic_sapphire_reward,
-                                                    relic_gold_reward: new_reward,
-                                                    relic_platinum_reward: x.relic_platinum_reward
-                                                }
-                                            )
-                                        }
-                                    );
-                                },
-                                _ => {}
+                            if let Rewards::TokensAndRelicRewards(x) = current_rewards {
+                                warppad_to_edit.unlock_2 = Some(
+                                    RaceUnlock {
+                                        requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                        reward: Rewards::TokensAndRelicRewards(
+                                            TokensAndRelicRewards {
+                                                token_reward: x.token_reward,
+                                                relic_sapphire_reward: x.relic_sapphire_reward,
+                                                relic_gold_reward: new_reward,
+                                                relic_platinum_reward: x.relic_platinum_reward
+                                            }
+                                        )
+                                    }
+                                );
                             }
                         }
                     }
@@ -690,23 +684,20 @@ impl GameWorld {
                         },
                         _ => {
                             let current_rewards = warppad_to_edit.unlock_2.unwrap().reward;
-                            match current_rewards {
-                                Rewards::TokensAndRelicRewards(x) => {
-                                    warppad_to_edit.unlock_2 = Some(
-                                        RaceUnlock {
-                                            requirement: warppad_to_edit.unlock_2.unwrap().requirement,
-                                            reward: Rewards::TokensAndRelicRewards(
-                                                TokensAndRelicRewards {
-                                                    token_reward: x.token_reward,
-                                                    relic_sapphire_reward: x.relic_sapphire_reward,
-                                                    relic_gold_reward: x.relic_gold_reward,
-                                                    relic_platinum_reward: new_reward
-                                                }
-                                            )
-                                        }
-                                    );
-                                },
-                                _ => {}
+                            if let Rewards::TokensAndRelicRewards(x) = current_rewards {
+                                warppad_to_edit.unlock_2 = Some(
+                                    RaceUnlock {
+                                        requirement: warppad_to_edit.unlock_2.unwrap().requirement,
+                                        reward: Rewards::TokensAndRelicRewards(
+                                            TokensAndRelicRewards {
+                                                token_reward: x.token_reward,
+                                                relic_sapphire_reward: x.relic_sapphire_reward,
+                                                relic_gold_reward: x.relic_gold_reward,
+                                                relic_platinum_reward: new_reward
+                                            }
+                                        )
+                                    }
+                                );
                             }
                         }
                     }
