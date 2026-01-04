@@ -643,7 +643,9 @@ fn get_item_placement(
                         .contains(&location)
                 {
                     if let Some(x) = placed_item {
-                        if !matches!(*x, RaceReward::PlatinumRelic) || reward_shuffle.include_platinum_relics {
+                        if !matches!(*x, RaceReward::PlatinumRelic)
+                            || reward_shuffle.include_platinum_relics
+                        {
                             // Found a plat relic, but we didn't shuffle them:
                             // Assume the player does not want to do plat relics
                             inventory.add_item(*x);
@@ -652,7 +654,12 @@ fn get_item_placement(
                     } else {
                         reachable_empty_locations.push(*location);
                     }
-                    if location.1 == RaceType::TrophyRace {
+                    // If first possible race of this warp pad:
+                    // Mark level as cleared for the purpose of boss garages
+                    if [RaceType::TrophyRace, RaceType::GemCup].contains(&location.1)
+                        || ([LevelID::TurboTrack, LevelID::SlideColiseum, LevelID::SkullRock, LevelID::RampageRuins, LevelID::RockyRoad, LevelID::NitroCourt].contains(&location.0)
+                            && [RaceType::RelicRaceSapphire, RaceType::CtrOrCrystalChallenge].contains(&location.1))
+                    {
                         inventory.add_track(location.0);
                         found_placed_item = true;
                     }
