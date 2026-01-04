@@ -228,8 +228,8 @@ The 10th Wumpa does not increase the speed further, but "juices up" the currentl
 | Slide Coliseum | 1:55:00 | 1:45:00 | 1:40:00 | 45*** (1:11:00 + 10:00) |
 | Turbo Track | 1:45:00 | 1:32:00 | 1:19:00 | 52 (1:25:00 + 10:00) |
 
-\* Sewer Speedway has six "double 3 crates" in the first half-pipe area and shortcut, where two 3-second time crates are placed in the exact same location, as well as one "double 1 crate" inside of the shortcut area.
-\*\*Dingo Canyon has a "double 1 crate" near the start, where two 1-second time crates are placed in the exact same location.
+\* Sewer Speedway has six "double 3 crates" in the first half-pipe area and shortcut, where two 3-second time crates are placed in the exact same location, as well as one "double 1 crate" inside of the shortcut area.  
+\*\*Dingo Canyon has a "double 1 crate" near the start, where two 1-second time crates are placed in the exact same location.  
 \*\*\* Slide Coliseum has a "double 2 crate" about 20 seconds into the track, where two 2-seconds time crates are placed in the exact same location.
 
 ## Randomizer
