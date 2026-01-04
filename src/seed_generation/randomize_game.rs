@@ -48,12 +48,19 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
 
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
+            let limit_arena_gemcup_shuffle =
+                chosen_settings.randomization.shuffle_race_rewards.is_none()
+                    && matches!(
+                        chosen_settings.randomization.warppad_unlock_requirements,
+                        WarppadUnlockRequirements::Vanilla
+                    );
+
             let new_warppads = get_shuffled_warppads(
                 &mut seed,
                 vanilla_gameworld.get_warppad_links(),
                 warppad_shuffle.include_battle_arenas,
                 warppad_shuffle.include_gem_cups,
-                matches!(chosen_settings.randomization.warppad_unlock_requirements, WarppadUnlockRequirements::Vanilla)
+                limit_arena_gemcup_shuffle,
             );
 
             new_game_world.set_warppad_links(new_warppads);
@@ -158,18 +165,19 @@ fn get_shuffled_warppads(
     original_warppads: HashMap<LevelID, LevelID>,
     include_battle_arenas: bool,
     include_gem_cups: bool,
-    vanilla_unlock_requirements: bool,
+    limit_arena_gemcup_shuffle: bool,
 ) -> HashMap<LevelID, LevelID> {
     let mut randomized_levels: HashMap<LevelID, LevelID> = original_warppads.clone();
     let mut untouched_levels: HashMap<LevelID, LevelID> = HashMap::new();
     let mut pre_randomized_levels: HashMap<LevelID, LevelID> = HashMap::new();
 
-    if !include_battle_arenas || vanilla_unlock_requirements {
+    if !include_battle_arenas || limit_arena_gemcup_shuffle {
         let level_map = if !include_battle_arenas {
             &mut untouched_levels
-        } else { // vanilla_unlock_requirements
-            // if vanilla warppad unlocks but warppad shuffle, then
-            // dont put non-trophypads into trophy pads
+        } else { // limit_arena_gemcup_shuffle
+            // if vanilla warppad unlocks and no reward shuffle, but
+            // also warppad shuffle, then dont put non-trophypads into
+            // trophy pads
             &mut pre_randomized_levels
         };
 
@@ -180,12 +188,13 @@ fn get_shuffled_warppads(
         }
     }
 
-    if !include_gem_cups || vanilla_unlock_requirements {
+    if !include_gem_cups || limit_arena_gemcup_shuffle {
         let level_map = if !include_gem_cups {
             &mut untouched_levels
         } else {
-            // if vanilla warppad unlocks but warppad shuffle, then
-            // dont put non-trophypads into trophy pads
+            // if vanilla warppad unlocks and no reward shuffle, but
+            // also warppad shuffle, then dont put non-trophypads into
+            // trophy pads
             &mut pre_randomized_levels
         };
 
@@ -196,9 +205,10 @@ fn get_shuffled_warppads(
         }
     }
 
-    if vanilla_unlock_requirements {
-        // if vanilla warppad unlocks but warppad shuffle, then
-        // dont put non-trophypads into trophy pads
+    if limit_arena_gemcup_shuffle {
+        // if vanilla warppad unlocks and no reward shuffle, but
+        // also warppad shuffle, then dont put non-trophypads into
+        // trophy pads
         for level_key in original_warppads.keys() {
             if *level_key == LevelID::TurboTrack || *level_key == LevelID::SlideColiseum {
                 pre_randomized_levels.insert(*level_key, *level_key);
