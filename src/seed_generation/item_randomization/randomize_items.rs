@@ -211,10 +211,6 @@ fn get_location_list(
     ) {
         let mut unlocks = static_requirements;
 
-        unlocks.push(UnlockRequirement::Item(UnlockRequirementItem {
-            item_type: RequiredItem::Key,
-            count: 2,
-        }));
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
                 .get(&(level_id, UnlockStage::One))
@@ -238,10 +234,6 @@ fn get_location_list(
                     .unwrap()
                     .unwrap(),
             ),
-            UnlockRequirement::Item(UnlockRequirementItem {
-                item_type: RequiredItem::Key,
-                count: 1,
-            }),
         ];
 
         unlocks.append(&mut static_requirements);
