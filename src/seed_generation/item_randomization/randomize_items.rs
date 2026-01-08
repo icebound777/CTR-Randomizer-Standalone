@@ -288,7 +288,9 @@ fn get_location_list(
     }
 
     for (original_level, current_level) in warppad_links {
-        // get static requirements for original warppad location
+        // get static requirements for original warppad location:
+        // this for the most part is equal to hub requirements, but
+        // the Gem Cup pads in Gemstone Valley add another key door
         let static_requirements: Vec<UnlockRequirement> = match original_level {
             LevelID::CrashCove
             | LevelID::RoosTubes
@@ -308,9 +310,7 @@ fn get_location_list(
             | LevelID::CocoPark
             | LevelID::PapusPyramid
             | LevelID::DingoCanyon
-            | LevelID::RampageRuins
-            | LevelID::TurboTrack
-            | LevelID::SlideColiseum => {
+            | LevelID::RampageRuins =>  {
                 let hubreq = hub_requirements
                     .get(&Hubs::TheLostRuins)
                     .expect("has to exist");
@@ -319,7 +319,18 @@ fn get_location_list(
                 } else {
                     Vec::new()
                 }
-            }
+            },
+            LevelID::TurboTrack
+            | LevelID::SlideColiseum => {
+                let hubreq = hub_requirements
+                    .get(&Hubs::GemStoneValley)
+                    .expect("has to exist");
+                if hubreq.is_some() {
+                    vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                } else {
+                    Vec::new()
+                }
+            },
             LevelID::CupRed
             | LevelID::CupGreen
             | LevelID::CupBlue
@@ -331,6 +342,7 @@ fn get_location_list(
                 if hubreq.is_some() {
                     vec![
                         UnlockRequirement::Item(hubreq.expect("checked by if")),
+                        // Special Gemstone Valley internal door requirement
                         UnlockRequirement::Item(UnlockRequirementItem {
                             item_type: RequiredItem::Key,
                             count: 2,
