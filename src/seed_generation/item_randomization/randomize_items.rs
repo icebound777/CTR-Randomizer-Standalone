@@ -161,10 +161,10 @@ fn get_location_list(
     fn insert_trophy_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        hub_requirements: Vec<UnlockRequirement>,
+        static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
-        let mut unlocks = hub_requirements;
+        let mut unlocks = static_requirements;
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
                 .get(&(level_id, UnlockStage::One))
@@ -188,10 +188,10 @@ fn get_location_list(
     fn insert_arena_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        hub_requirements: Vec<UnlockRequirement>,
+        static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
-        let mut unlocks = hub_requirements;
+        let mut unlocks = static_requirements;
 
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
@@ -206,10 +206,10 @@ fn get_location_list(
     fn insert_gemcup_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        hub_requirements: Vec<UnlockRequirement>,
+        static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
-        let mut unlocks = hub_requirements;
+        let mut unlocks = static_requirements;
 
         unlocks.push(UnlockRequirement::Item(UnlockRequirementItem {
             item_type: RequiredItem::Key,
@@ -228,7 +228,7 @@ fn get_location_list(
     fn insert_reliconly_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        mut hub_requirements: Vec<UnlockRequirement>,
+        mut static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
         let mut unlocks: Vec<UnlockRequirement> = vec![
@@ -244,7 +244,7 @@ fn get_location_list(
             }),
         ];
 
-        unlocks.append(&mut hub_requirements);
+        unlocks.append(&mut static_requirements);
 
         location_list.insert((level_id, RaceType::RelicRaceSapphire), unlocks.clone());
         location_list.insert((level_id, RaceType::RelicRaceGold), unlocks.clone());
@@ -288,8 +288,8 @@ fn get_location_list(
     }
 
     for (original_level, current_level) in warppad_links {
-        // get hub requirements for original warppad location
-        let current_hub_requirements: Vec<UnlockRequirement> = match original_level {
+        // get static requirements for original warppad location
+        let static_requirements: Vec<UnlockRequirement> = match original_level {
             LevelID::CrashCove
             | LevelID::RoosTubes
             | LevelID::MysteryCaves
@@ -394,7 +394,7 @@ fn get_location_list(
                 insert_trophy_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
@@ -405,7 +405,7 @@ fn get_location_list(
                 insert_arena_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
@@ -417,7 +417,7 @@ fn get_location_list(
                 insert_gemcup_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
@@ -425,7 +425,7 @@ fn get_location_list(
                 insert_reliconly_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
