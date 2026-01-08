@@ -134,7 +134,7 @@ pub fn get_shuffled_rewards(
     );
 
     // run and return item placement
-    for attempts in 0..11 {
+    for attempts in 1..11 {
         let placement_result = get_item_placement(
             seed,
             item_pool.clone(),
