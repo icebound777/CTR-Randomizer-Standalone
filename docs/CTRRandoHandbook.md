@@ -232,6 +232,12 @@ The 10th Wumpa does not increase the speed further, but "juices up" the currentl
 \*\*Dingo Canyon has a "double 1 crate" near the start, where two 1-second time crates are placed in the exact same location.  
 \*\*\* Slide Coliseum has a "double 2 crate" about 20 seconds into the track, where two 2-seconds time crates are placed in the exact same location.
 
+## Oxide Cutscene and Credits
+
+Winning **Oxide's Challenge** plays the "you haven't gathered the time relics" cutscene, and shows the regular credits.  
+Winning **Oxide's Final Challenge** plays the "you beat me again" cutscene, and shows the epilogue credits.  
+Winning **Oxide's Final Challenge** while having a **101% save file** plays the "you beat me again" cutscene, and shows the epilogue credits with lots of confetti.
+
 ## Randomizer
 
 ### General randomizer changes
