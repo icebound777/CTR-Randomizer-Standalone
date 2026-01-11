@@ -134,7 +134,8 @@ pub fn get_shuffled_rewards(
     );
 
     // run and return item placement
-    for attempts in 1..11 {
+    let num_max_attempts = 1000;
+    for attempts in 1..num_max_attempts+1 {
         let placement_result = get_item_placement(
             seed,
             item_pool.clone(),
@@ -146,7 +147,8 @@ pub fn get_shuffled_rewards(
             return x;
         }
     }
-    println!("Item placement failed after 10 attempts.");
+    let err_text = format!("Item placement failed after {num_max_attempts} attempts.");
+    println!("{err_text}");
     panic!()
 }
 
