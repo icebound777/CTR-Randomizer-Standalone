@@ -60,6 +60,35 @@ This also affects the items the player can get during a boss race (see further b
 
 The minimum difficulty value is zero.
 
+### Adventure Mode Track Champions
+
+Each track is assigned a track champion, which is a character the track "belongs to".  
+In Adventure Mode, if that character is participating in a regular race they're the Track Champion on, and that character is not controlled by the player, then that character always starts the race in first position.
+
+| Track | Champion |
+| ----------- | ----------- |
+| Crash Cove | Crash |
+| Roo's Tubes | Ripper Roo |
+| Mystery Caves | Fake Crash |
+| Sewer Speedway | N.Tropy |
+| Tiger Temple | Pura |
+| Coco Park | Coco |
+| Papu's Pyramid | Papu Papu |
+| Dingo Canyon | Dingodile |
+| Blizzard Bluff | Penta Penguin |
+| Dragon Mines | Komodo Joe |
+| Polar Pass | Polar |
+| Tiny Arena | Tiny Tiger |
+| N.Gin Labs | N.Gin |
+| Cortex Castle | Cortex |
+| Hot Air Skyway | Pinstripe |
+| Oxide Station | N.Oxide |
+| Slide Coliseum | Crash |
+| Turbo Track | Crash |
+
+Obviously, some characters don't normally participate in regular Adventure Mode races, like N.Oxide or the unlockable characters.  
+They are, however, still assigned to different tracks as Track Champions.
+
 ### Items
 
 #### Item Roulette

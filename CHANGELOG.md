@@ -27,7 +27,8 @@
 ### CTR Randomizer Handbook
 
 * Added info about the different Oxide Cutscenes and Credits.
-* Added info about how the adventure mode completion percentage is calculated.
+* Explained Track Champions.
+* Explained how the adventure mode completion percentage is calculated.
 
 ## alpha 1
 
