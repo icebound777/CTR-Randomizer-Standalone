@@ -279,3 +279,19 @@ A bit of text has been added to the in-game credits scene.
 
 If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash.  
 Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.
+
+### Adventure Mode Completion
+
+(I wasn't quite sure where to put this, but since the randomizer makes noticable changes here I guess it fits this section)
+
+The Adventure mode shows a completion percentage on a save file.  
+That percentage is calculated as follows:
+
+* +2% for each of the 16 trophies, for a total of +32%
+* +1% for each of the 20 CTR tokens, for a total of +20%
+* +1% for each of the 4 keys, for a total of +4%
+* +1% for each of the 5 gems, for a total of +5%
+* +2% for each of the 18 relics, only counting the relic type the player has the most of, for a total of +36%
+* +1% for having a total of 36 or more combined gold relics and platinum relics
+* +2% for winning the first Oxide race
+* +1% for winning the second Oxide race (also counts as winning the first race)
