@@ -18,3 +18,18 @@
 * Credits
   * The "true ending" cutscene should no longer play if the player has beaten all sapphire relic times. Instead requires beating Oxide's Final Challenge.
   * The "true ending with confetti" aka "101% credits" should no longer play if the player has beaten all gold relic times. Instead actually requires 101% completion.
+
+## alpha 1
+
+### Features (alpha 1)
+
+* HUD Relic Count
+  * During the post-race cutscenes, if the player wins a relic, now locks the color of the HUD relic to the color of the relic the player won for a few seconds. This makes it easier to see the new count of that specific relic.
+
+### Bug Fixes (base mod) (alpha 1)
+
+* Relic models
+  * Fix wrong relic color during the post-race cutscenes.
+  * Fix the HUD relic sometimes showing a count of "-1" duringthe post-race cutscenes.
+* Relic Races
+  * Fix starting the player in the 8th position at the starting line. Now instead uses the special time trial starting positions.
