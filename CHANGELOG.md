@@ -2,6 +2,11 @@
 
 ## alpha 2
 
+### Features (seed generator)
+
+* 'About' tab
+  * Added a quick-link to the CTR Randomizer Handbook
+
 ### Bug Fixes (seed generator)
 
 * Gem Cup Warp Pad Shuffle
@@ -18,6 +23,11 @@
 * Credits
   * The "true ending" cutscene should no longer play if the player has beaten all sapphire relic times. Instead requires beating Oxide's Final Challenge.
   * The "true ending with confetti" aka "101% credits" should no longer play if the player has beaten all gold relic times. Instead actually requires 101% completion.
+
+### CTR Randomizer Handbook
+
+* Added info about the different Oxide Cutscenes and Credits.
+* Added info about how the adventure mode completion percentage is calculated.
 
 ## alpha 1
 
