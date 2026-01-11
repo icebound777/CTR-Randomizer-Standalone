@@ -20,7 +20,7 @@ pub fn get_shuffled_rewards(
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
-) -> HashMap<(LevelID, RaceType), RaceReward> {
+) -> Result<HashMap<(LevelID, RaceType), RaceReward>, String> {
     // generate item pool, based on
     // * include_keys
     // * include_gems
@@ -134,7 +134,8 @@ pub fn get_shuffled_rewards(
     );
 
     // run and return item placement
-    for attempts in 0..11 {
+    let num_max_attempts = 1000;
+    for attempts in 1..num_max_attempts+1 {
         let placement_result = get_item_placement(
             seed,
             item_pool.clone(),
@@ -143,11 +144,12 @@ pub fn get_shuffled_rewards(
         );
         if let Ok(x) = placement_result {
             println!("Item placement needed {attempts} attempts.");
-            return x;
+            return Ok(x);
         }
     }
-    println!("Item placement failed after 10 attempts.");
-    panic!()
+    let err_text = format!("Item placement failed after {num_max_attempts} attempts.");
+    println!("{err_text}");
+    Err(err_text)
 }
 
 fn get_location_list(
@@ -161,10 +163,10 @@ fn get_location_list(
     fn insert_trophy_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        hub_requirements: Vec<UnlockRequirement>,
+        static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
-        let mut unlocks = hub_requirements;
+        let mut unlocks = static_requirements;
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
                 .get(&(level_id, UnlockStage::One))
@@ -188,10 +190,10 @@ fn get_location_list(
     fn insert_arena_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        hub_requirements: Vec<UnlockRequirement>,
+        static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
-        let mut unlocks = hub_requirements;
+        let mut unlocks = static_requirements;
 
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
@@ -206,15 +208,11 @@ fn get_location_list(
     fn insert_gemcup_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        hub_requirements: Vec<UnlockRequirement>,
+        static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
-        let mut unlocks = hub_requirements;
+        let mut unlocks = static_requirements;
 
-        unlocks.push(UnlockRequirement::Item(UnlockRequirementItem {
-            item_type: RequiredItem::Key,
-            count: 2,
-        }));
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
                 .get(&(level_id, UnlockStage::One))
@@ -228,7 +226,7 @@ fn get_location_list(
     fn insert_reliconly_warppad(
         location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-        mut hub_requirements: Vec<UnlockRequirement>,
+        mut static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
     ) {
         let mut unlocks: Vec<UnlockRequirement> = vec![
@@ -238,13 +236,9 @@ fn get_location_list(
                     .unwrap()
                     .unwrap(),
             ),
-            UnlockRequirement::Item(UnlockRequirementItem {
-                item_type: RequiredItem::Key,
-                count: 1,
-            }),
         ];
 
-        unlocks.append(&mut hub_requirements);
+        unlocks.append(&mut static_requirements);
 
         location_list.insert((level_id, RaceType::RelicRaceSapphire), unlocks.clone());
         location_list.insert((level_id, RaceType::RelicRaceGold), unlocks.clone());
@@ -288,8 +282,10 @@ fn get_location_list(
     }
 
     for (original_level, current_level) in warppad_links {
-        // get hub requirements for original warppad location
-        let current_hub_requirements: Vec<UnlockRequirement> = match original_level {
+        // get static requirements for original warppad location:
+        // this for the most part is equal to hub requirements, but
+        // the Gem Cup pads in Gemstone Valley add another key door
+        let static_requirements: Vec<UnlockRequirement> = match original_level {
             LevelID::CrashCove
             | LevelID::RoosTubes
             | LevelID::MysteryCaves
@@ -308,9 +304,7 @@ fn get_location_list(
             | LevelID::CocoPark
             | LevelID::PapusPyramid
             | LevelID::DingoCanyon
-            | LevelID::RampageRuins
-            | LevelID::TurboTrack
-            | LevelID::SlideColiseum => {
+            | LevelID::RampageRuins =>  {
                 let hubreq = hub_requirements
                     .get(&Hubs::TheLostRuins)
                     .expect("has to exist");
@@ -319,7 +313,18 @@ fn get_location_list(
                 } else {
                     Vec::new()
                 }
-            }
+            },
+            LevelID::TurboTrack
+            | LevelID::SlideColiseum => {
+                let hubreq = hub_requirements
+                    .get(&Hubs::GemStoneValley)
+                    .expect("has to exist");
+                if hubreq.is_some() {
+                    vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                } else {
+                    Vec::new()
+                }
+            },
             LevelID::CupRed
             | LevelID::CupGreen
             | LevelID::CupBlue
@@ -331,6 +336,7 @@ fn get_location_list(
                 if hubreq.is_some() {
                     vec![
                         UnlockRequirement::Item(hubreq.expect("checked by if")),
+                        // Special Gemstone Valley internal door requirement
                         UnlockRequirement::Item(UnlockRequirementItem {
                             item_type: RequiredItem::Key,
                             count: 2,
@@ -394,7 +400,7 @@ fn get_location_list(
                 insert_trophy_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
@@ -405,7 +411,7 @@ fn get_location_list(
                 insert_arena_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
@@ -417,7 +423,7 @@ fn get_location_list(
                 insert_gemcup_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }
@@ -425,7 +431,7 @@ fn get_location_list(
                 insert_reliconly_warppad(
                     &mut location_list,
                     &warppad_unlocks,
-                    current_hub_requirements,
+                    static_requirements,
                     x,
                 );
             }

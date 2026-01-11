@@ -99,7 +99,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Generate seed
         let rom_path = main_window.get_rom_path();
         let rom_path = rom_path.as_str();
-        let _gen_result = generate_seed(rom_path, &chosen_settings);
+        let gen_result = generate_seed(rom_path, &chosen_settings);
+        if gen_result.is_err() {
+            panic!()
+        }
     });
 
     let main_ui_weak = ui.as_weak();
