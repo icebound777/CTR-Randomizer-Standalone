@@ -2,6 +2,11 @@
 
 ## alpha 2
 
+### Bug Fixes (seed generator)
+
+* Gem Cup Warp Pad Shuffle
+  * Reduced the chance of the seed generator crashing when shuffling gem cup warp pads from ~32% to ~18%
+
 ### Bug Fixes (base mod)
 
 * Gem Cups
