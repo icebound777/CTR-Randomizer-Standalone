@@ -101,7 +101,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
         }
 
         // Race Rewards
-        let rewards_ok = if let Some(reward_shuffle) = &chosen_settings.randomization.shuffle_race_rewards {
+        if let Some(reward_shuffle) = &chosen_settings.randomization.shuffle_race_rewards {
             let new_reward_placement = get_shuffled_rewards(
                 &mut seed,
                 reward_shuffle,
@@ -111,17 +111,15 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 new_game_world.get_hub_requirements(),
             );
 
-            if new_reward_placement.is_ok() {
-                new_game_world.set_rewards(new_reward_placement.expect("Checked by if"));
+            if let Ok(new_reward_placement) = new_reward_placement {
+                new_game_world.set_rewards(new_reward_placement);
                 Ok(())
             } else {
                 Err(())
             }
         } else {
             Ok(())
-        };
-
-        rewards_ok
+        }
     } else {
         Ok(())
     };

@@ -31,12 +31,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 
-    if randomized_game.is_err()
-    {
-        return Err("Failed to generate a randomized game! Seed: {seed}");
-    } else {
-        let randomized_game = randomized_game.expect("Checked by if");
-
+    if let Ok(randomized_game) = randomized_game {
         // apply base mod patch to rom
         let filepath_new_rom = apply_patchfile(rom_filepath, seed);
 
@@ -68,6 +63,8 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
             },
             _ => { return Err("Could not apply base patch to vanilla ROM!");}
         }
+    } else {
+        return Err("Failed to generate a randomized game! Seed: {seed}");
     }
 
     Ok(())
