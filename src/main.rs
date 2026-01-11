@@ -39,6 +39,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         let _ = open_that("https://github.com/icebound777/CTR-Randomizer/");
     });
 
+    ui.on_sources_handbook(move || {
+        let _ = open_that("https://github.com/icebound777/CTR-Randomizer-Standalone/blob/master/docs/CTRRandoHandbook.md");
+    });
+
     ui.on_gen_seed(move || {
         // Collect settings chosen via UI
         let chosen_rando_settings = RandomizationSettings {
