@@ -271,4 +271,5 @@ A bit of text has been added to the in-game credits scene.
 
 ### Title screen seed hash
 
-If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash. Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.
+If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash.  
+Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.
