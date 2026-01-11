@@ -845,26 +845,26 @@ component RomOutputBar inherits Rectangle {
             border-color: black;
             border-width: 1px;
 
-                Switch {
-                    x: 30px;
-                    text: "Generate Spoilerlog";
-                    checked: true;
-                    toggled => { root.write_spoilerlog = self.checked }
-                }
+            Switch {
+                x: 30px;
+                text: "Generate Spoilerlog";
+                checked: true;
+                toggled => { root.write_spoilerlog = self.checked }
+            }
 
-                Button {
-                    x: 250px;
-                    width: 200px;
-                    text: "Generate Seed";
-                    height: parent.height * (2/3);
-                    enabled: can_generate;
-                    clicked => {root.gen_seed()}
-                }
+            Button {
+                x: 250px;
+                width: 200px;
+                text: "Generate Seed";
+                height: parent.height * (2/3);
+                enabled: can_generate;
+                clicked => {root.gen_seed()}
+            }
 
-                Spinner {
-                    x: 460px;
-                    progress: 0.9;
-                }
+            Spinner {
+                x: 460px;
+                progress: 0.9;
+            }
         }
     }
 }
