@@ -39,6 +39,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         let _ = open_that("https://github.com/icebound777/CTR-Randomizer/");
     });
 
+    ui.on_sources_handbook(move || {
+        let _ = open_that("https://github.com/icebound777/CTR-Randomizer-Standalone/blob/master/docs/CTRRandoHandbook.md");
+    });
+
     ui.on_gen_seed(move || {
         // Collect settings chosen via UI
         let chosen_rando_settings = RandomizationSettings {
@@ -99,7 +103,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Generate seed
         let rom_path = main_window.get_rom_path();
         let rom_path = rom_path.as_str();
-        let _gen_result = generate_seed(rom_path, &chosen_settings);
+        let gen_result = generate_seed(rom_path, &chosen_settings);
+        if gen_result.is_err() {
+            panic!()
+        }
     });
 
     let main_ui_weak = ui.as_weak();

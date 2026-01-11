@@ -74,7 +74,7 @@ component TitleBar inherits Rectangle {
         }
 
         Text {
-            text: "CTR-Randomizer (alpha 1)";
+            text: "CTR-Randomizer (alpha 2)";
             font-weight: 800;
             font-size: 40pt;
             horizontal-alignment: center;
@@ -653,6 +653,7 @@ component QoLSubmenu inherits Rectangle {
 component AboutSubmenu inherits Rectangle {
     callback sources_generator();
     callback sources_mod();
+    callback sources_handbook();
 
     Text {
         y: 10px;
@@ -729,6 +730,38 @@ component AboutSubmenu inherits Rectangle {
         }
     }
 
+    Text {
+        x: 80px;
+        y: 100px;
+        text: "Also check out the";
+        font-weight: 800;
+        font-size: 10pt;
+    }
+    Text {
+        x: 50px;
+        y: 116px;
+        text: "CTR Randomizer Handbook:";
+        font-weight: 800;
+        font-size: 10pt;
+    }
+    TouchArea {
+        x: 116px;
+        y: 140px;
+        height: 30px;
+        width: 75px;
+        clicked => {root.sources_handbook();}
+        Button {
+            enabled: false;
+            height: 34px;
+            width: 80px;
+        }
+        Image {
+            source: @image-url("../res/GitHub_Logo.png");
+            height: 30px;
+            width: 75px;
+        }
+    }
+
     AboutSlint {
         x: 370px;
         y: 170px;
@@ -747,6 +780,7 @@ component AboutSubmenu inherits Rectangle {
 component SettingsMenu inherits TabWidget {
     callback sources_generator();
     callback sources_mod();
+    callback sources_handbook();
 
     out property <int> shuffle_adventure <=> randomization.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> randomization.shuffle_race_rewards;
@@ -788,6 +822,7 @@ component SettingsMenu inherits TabWidget {
         AboutSubmenu {
             sources_generator() => { root.sources_generator(); }
             sources_mod() => { root.sources_mod(); }
+            sources_handbook() => { root.sources_handbook(); }
         }
     }
 }
@@ -845,26 +880,21 @@ component RomOutputBar inherits Rectangle {
             border-color: black;
             border-width: 1px;
 
-                Switch {
-                    x: 30px;
-                    text: "Generate Spoilerlog";
-                    checked: true;
-                    toggled => { root.write_spoilerlog = self.checked }
-                }
+            Switch {
+                x: 30px;
+                text: "Generate Spoilerlog";
+                checked: true;
+                toggled => { root.write_spoilerlog = self.checked }
+            }
 
-                Button {
-                    x: 250px;
-                    width: 200px;
-                    text: "Generate Seed";
-                    height: parent.height * (2/3);
-                    enabled: can_generate;
-                    clicked => {root.gen_seed()}
-                }
-
-                Spinner {
-                    x: 460px;
-                    progress: 0.9;
-                }
+            Button {
+                x: 250px;
+                width: 200px;
+                text: "Generate Seed";
+                height: parent.height * (2/3);
+                enabled: can_generate;
+                clicked => {root.gen_seed()}
+            }
         }
     }
 }
@@ -877,6 +907,7 @@ export component MainWindow inherits Window {
     callback pick_rom();
     callback sources_generator();
     callback sources_mod();
+    callback sources_handbook();
     in-out property <string> rom_path;
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
@@ -915,6 +946,7 @@ export component MainWindow inherits Window {
         settings := SettingsMenu {
             sources_generator() => { root.sources_generator(); }
             sources_mod() => { root.sources_mod(); }
+            sources_handbook() => { root.sources_handbook(); }
         }
         romoutput := RomOutputBar {
             height: parent.height * 0.13;

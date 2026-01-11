@@ -60,6 +60,35 @@ This also affects the items the player can get during a boss race (see further b
 
 The minimum difficulty value is zero.
 
+### Adventure Mode Track Champions
+
+Each track is assigned a track champion, which is a character the track "belongs to".  
+In Adventure Mode, if that character is participating in a regular race they're the Track Champion on, and that character is not controlled by the player, then that character always starts the race in first position.
+
+| Track | Champion |
+| ----------- | ----------- |
+| Crash Cove | Crash |
+| Roo's Tubes | Ripper Roo |
+| Mystery Caves | Fake Crash |
+| Sewer Speedway | N.Tropy |
+| Tiger Temple | Pura |
+| Coco Park | Coco |
+| Papu's Pyramid | Papu Papu |
+| Dingo Canyon | Dingodile |
+| Blizzard Bluff | Penta Penguin |
+| Dragon Mines | Komodo Joe |
+| Polar Pass | Polar |
+| Tiny Arena | Tiny Tiger |
+| N.Gin Labs | N.Gin |
+| Cortex Castle | Cortex |
+| Hot Air Skyway | Pinstripe |
+| Oxide Station | N.Oxide |
+| Slide Coliseum | Crash |
+| Turbo Track | Crash |
+
+Obviously, some characters don't normally participate in regular Adventure Mode races, like N.Oxide or the unlockable characters.  
+They are, however, still assigned to different tracks as Track Champions.
+
 ### Items
 
 #### Item Roulette
@@ -232,6 +261,12 @@ The 10th Wumpa does not increase the speed further, but "juices up" the currentl
 \*\*Dingo Canyon has a "double 1 crate" near the start, where two 1-second time crates are placed in the exact same location.  
 \*\*\* Slide Coliseum has a "double 2 crate" about 20 seconds into the track, where two 2-seconds time crates are placed in the exact same location.
 
+## Oxide Cutscene and Credits
+
+Winning **Oxide's Challenge** plays the "you haven't gathered the time relics" cutscene, and shows the regular credits.  
+Winning **Oxide's Final Challenge** plays the "you beat me again" cutscene, and shows the epilogue credits.  
+Winning **Oxide's Final Challenge** while having a **101% save file** plays the "you beat me again" cutscene, and shows the epilogue credits with lots of confetti.
+
 ## Randomizer
 
 ### General randomizer changes
@@ -271,4 +306,21 @@ A bit of text has been added to the in-game credits scene.
 
 ### Title screen seed hash
 
-If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash. Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.
+If settings have been chosen that actually randomize something about the game, then a so called "seed hash" will be displayed on the title screen. This hash consists of four character icons, and other seeds with different randomization will show a different seed hash.  
+Its only purpose is to make this exact seed identifiable at a glance, so if multiple players want to play the same seed in a race or cooperative setting, they can use the hash to verify everyone has the same randomization.
+
+### Adventure Mode Completion
+
+(I wasn't quite sure where to put this, but since the randomizer makes noticable changes here I guess it fits this section)
+
+The Adventure mode shows a completion percentage on a save file.  
+That percentage is calculated as follows:
+
+* +2% for each of the 16 trophies, for a total of +32%
+* +1% for each of the 20 CTR tokens, for a total of +20%
+* +1% for each of the 4 keys, for a total of +4%
+* +1% for each of the 5 gems, for a total of +5%
+* +2% for each of the 18 relics, only counting the relic type the player has the most of, for a total of +36%
+* +1% for having a total of 36 or more combined gold relics and platinum relics
+* +2% for winning the first Oxide race
+* +1% for winning the second Oxide race (also counts as winning the first race)

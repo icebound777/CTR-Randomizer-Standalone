@@ -31,36 +31,40 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
 
-    // apply base mod patch to rom
-    let filepath_new_rom = apply_patchfile(rom_filepath, seed);
+    if let Ok(randomized_game) = randomized_game {
+        // apply base mod patch to rom
+        let filepath_new_rom = apply_patchfile(rom_filepath, seed);
 
-    match filepath_new_rom {
-        Ok(new_rom) => {
-            // write randomization to rom
-            let write_result = write_db_to_rom(&new_rom, &randomized_game);
-            if write_result.is_err() {
-                return Err(write_result.expect_err("str type error"));
-            }
-
-            // if needed, write patch file
-            if chosen_settings.write_patchfile {
-                let filepath_new_patch = create_patchfile(rom_filepath, &new_rom);
-
-                if filepath_new_patch.is_err() {
-                    return Err("Could not create patch file!");
+        match filepath_new_rom {
+            Ok(new_rom) => {
+                // write randomization to rom
+                let write_result = write_db_to_rom(&new_rom, &randomized_game);
+                if write_result.is_err() {
+                    return Err(write_result.expect_err("str type error"));
                 }
-            }
 
-            // if needed, write spoiler log
-            if chosen_settings.write_spoilerlog {
-                let log_success = write_spoilerlog(new_rom, randomized_game, seed);
+                // if needed, write patch file
+                if chosen_settings.write_patchfile {
+                    let filepath_new_patch = create_patchfile(rom_filepath, &new_rom);
 
-                if log_success.is_err() {
-                    return Err("Could not create spoiler log file!");
+                    if filepath_new_patch.is_err() {
+                        return Err("Could not create patch file!");
+                    }
                 }
-            }
-        },
-        _ => { return Err("Could not apply base patch to vanilla ROM!");}
+
+                // if needed, write spoiler log
+                if chosen_settings.write_spoilerlog {
+                    let log_success = write_spoilerlog(new_rom, randomized_game, seed);
+
+                    if log_success.is_err() {
+                        return Err("Could not create spoiler log file!");
+                    }
+                }
+            },
+            _ => { return Err("Could not apply base patch to vanilla ROM!");}
+        }
+    } else {
+        return Err("Failed to generate a randomized game! Seed: {seed}");
     }
 
     Ok(())

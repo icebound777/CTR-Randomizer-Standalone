@@ -35,7 +35,7 @@ fn get_vanilla_game() -> GameSetup {
     }
 }
 
-pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> GameSetup {
+pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_settings: &SeedSettings) -> Result<GameSetup, ()> {
     let vanilla_gameworld = get_vanilla_game().game_world;
     let mut new_game_world = vanilla_gameworld.clone();
 
@@ -58,7 +58,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
             (0u16, 0u16)
         };
 
-    if chosen_settings.randomization.shuffle_adventure {
+    let shuffling_ok: Result<(), ()> = if chosen_settings.randomization.shuffle_adventure {
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             let limit_arena_gemcup_shuffle =
@@ -111,62 +111,77 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 new_game_world.get_hub_requirements(),
             );
 
-            new_game_world.set_rewards(new_reward_placement);
+            if let Ok(new_reward_placement) = new_reward_placement {
+                new_game_world.set_rewards(new_reward_placement);
+                Ok(())
+            } else {
+                Err(())
+            }
+        } else {
+            Ok(())
         }
-    }
+    } else {
+        Ok(())
+    };
 
-    GameSetup {
-        game_world: new_game_world,
-        settings: vec![
-            (
-                SettingID::RelicDifficulty,
-                SettingValue::RelicDifficulty(chosen_settings.general.rr_required_minimum_time),
-            ),
-            (
-                SettingID::RelicNeedsPerfect,
-                SettingValue::Boolean(chosen_settings.general.rr_require_perfects),
-            ),
-            (
-                SettingID::BossGarageRequirements,
-                SettingValue::BossGarageRequirements(
-                    chosen_settings.randomization.bossgarage_unlock_requirements,
-                ),
-            ),
-            (
-                SettingID::QolSkipMaskhints,
-                SettingValue::Boolean(chosen_settings.qol.skip_mask_hints),
-            ),
-            (
-                SettingID::QolSkipPodium,
-                SettingValue::Boolean(chosen_settings.qol.autoskip_podium_cutscenes),
-            ),
-            (
-                SettingID::QolSkipMaskcongrats,
-                SettingValue::Boolean(chosen_settings.qol.skip_mask_congrats),
-            ),
-            (
-                SettingID::OxideRequiredRelics,
-                SettingValue::OxideRequiredRelics(
-                    chosen_settings.general.oxide_final_challenge_unlock,
-                ),
-            ),
-            (
-                SettingID::SeedHash1,
-                SettingValue::SeedHashPart(overwrite_seed_hash_1),
-            ),
-            (
-                SettingID::SeedHash2,
-                SettingValue::SeedHashPart(overwrite_seed_hash_2),
-            ),
-            (
-                SettingID::HelperTiziano,
-                SettingValue::Boolean(chosen_settings.tricks.helper_tiziano),
-            ),
-            (
-                SettingID::HelperTA,
-                SettingValue::Boolean(chosen_settings.tricks.helper_ta),
-            ),
-        ],
+    if shuffling_ok.is_err() {
+        Err(())
+    } else {
+        Ok(
+            GameSetup {
+                game_world: new_game_world,
+                settings: vec![
+                    (
+                        SettingID::RelicDifficulty,
+                        SettingValue::RelicDifficulty(chosen_settings.general.rr_required_minimum_time),
+                    ),
+                    (
+                        SettingID::RelicNeedsPerfect,
+                        SettingValue::Boolean(chosen_settings.general.rr_require_perfects),
+                    ),
+                    (
+                        SettingID::BossGarageRequirements,
+                        SettingValue::BossGarageRequirements(
+                            chosen_settings.randomization.bossgarage_unlock_requirements,
+                        ),
+                    ),
+                    (
+                        SettingID::QolSkipMaskhints,
+                        SettingValue::Boolean(chosen_settings.qol.skip_mask_hints),
+                    ),
+                    (
+                        SettingID::QolSkipPodium,
+                        SettingValue::Boolean(chosen_settings.qol.autoskip_podium_cutscenes),
+                    ),
+                    (
+                        SettingID::QolSkipMaskcongrats,
+                        SettingValue::Boolean(chosen_settings.qol.skip_mask_congrats),
+                    ),
+                    (
+                        SettingID::OxideRequiredRelics,
+                        SettingValue::OxideRequiredRelics(
+                            chosen_settings.general.oxide_final_challenge_unlock,
+                        ),
+                    ),
+                    (
+                        SettingID::SeedHash1,
+                        SettingValue::SeedHashPart(overwrite_seed_hash_1),
+                    ),
+                    (
+                        SettingID::SeedHash2,
+                        SettingValue::SeedHashPart(overwrite_seed_hash_2),
+                    ),
+                    (
+                        SettingID::HelperTiziano,
+                        SettingValue::Boolean(chosen_settings.tricks.helper_tiziano),
+                    ),
+                    (
+                        SettingID::HelperTA,
+                        SettingValue::Boolean(chosen_settings.tricks.helper_ta),
+                    ),
+                ],
+            }
+        )
     }
 }
 

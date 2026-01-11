@@ -1092,7 +1092,7 @@ checksum = "1f791803201ab277ace03903de1594460708d2d54df6053f2d9e82f592b19e3b"
 
 [[package]]
 name = "ctrrandomizer-standalone"
-version = "0.1.0"
+version = "1.0.0-alpha.2"
 dependencies = [
  "md5",
  "open",
