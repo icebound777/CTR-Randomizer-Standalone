@@ -20,7 +20,7 @@ pub fn get_shuffled_rewards(
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
-) -> HashMap<(LevelID, RaceType), RaceReward> {
+) -> Result<HashMap<(LevelID, RaceType), RaceReward>, String> {
     // generate item pool, based on
     // * include_keys
     // * include_gems
@@ -144,12 +144,12 @@ pub fn get_shuffled_rewards(
         );
         if let Ok(x) = placement_result {
             println!("Item placement needed {attempts} attempts.");
-            return x;
+            return Ok(x);
         }
     }
     let err_text = format!("Item placement failed after {num_max_attempts} attempts.");
     println!("{err_text}");
-    panic!()
+    Err(err_text)
 }
 
 fn get_location_list(
