@@ -50,12 +50,32 @@ pub enum WarppadUnlockRequirements {
     Chaotic = 2,
 }
 
+impl std::fmt::Display for WarppadUnlockRequirements {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            WarppadUnlockRequirements::Vanilla => String::from("Vanilla"),
+            WarppadUnlockRequirements::Shuffled => String::from("Shuffled"),
+            WarppadUnlockRequirements::Chaotic => String::from("Chaotic"),
+        })
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 #[repr(u16)]
 pub enum BossGarageRequirements {
     Original4Tracks = 0,
     SameHubTracks = 1,
     Trophies = 2,
+}
+
+impl std::fmt::Display for BossGarageRequirements {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            BossGarageRequirements::Original4Tracks => String::from("Original4Tracks"),
+            BossGarageRequirements::SameHubTracks => String::from("SameHubTracks"),
+            BossGarageRequirements::Trophies => String::from("Trophies"),
+        })
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -71,6 +91,16 @@ pub enum RelicTime {
     SapphireTime = 0,
     GoldTime = 1,
     PlatinumTime = 2,
+}
+
+impl std::fmt::Display for RelicTime {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            RelicTime::SapphireTime => String::from("SapphireTime"),
+            RelicTime::GoldTime => String::from("GoldTime"),
+            RelicTime::PlatinumTime => String::from("PlatinumTime"),
+        })
+    }
 }
 
 impl TryFrom<i32> for WarppadUnlockRequirements {
@@ -137,5 +167,14 @@ impl TryFrom<i32> for FinalOxideUnlock {
             }
             _ => Err(()),
         }
+    }
+}
+
+impl std::fmt::Display for FinalOxideUnlock {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            FinalOxideUnlock::SappireRelics18 => String::from("SappireRelics18"),
+            FinalOxideUnlock::GoldAndPlatinumRelics18 => String::from("GoldAndPlatinumRelics18"),
+        })
     }
 }
