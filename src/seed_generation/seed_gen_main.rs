@@ -54,7 +54,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
 
                 // if needed, write spoiler log
                 if chosen_settings.write_spoilerlog {
-                    let log_success = write_spoilerlog(new_rom, randomized_game, seed);
+                    let log_success = write_spoilerlog(new_rom, randomized_game, seed, chosen_settings);
 
                     if log_success.is_err() {
                         return Err("Could not create spoiler log file!");

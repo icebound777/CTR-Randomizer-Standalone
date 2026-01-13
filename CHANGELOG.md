@@ -7,6 +7,13 @@
 * Auto-Unlock CTR Challenge & Relic Race
   * If this setting is turned on, then all warp pads' second stage unlock, the CTR Challenge and Relic Race, is always "free" and available right after beating the warp pad's Trophy Race.  
   Does not affect battle arena warp pads, gem cup warp pads, or relic-only warp pads.
+* Spoiler log
+  * Now includes the settings chosen for the seed.
+
+### Bug Fixes (seed generator)
+
+* Oxide's Final Challenge Unlock
+  * Fix an issue where the Final Challenge Unlock dropdown menu did absolutely nothing, and that setting instead falsely used the "Relic Races: Required Minimum Time" dropdown. This resulted in unexpected requirements for Oxide's Final Challenge, and the seed generator crashing if "Relic Races: Required Minimum Time" was set to "Platinum Time".
 
 ## alpha 2
 

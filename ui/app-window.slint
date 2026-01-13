@@ -800,7 +800,7 @@ component SettingsMenu inherits TabWidget {
 
     out property <int> rr_required_minimum_time <=> generalmenu.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> generalmenu.rr_require_perfects;
-    out property <int> oxide_final_challenge_unlock <=> generalmenu.rr_required_minimum_time;
+    out property <int> oxide_final_challenge_unlock <=> generalmenu.oxide_final_challenge_unlock;
 
     out property <bool> qol_skip_mask_hints <=> qolmenu.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> qolmenu.qol_skip_podium;
@@ -932,7 +932,7 @@ export component MainWindow inherits Window {
 
     out property <int> rr_required_minimum_time <=> settings.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> settings.rr_require_perfects;
-    out property <int> oxide_final_challenge_unlock <=> settings.rr_required_minimum_time;
+    out property <int> oxide_final_challenge_unlock <=> settings.oxide_final_challenge_unlock;
 
     out property <bool> qol_skip_mask_hints <=> settings.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> settings.qol_skip_podium;
