@@ -3,7 +3,14 @@ use std::{io, path::PathBuf};
 use serde_json::{json, to_string_pretty};
 
 use crate::seed_generation::seed_settings::{RewardShuffle, WarppadShuffle};
-use crate::seed_generation::{game_world::{BattleArenaRewards, BossGarage, BossRaceRewards, GemCupRewards, RelicRaceOnlyRewards, Rewards, TokensAndRelicRewards, TrophyRaceRewards, WarpPad}, randomization_datastructures::{GameSetup, UnlockRequirement, UnlockRequirementItem}, seed_settings::SeedSettings};
+use crate::seed_generation::{
+    game_world::{
+        BattleArenaRewards, BossGarage, BossRaceRewards, GemCupRewards, RelicRaceOnlyRewards,
+        Rewards, TokensAndRelicRewards, TrophyRaceRewards, WarpPad,
+    },
+    randomization_datastructures::{GameSetup, UnlockRequirement, UnlockRequirementItem},
+    seed_settings::SeedSettings,
+};
 
 pub fn write_spoilerlog(
     new_rom_path: PathBuf,
@@ -88,7 +95,11 @@ pub fn write_spoilerlog(
     let file_stem = spoilerlog_path.clone();
     let file_stem = file_stem.file_stem().unwrap();
     spoilerlog_path.pop();
-    spoilerlog_path.push(format!("{}{}", file_stem.to_str().unwrap(), "_spoilers.json"));
+    spoilerlog_path.push(format!(
+        "{}{}",
+        file_stem.to_str().unwrap(),
+        "_spoilers.json"
+    ));
 
     std::fs::write(&spoilerlog_path, to_string_pretty(&spoilerlog).unwrap())
 }
@@ -113,8 +124,9 @@ fn get_seed_hash(seed: u32) -> String {
             13 => "Penta",
             14 => "FakeCrash",
             15 => "N.Oxide",
-            _ => panic!()
-        }.to_string()
+            _ => panic!(),
+        }
+        .to_string()
     }
 
     let character_icon_1 = get_character(((seed >> 24) & 0xFF) as u8);
@@ -157,14 +169,18 @@ fn get_formatted_warppad(warppad: WarpPad) -> serde_json::Value {
 
 fn get_formatted_bossgarage(bossgarage: BossGarage) -> serde_json::Value {
     match bossgarage.requirement {
-        UnlockRequirement::Item(UnlockRequirementItem{item_type, count}) => {
+        UnlockRequirement::Item(UnlockRequirementItem { item_type, count }) => {
             json!({
                 "unlock": format!("{} (x{})", item_type, count),
                 "reward": get_formatted_reward(bossgarage.reward)
             })
-        },
+        }
         UnlockRequirement::LevelList(x) => {
-            let level_list: String = x.iter().map(std::string::ToString::to_string).collect::<Vec<_>>().join(", ");
+            let level_list: String = x
+                .iter()
+                .map(std::string::ToString::to_string)
+                .collect::<Vec<_>>()
+                .join(", ");
             json!({
                 "unlock": level_list,
                 "reward": get_formatted_reward(bossgarage.reward)
@@ -179,33 +195,42 @@ fn get_formatted_reward(reward: Rewards) -> serde_json::Value {
             json!({
                 "Trophy Race": rew.to_string()
             })
-        },
-        Rewards::TokensAndRelicRewards(TokensAndRelicRewards{token_reward,relic_sapphire_reward,relic_gold_reward,relic_platinum_reward}) => {
+        }
+        Rewards::TokensAndRelicRewards(TokensAndRelicRewards {
+            token_reward,
+            relic_sapphire_reward,
+            relic_gold_reward,
+            relic_platinum_reward,
+        }) => {
             json!({
                 "CTR Challenge": token_reward.to_string(),
                 "Sapphire Time": relic_sapphire_reward.to_string(),
                 "Gold Time": relic_gold_reward.to_string(),
                 "Platinum Time": relic_platinum_reward.to_string(),
             })
-        },
-        Rewards::BossRaceRewards(BossRaceRewards{single_reward}) => {
+        }
+        Rewards::BossRaceRewards(BossRaceRewards { single_reward }) => {
             json!({
                 "Boss Reward": single_reward.to_string()
             })
-        },
-        Rewards::BattleArenaRewards(BattleArenaRewards{single_reward}) => {
+        }
+        Rewards::BattleArenaRewards(BattleArenaRewards { single_reward }) => {
             json!({
                 "Crystal Challenge": single_reward.to_string()
             })
-        },
-        Rewards::RelicRaceOnlyRewards(RelicRaceOnlyRewards{ relic_sapphire_reward, relic_gold_reward, relic_platinum_reward }) => {
+        }
+        Rewards::RelicRaceOnlyRewards(RelicRaceOnlyRewards {
+            relic_sapphire_reward,
+            relic_gold_reward,
+            relic_platinum_reward,
+        }) => {
             json!({
                 "Sapphire Time": relic_sapphire_reward.to_string(),
                 "Gold Time": relic_gold_reward.to_string(),
                 "Platinum Time": relic_platinum_reward.to_string(),
             })
-        },
-        Rewards::GemCupRewards(GemCupRewards{single_reward}) => {
+        }
+        Rewards::GemCupRewards(GemCupRewards { single_reward }) => {
             json!({
                 "Cup Reward": single_reward.to_string()
             })
@@ -217,20 +242,37 @@ fn get_serialized_optional_setting(opt_setting: OptionalSettings) -> serde_json:
     match opt_setting {
         OptionalSettings::RewardShuffle(x) => {
             if let Some(y) = x {
-                let mut json_map: serde_json::Map<String, serde_json::Value> = serde_json::Map::new();
-                json_map.insert("include_keys".to_owned(), serde_json::Value::Bool(y.include_keys));
-                json_map.insert("include_gems".to_owned(), serde_json::Value::Bool(y.include_gems));
-                json_map.insert("include_platinum_relics".to_owned(), serde_json::Value::Bool(y.include_platinum_relics));
+                let mut json_map: serde_json::Map<String, serde_json::Value> =
+                    serde_json::Map::new();
+                json_map.insert(
+                    "include_keys".to_owned(),
+                    serde_json::Value::Bool(y.include_keys),
+                );
+                json_map.insert(
+                    "include_gems".to_owned(),
+                    serde_json::Value::Bool(y.include_gems),
+                );
+                json_map.insert(
+                    "include_platinum_relics".to_owned(),
+                    serde_json::Value::Bool(y.include_platinum_relics),
+                );
                 serde_json::Value::Object(json_map)
             } else {
                 serde_json::Value::String("false".to_owned())
             }
-        },
+        }
         OptionalSettings::WarppadShuffle(x) => {
             if let Some(y) = x {
-                let mut json_map: serde_json::Map<String, serde_json::Value> = serde_json::Map::new();
-                json_map.insert("include_battle_arenas".to_owned(), serde_json::Value::Bool(y.include_battle_arenas));
-                json_map.insert("include_gem_cups".to_owned(), serde_json::Value::Bool(y.include_gem_cups));
+                let mut json_map: serde_json::Map<String, serde_json::Value> =
+                    serde_json::Map::new();
+                json_map.insert(
+                    "include_battle_arenas".to_owned(),
+                    serde_json::Value::Bool(y.include_battle_arenas),
+                );
+                json_map.insert(
+                    "include_gem_cups".to_owned(),
+                    serde_json::Value::Bool(y.include_gem_cups),
+                );
                 serde_json::Value::Object(json_map)
             } else {
                 serde_json::Value::String("false".to_owned())
