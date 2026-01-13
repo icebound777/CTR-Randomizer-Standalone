@@ -278,11 +278,10 @@ component RandomizationSubmenu inherits Rectangle {
                     font-size: 10pt;
                 }
                 warppad_unlocks := ComboBox {
-                    enabled: false;
                     y: warppad_unlocks_text.y - 8px;
                     x: 10px;
                     width: 190px;
-                    model: ["Vanilla", "Shuffled", "Chaotic"];
+                    model: ["Vanilla", "Random", "Random w/o 4 Keys"];
                 }
             }
             bossgarage_unlocks_touch := TouchArea {

@@ -48,16 +48,16 @@ pub struct WarppadShuffle {
 
 pub enum WarppadUnlockRequirements {
     Vanilla = 0,
-    Shuffled = 1,
-    Chaotic = 2,
+    Random = 1,
+    RandomWithout4Keys = 2,
 }
 
 impl std::fmt::Display for WarppadUnlockRequirements {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", match self {
             WarppadUnlockRequirements::Vanilla => String::from("Vanilla"),
-            WarppadUnlockRequirements::Shuffled => String::from("Shuffled"),
-            WarppadUnlockRequirements::Chaotic => String::from("Chaotic"),
+            WarppadUnlockRequirements::Random => String::from("Random"),
+            WarppadUnlockRequirements::RandomWithout4Keys => String::from("RandomWithout4Keys"),
         })
     }
 }
@@ -113,11 +113,11 @@ impl TryFrom<i32> for WarppadUnlockRequirements {
             x if x == WarppadUnlockRequirements::Vanilla as i32 => {
                 Ok(WarppadUnlockRequirements::Vanilla)
             }
-            x if x == WarppadUnlockRequirements::Shuffled as i32 => {
-                Ok(WarppadUnlockRequirements::Shuffled)
+            x if x == WarppadUnlockRequirements::Random as i32 => {
+                Ok(WarppadUnlockRequirements::Random)
             }
-            x if x == WarppadUnlockRequirements::Chaotic as i32 => {
-                Ok(WarppadUnlockRequirements::Chaotic)
+            x if x == WarppadUnlockRequirements::RandomWithout4Keys as i32 => {
+                Ok(WarppadUnlockRequirements::RandomWithout4Keys)
             }
             _ => Err(()),
         }
