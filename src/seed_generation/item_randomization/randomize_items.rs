@@ -25,6 +25,42 @@ pub fn get_shuffled_rewards(
     // * include_keys
     // * include_gems
     // * include_platinum_relics
+    let item_pool = build_item_pool(
+        reward_shuffle
+    );
+
+    // generate logical requirements from warppad links, warppad_unlocks, hub requirements, and garage unlocks
+    // The warppad_links here are VanillaTrackLocation: ActualTrack
+    // The warppad_unlocks here are (ActualTrack, UnlockStage, Option<UnlockRequirement>)
+    let location_list = get_location_list(
+        warppad_links,
+        warppad_unlocks,
+        bossgarage_requirements,
+        hub_requirements,
+    );
+
+    // run and return item placement
+    let num_max_attempts = 1000;
+    for attempts in 1..num_max_attempts+1 {
+        let placement_result = get_item_placement(
+            seed,
+            item_pool.clone(),
+            reward_shuffle,
+            location_list.clone(),
+        );
+        if let Ok(x) = placement_result {
+            println!("Item placement needed {attempts} attempts.");
+            return Ok(x);
+        }
+    }
+    let err_text = format!("Item placement failed after {num_max_attempts} attempts.");
+    println!("{err_text}");
+    Err(err_text)
+}
+
+pub fn build_item_pool(
+    reward_shuffle: &RewardShuffle,
+) -> Vec<RaceReward> {
     let mut item_pool: Vec<RaceReward> = vec![
         // 16 Trophies
         RaceReward::Trophy,
@@ -123,33 +159,7 @@ pub fn get_shuffled_rewards(
         }
     }
 
-    // generate logical requirements from warppad links, warppad_unlocks, hub requirements, and garage unlocks
-    // The warppad_links here are VanillaTrackLocation: ActualTrack
-    // The warppad_unlocks here are (ActualTrack, UnlockStage, Option<UnlockRequirement>)
-    let location_list = get_location_list(
-        warppad_links,
-        warppad_unlocks,
-        bossgarage_requirements,
-        hub_requirements,
-    );
-
-    // run and return item placement
-    let num_max_attempts = 1000;
-    for attempts in 1..num_max_attempts+1 {
-        let placement_result = get_item_placement(
-            seed,
-            item_pool.clone(),
-            reward_shuffle,
-            location_list.clone(),
-        );
-        if let Ok(x) = placement_result {
-            println!("Item placement needed {attempts} attempts.");
-            return Ok(x);
-        }
-    }
-    let err_text = format!("Item placement failed after {num_max_attempts} attempts.");
-    println!("{err_text}");
-    Err(err_text)
+    item_pool
 }
 
 fn get_location_list(
