@@ -33,12 +33,14 @@ pub struct TrickSettings {
     pub helper_ta: bool,
 }
 
+#[derive(Clone, Copy)]
 pub struct RewardShuffle {
     pub include_keys: bool,
     pub include_gems: bool,
     pub include_platinum_relics: bool,
 }
 
+#[derive(Clone, Copy)]
 pub struct WarppadShuffle {
     pub include_battle_arenas: bool,
     pub include_gem_cups: bool,

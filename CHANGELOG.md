@@ -7,6 +7,8 @@
 * Auto-Unlock CTR Challenge & Relic Race
   * If this setting is turned on, then all warp pads' second stage unlock, the CTR Challenge and Relic Race, is always "free" and available right after beating the warp pad's Trophy Race.  
   Does not affect battle arena warp pads, gem cup warp pads, or relic-only warp pads.
+* Spoiler log
+  * Now includes the settings chosen for the seed.
 
 ### Bug Fixes (seed generator)
 
