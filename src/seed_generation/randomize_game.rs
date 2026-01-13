@@ -79,6 +79,17 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
             new_game_world.set_warppad_links(new_warppads);
         }
 
+        // Boss Garage requirements
+        // Don't modify if Original4Tracks, as we expect that to be set by default
+        if !matches!(chosen_settings.randomization.bossgarage_unlock_requirements, BossGarageRequirements::Original4Tracks) {
+            let new_garage_unlocks = get_modified_garage_unlocks(
+                chosen_settings.randomization.bossgarage_unlock_requirements,
+                new_game_world.get_warppad_links(),
+            );
+
+            new_game_world.set_garage_unlocks(new_garage_unlocks);
+        }
+
         // Warppad Unlocks
         let mut new_warppad_unlocks = match chosen_settings.randomization.warppad_unlock_requirements {
             WarppadUnlockRequirements::Vanilla => {
@@ -92,17 +103,6 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
         }
 
         new_game_world.set_warppad_unlocks(new_warppad_unlocks);
-
-        // Boss Garage requirements
-        // Don't modify if Original4Tracks, as we expect that to be set by default
-        if !matches!(chosen_settings.randomization.bossgarage_unlock_requirements, BossGarageRequirements::Original4Tracks) {
-            let new_garage_unlocks = get_modified_garage_unlocks(
-                chosen_settings.randomization.bossgarage_unlock_requirements,
-                new_game_world.get_warppad_links(),
-            );
-
-            new_game_world.set_garage_unlocks(new_garage_unlocks);
-        }
 
         // Race Rewards
         if let Some(reward_shuffle) = &chosen_settings.randomization.shuffle_race_rewards {
