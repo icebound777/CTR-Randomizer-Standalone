@@ -10,6 +10,18 @@
 * Spoiler log
   * Now includes the settings chosen for the seed.
 
+### General Changes (base mod)
+
+* CTR Challenges
+  * Hide the CTR token at the end of a successful CTR Challenge
+  * Change the displayed text from `CTR TOKEN AWARDED` to `LETTERS COLLECTED`
+* Crystal Challenges
+  * Hide the CTR token at the end of a successful Crystal Challenge
+  * Change the displayed text from `CTR TOKEN AWARDED` to `CRYSTALS COLLECTED`
+* Relic Races
+  * Hide the Relic at the end of a successful Relic Race
+  * Change the displayed text from `RELIC AWARDED!` to `<type> TIME BEATEN` (type being `SAPPHIRE`, `GOLD`, `PLATINUM`)
+
 ### Bug Fixes (seed generator)
 
 * Oxide's Final Challenge Unlock
