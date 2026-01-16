@@ -5,7 +5,7 @@ use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
     game_world::{BossCharacter, get_vanilla_gameworld}, item_randomization::randomize_items::get_shuffled_rewards, randomization_datastructures::{
-        GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement, UnlockRequirementItem
+        GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement, UnlockRequirementItem, UnlockStage
     }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
 };
 
@@ -80,12 +80,16 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
         }
 
         // Warppad Unlocks
-        let new_warppad_unlocks = match chosen_settings.randomization.warppad_unlock_requirements {
+        let mut new_warppad_unlocks = match chosen_settings.randomization.warppad_unlock_requirements {
             WarppadUnlockRequirements::Vanilla => {
                 vanilla_gameworld.get_warppad_unlocks()
             },
             _ => todo!()
         };
+
+        if chosen_settings.randomization.autounlock_ctrchallenge_relicrace {
+            new_warppad_unlocks = clear_stage2_unlocks(new_warppad_unlocks);
+        }
 
         new_game_world.set_warppad_unlocks(new_warppad_unlocks);
 
@@ -383,4 +387,21 @@ fn get_modified_garage_unlocks(
     };
 
     new_garage_unlocks
+}
+
+fn clear_stage2_unlocks(warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>) -> HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> {
+    let mut modified_warppad_unlocks = HashMap::new();
+
+    for ((k_levelid, k_unlockstage), unlock_req) in warppad_unlocks {
+        if k_unlockstage == UnlockStage::One {
+            // Unmodified
+            modified_warppad_unlocks.insert((k_levelid, k_unlockstage), unlock_req);
+        } else {
+            // UnlockStage::Two
+            // Just set it to 0 trophies
+            modified_warppad_unlocks.insert((k_levelid, k_unlockstage), Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 0 }));
+        }
+    }
+
+    modified_warppad_unlocks
 }

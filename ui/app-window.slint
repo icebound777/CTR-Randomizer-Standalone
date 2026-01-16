@@ -74,7 +74,7 @@ component TitleBar inherits Rectangle {
         }
 
         Text {
-            text: "CTR-Randomizer (alpha 2)";
+            text: "CTR-Randomizer (alpha 3)";
             font-weight: 800;
             font-size: 40pt;
             horizontal-alignment: center;
@@ -312,7 +312,6 @@ component RandomizationSubmenu inherits Rectangle {
                 height: 34px;
                 y: bossgarage_unlocks_touch.y + 42px;
                 Switch {
-                    enabled: false;
                     text: "Auto-Unlock CTR Challenge & Relic Race";
                     toggled => {root.autounlock_ctrchallenge_relicrace = self.checked}
                 }
@@ -418,10 +417,15 @@ component RandomizationSubmenu inherits Rectangle {
     }
     ToolTip {
         x: auto_unlock_stagetwo_touch.x + 220px;
-        y: auto_unlock_stagetwo_touch.y + 90px; // <-- references any or no component, not necessarily a TouchArea
-        height: 2rem;
-        width: 16rem;
-        text: "NYI: NOT YET IMPLEMENTED";
+        y: auto_unlock_stagetwo_touch.y + 38px; // <-- references any or no component, not necessarily a TouchArea
+        height: 12rem;
+        width: 25rem;
+        text: "OFF: The second stage unlock for warp pads, which opens the "
+        + "CTR Challenge and Relic Race, has a separate unlock requirement "
+        + "from the first stage unlock (trophy race).\n\n"
+        + "ON: The second stage unlock is always free, making the CTR Challenge "
+        + "and Relic Race available immediately after beating that warp pad's "
+        + "trophy race.";
         user_is_hovering: auto_unlock_stagetwo_touch.has-hover; // <-- references one or more TouchArea below
     }
 }
@@ -796,7 +800,7 @@ component SettingsMenu inherits TabWidget {
 
     out property <int> rr_required_minimum_time <=> generalmenu.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> generalmenu.rr_require_perfects;
-    out property <int> oxide_final_challenge_unlock <=> generalmenu.rr_required_minimum_time;
+    out property <int> oxide_final_challenge_unlock <=> generalmenu.oxide_final_challenge_unlock;
 
     out property <bool> qol_skip_mask_hints <=> qolmenu.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> qolmenu.qol_skip_podium;
@@ -928,7 +932,7 @@ export component MainWindow inherits Window {
 
     out property <int> rr_required_minimum_time <=> settings.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> settings.rr_require_perfects;
-    out property <int> oxide_final_challenge_unlock <=> settings.rr_required_minimum_time;
+    out property <int> oxide_final_challenge_unlock <=> settings.oxide_final_challenge_unlock;
 
     out property <bool> qol_skip_mask_hints <=> settings.qol_skip_mask_hints;
     out property <bool> qol_skip_podium <=> settings.qol_skip_podium;
