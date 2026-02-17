@@ -139,6 +139,12 @@ impl std::fmt::Display for RequiredItem {
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
+pub struct ItemLocation {
+    pub levelid: LevelID,
+    pub racetype: RaceType,
+}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
 #[repr(u16)]
 pub enum RaceType {
     TrophyRace = 98,

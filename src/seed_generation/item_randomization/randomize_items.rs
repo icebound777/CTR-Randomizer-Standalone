@@ -7,8 +7,7 @@ use crate::seed_generation::{
     game_world::{BossCharacter, Hubs},
     item_randomization::player_inventory::PlayerInventory,
     randomization_datastructures::{
-        LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockRequirementItem,
-        UnlockStage,
+        LevelID, ItemLocation, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockRequirementItem, UnlockStage
     },
     seed_settings::RewardShuffle,
 };
@@ -20,7 +19,7 @@ pub fn get_shuffled_rewards(
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
-) -> Result<HashMap<(LevelID, RaceType), RaceReward>, String> {
+) -> Result<HashMap<ItemLocation, RaceReward>, String> {
     // generate item pool, based on
     // * include_keys
     // * include_gems
@@ -167,11 +166,11 @@ fn get_location_list(
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
-) -> HashMap<(LevelID, RaceType), Vec<UnlockRequirement>> {
+) -> HashMap<ItemLocation, Vec<UnlockRequirement>> {
     let mut location_list = HashMap::new();
 
     fn insert_trophy_warppad(
-        location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
+        location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
         static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
@@ -183,7 +182,7 @@ fn get_location_list(
                 .unwrap()
                 .unwrap(),
         ));
-        location_list.insert((level_id, RaceType::TrophyRace), unlocks.clone());
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::TrophyRace}, unlocks.clone());
 
         unlocks.push(UnlockRequirement::Item(
             warppad_unlocks
@@ -191,14 +190,14 @@ fn get_location_list(
                 .unwrap()
                 .unwrap(),
         ));
-        location_list.insert((level_id, RaceType::CtrOrCrystalChallenge), unlocks.clone());
-        location_list.insert((level_id, RaceType::RelicRaceSapphire), unlocks.clone());
-        location_list.insert((level_id, RaceType::RelicRaceGold), unlocks.clone());
-        location_list.insert((level_id, RaceType::RelicRacePlatinum), unlocks);
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::CtrOrCrystalChallenge}, unlocks.clone());
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceSapphire}, unlocks.clone());
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceGold}, unlocks.clone());
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRacePlatinum}, unlocks);
     }
 
     fn insert_arena_warppad(
-        location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
+        location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
         static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
@@ -212,11 +211,11 @@ fn get_location_list(
                 .unwrap(),
         ));
 
-        location_list.insert((level_id, RaceType::CtrOrCrystalChallenge), unlocks);
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::CtrOrCrystalChallenge}, unlocks);
     }
 
     fn insert_gemcup_warppad(
-        location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
+        location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
         static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
@@ -230,11 +229,11 @@ fn get_location_list(
                 .unwrap(),
         ));
 
-        location_list.insert((level_id, RaceType::GemCup), unlocks);
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::GemCup}, unlocks);
     }
 
     fn insert_reliconly_warppad(
-        location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
+        location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
         warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
         mut static_requirements: Vec<UnlockRequirement>,
         level_id: LevelID,
@@ -250,13 +249,13 @@ fn get_location_list(
 
         unlocks.append(&mut static_requirements);
 
-        location_list.insert((level_id, RaceType::RelicRaceSapphire), unlocks.clone());
-        location_list.insert((level_id, RaceType::RelicRaceGold), unlocks.clone());
-        location_list.insert((level_id, RaceType::RelicRacePlatinum), unlocks);
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceSapphire}, unlocks.clone());
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceGold}, unlocks.clone());
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRacePlatinum}, unlocks);
     }
 
     fn insert_boss_garage(
-        location_list: &mut HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
+        location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
         bossgarage_requirements: &HashMap<BossCharacter, UnlockRequirement>,
         hub_requirements: &HashMap<Hubs, Option<UnlockRequirementItem>>,
         level_id: LevelID,
@@ -288,7 +287,7 @@ fn get_location_list(
             req_list.push(UnlockRequirement::Item(*x));
         }
 
-        location_list.insert((level_id, RaceType::BossRace), req_list);
+        location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::BossRace}, req_list);
     }
 
     for (original_level, current_level) in warppad_links {
@@ -487,10 +486,10 @@ fn get_item_placement(
     seed: &mut ChaCha8Rng,
     mut item_pool: Vec<RaceReward>,
     reward_shuffle: &RewardShuffle,
-    location_list: HashMap<(LevelID, RaceType), Vec<UnlockRequirement>>,
-) -> Result<HashMap<(LevelID, RaceType), RaceReward>, String> {
+    location_list: HashMap<ItemLocation, Vec<UnlockRequirement>>,
+) -> Result<HashMap<ItemLocation, RaceReward>, String> {
     let mut item_placement: HashMap<
-        (LevelID, RaceType),
+        ItemLocation,
         (Vec<UnlockRequirement>, Option<RaceReward>),
     > = HashMap::new();
 
@@ -501,123 +500,123 @@ fn get_item_placement(
 
     // Pre-place items that cannot be shuffled
     item_placement
-        .get_mut(&(LevelID::OxideStation, RaceType::BossRace))
+        .get_mut(&ItemLocation{levelid: LevelID::OxideStation, racetype: RaceType::BossRace})
         .unwrap()
         .1 = Some(RaceReward::BeatTheGame);
     // Pre-place items that the player does not want shuffled
     if !reward_shuffle.include_platinum_relics {
         item_placement
-            .get_mut(&(LevelID::CrashCove, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::CrashCove, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::RoosTubes, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::MysteryCaves, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::MysteryCaves, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::SewerSpeedway, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::SewerSpeedway, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::TigerTemple, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::TigerTemple, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::CocoPark, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::CocoPark, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::PapusPyramid, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::DingoCanyon, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::DingoCanyon, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::BlizzardBluff, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::BlizzardBluff, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::DragonMines, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::PolarPass, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::PolarPass, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::TinyArena, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::TinyArena, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::NGinLabs, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::NGinLabs, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::CortexCastle, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::CortexCastle, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::HotAirSkyway, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::OxideStation, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::OxideStation, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::TurboTrack, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::TurboTrack, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
         item_placement
-            .get_mut(&(LevelID::SlideColiseum, RaceType::RelicRacePlatinum))
+            .get_mut(&ItemLocation{levelid: LevelID::SlideColiseum, racetype: RaceType::RelicRacePlatinum})
             .unwrap()
             .1 = Some(RaceReward::PlatinumRelic);
     }
 
     if !reward_shuffle.include_gems {
         item_placement
-            .get_mut(&(LevelID::CupRed, RaceType::GemCup))
+            .get_mut(&ItemLocation{levelid: LevelID::CupRed, racetype: RaceType::GemCup})
             .unwrap()
             .1 = Some(RaceReward::RedGem);
         item_placement
-            .get_mut(&(LevelID::CupGreen, RaceType::GemCup))
+            .get_mut(&ItemLocation{levelid: LevelID::CupGreen, racetype: RaceType::GemCup})
             .unwrap()
             .1 = Some(RaceReward::GreenGem);
         item_placement
-            .get_mut(&(LevelID::CupBlue, RaceType::GemCup))
+            .get_mut(&ItemLocation{levelid: LevelID::CupBlue, racetype: RaceType::GemCup})
             .unwrap()
             .1 = Some(RaceReward::BlueGem);
         item_placement
-            .get_mut(&(LevelID::CupYellow, RaceType::GemCup))
+            .get_mut(&ItemLocation{levelid: LevelID::CupYellow, racetype: RaceType::GemCup})
             .unwrap()
             .1 = Some(RaceReward::YellowGem);
         item_placement
-            .get_mut(&(LevelID::CupPurple, RaceType::GemCup))
+            .get_mut(&ItemLocation{levelid: LevelID::CupPurple, racetype: RaceType::GemCup})
             .unwrap()
             .1 = Some(RaceReward::PurpleGem);
     }
 
     if !reward_shuffle.include_keys {
         item_placement
-            .get_mut(&(LevelID::RoosTubes, RaceType::BossRace))
+            .get_mut(&ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::BossRace})
             .unwrap()
             .1 = Some(RaceReward::Key);
         item_placement
-            .get_mut(&(LevelID::PapusPyramid, RaceType::BossRace))
+            .get_mut(&ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::BossRace})
             .unwrap()
             .1 = Some(RaceReward::Key);
         item_placement
-            .get_mut(&(LevelID::DragonMines, RaceType::BossRace))
+            .get_mut(&ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::BossRace})
             .unwrap()
             .1 = Some(RaceReward::Key);
         item_placement
-            .get_mut(&(LevelID::HotAirSkyway, RaceType::BossRace))
+            .get_mut(&ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::BossRace})
             .unwrap()
             .1 = Some(RaceReward::Key);
     }
@@ -644,9 +643,9 @@ fn get_item_placement(
 
         // Find all locations that are reachable with the player's current
         // inventory combined with all currently reachable items
-        let mut reachable_locations: HashMap<(LevelID, RaceType), Option<RaceReward>> =
+        let mut reachable_locations: HashMap<ItemLocation, Option<RaceReward>> =
             HashMap::new();
-        let mut reachable_empty_locations: Vec<(LevelID, RaceType)> = Vec::new();
+        let mut reachable_empty_locations: Vec<ItemLocation> = Vec::new();
         let mut found_placed_item = true;
 
         while found_placed_item {
@@ -672,11 +671,11 @@ fn get_item_placement(
                     }
                     // If first possible race of this warp pad:
                     // Mark level as cleared for the purpose of boss garages
-                    if [RaceType::TrophyRace, RaceType::GemCup].contains(&location.1)
-                        || ([LevelID::TurboTrack, LevelID::SlideColiseum, LevelID::SkullRock, LevelID::RampageRuins, LevelID::RockyRoad, LevelID::NitroCourt].contains(&location.0)
-                            && [RaceType::RelicRaceSapphire, RaceType::CtrOrCrystalChallenge].contains(&location.1))
+                    if [RaceType::TrophyRace, RaceType::GemCup].contains(&location.racetype)
+                        || ([LevelID::TurboTrack, LevelID::SlideColiseum, LevelID::SkullRock, LevelID::RampageRuins, LevelID::RockyRoad, LevelID::NitroCourt].contains(&location.levelid)
+                            && [RaceType::RelicRaceSapphire, RaceType::CtrOrCrystalChallenge].contains(&location.racetype))
                     {
-                        inventory.add_track(location.0);
+                        inventory.add_track(location.levelid);
                         found_placed_item = true;
                     }
                     reachable_locations.insert(*location, *placed_item);

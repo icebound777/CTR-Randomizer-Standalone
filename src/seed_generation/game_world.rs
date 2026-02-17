@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::seed_generation::randomization_datastructures::{LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockRequirementItem, UnlockStage};
+use crate::seed_generation::randomization_datastructures::{ItemLocation, LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement, UnlockRequirementItem, UnlockStage};
 
 #[derive(Debug, Clone)]
 pub struct GameWorld {
@@ -109,12 +109,12 @@ impl GameWorld {
         warppad_unlocks
     }
 
-    pub fn get_race_rewards(&self) -> Vec<(LevelID, RaceType, RaceReward)> {
-        fn add_single_warppad_rewards(all_warppad_rewards: &mut Vec<(LevelID, RaceType, RaceReward)>, warp_pad: WarpPad) {
-            fn add_single_reward(all_warppad_rewards: &mut Vec<(LevelID, RaceType, RaceReward)>, level: LevelID, unlock: RaceUnlock) {
+    pub fn get_race_rewards(&self) -> Vec<(ItemLocation, RaceReward)> {
+        fn add_single_warppad_rewards(all_warppad_rewards: &mut Vec<(ItemLocation, RaceReward)>, warp_pad: WarpPad) {
+            fn add_single_reward(all_warppad_rewards: &mut Vec<(ItemLocation, RaceReward)>, level: LevelID, unlock: RaceUnlock) {
                 match unlock.reward {
                     Rewards::TrophyRaceRewards(TrophyRaceRewards { trophy_reward: rew }) => {
-                        all_warppad_rewards.push((level, RaceType::TrophyRace, rew));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::TrophyRace}, rew));
                     },
                     Rewards::TokensAndRelicRewards(TokensAndRelicRewards {
                         token_reward,
@@ -122,28 +122,28 @@ impl GameWorld {
                         relic_gold_reward,
                         relic_platinum_reward
                     }) => {
-                        all_warppad_rewards.push((level, RaceType::CtrOrCrystalChallenge, token_reward));
-                        all_warppad_rewards.push((level, RaceType::RelicRaceSapphire, relic_sapphire_reward));
-                        all_warppad_rewards.push((level, RaceType::RelicRaceGold, relic_gold_reward));
-                        all_warppad_rewards.push((level, RaceType::RelicRacePlatinum, relic_platinum_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::CtrOrCrystalChallenge}, token_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceSapphire}, relic_sapphire_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceGold}, relic_gold_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRacePlatinum}, relic_platinum_reward));
                     },
                     Rewards::BattleArenaRewards(BattleArenaRewards { single_reward: rew}) => {
-                        all_warppad_rewards.push((level, RaceType::CtrOrCrystalChallenge, rew));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::CtrOrCrystalChallenge}, rew));
                     },
                     Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
-                        all_warppad_rewards.push((level, RaceType::BossRace, rew));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::BossRace}, rew));
                     },
                     Rewards::RelicRaceOnlyRewards(RelicRaceOnlyRewards {
                         relic_sapphire_reward,
                         relic_gold_reward,
                         relic_platinum_reward
                     }) => {
-                        all_warppad_rewards.push((level, RaceType::RelicRaceSapphire, relic_sapphire_reward));
-                        all_warppad_rewards.push((level, RaceType::RelicRaceGold, relic_gold_reward));
-                        all_warppad_rewards.push((level, RaceType::RelicRacePlatinum, relic_platinum_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceSapphire}, relic_sapphire_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceGold}, relic_gold_reward));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRacePlatinum}, relic_platinum_reward));
                     },
                     Rewards::GemCupRewards(GemCupRewards { single_reward: rew }) => {
-                        all_warppad_rewards.push((level, RaceType::GemCup, rew));
+                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::GemCup}, rew));
                     }
                 }
             }
@@ -163,7 +163,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_1.boss_garage.reward {
-            race_rewards.push((LevelID::RoosTubes, RaceType::BossRace, rew));
+            race_rewards.push((ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::BossRace}, rew));
         }
 
         // Hub 2 - Lost Temple
@@ -173,7 +173,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_2.boss_garage.reward {
-            race_rewards.push((LevelID::PapusPyramid, RaceType::BossRace, rew));
+            race_rewards.push((ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::BossRace}, rew));
         }
 
         // Hub 3 - Glacial Park
@@ -183,7 +183,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_3.boss_garage.reward {
-            race_rewards.push((LevelID::DragonMines, RaceType::BossRace, rew));
+            race_rewards.push((ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::BossRace}, rew));
         }
 
         // Hub 4 - Citadel City
@@ -193,7 +193,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_4.boss_garage.reward {
-            race_rewards.push((LevelID::HotAirSkyway, RaceType::BossRace, rew));
+            race_rewards.push((ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::BossRace}, rew));
         }
 
         // Hub 5? - Gem Stone Valley
@@ -438,12 +438,12 @@ impl GameWorld {
         ])
     }
 
-    pub fn set_rewards(&mut self, reward_placement: HashMap<(LevelID, RaceType), RaceReward>) {
+    pub fn set_rewards(&mut self, reward_placement: HashMap<ItemLocation, RaceReward>) {
         let current_warppad_links = self.get_warppad_links();
         let inverted_warppad_links: HashMap<LevelID, LevelID> = current_warppad_links.iter().map(|(k, v)| (*v, *k)).collect();
 
-        for ((level, race), new_reward) in reward_placement {
-            let race_location = inverted_warppad_links.get(&level).unwrap();
+        for (location, new_reward) in reward_placement {
+            let race_location = inverted_warppad_links.get(&location.levelid).unwrap();
             let warppad_to_edit = match race_location {
                 LevelID::CrashCove  => {
                     &mut self.hub_1.warppad_1
@@ -528,7 +528,7 @@ impl GameWorld {
                 },
             };
 
-            match race {
+            match location.racetype {
                 RaceType::TrophyRace => {
                     warppad_to_edit.unlock_1.reward = Rewards::TrophyRaceRewards(
                         TrophyRaceRewards{
@@ -544,7 +544,7 @@ impl GameWorld {
                     )
                 },
                 RaceType::CtrOrCrystalChallenge => {
-                    match level {
+                    match location.levelid {
                         LevelID::SkullRock | LevelID::RampageRuins | LevelID::RockyRoad | LevelID::NitroCourt => {
                             warppad_to_edit.unlock_1.reward = Rewards::BattleArenaRewards(
                                 BattleArenaRewards{
@@ -580,7 +580,7 @@ impl GameWorld {
                     }
                 },
                 RaceType::RelicRaceSapphire => {
-                    match level {
+                    match location.levelid {
                         LevelID::TurboTrack | LevelID::SlideColiseum => {
                             let current_rewards = warppad_to_edit.unlock_1.reward;
                             match current_rewards {
@@ -621,7 +621,7 @@ impl GameWorld {
                     }
                 },
                 RaceType::RelicRaceGold => {
-                    match level {
+                    match location.levelid {
                         LevelID::TurboTrack | LevelID::SlideColiseum => {
                             let current_rewards = warppad_to_edit.unlock_1.reward;
                             match current_rewards {
@@ -662,7 +662,7 @@ impl GameWorld {
                     }
                 },
                 RaceType::RelicRacePlatinum => {
-                    match level {
+                    match location.levelid {
                         LevelID::TurboTrack | LevelID::SlideColiseum => {
                             let current_rewards = warppad_to_edit.unlock_1.reward;
                             match current_rewards {
@@ -703,7 +703,7 @@ impl GameWorld {
                     }
                 }
                 RaceType::BossRace => {
-                    let boss_location = match level {
+                    let boss_location = match location.levelid {
                         LevelID::RoosTubes => {
                             &mut self.hub_1.boss_garage
                         },
