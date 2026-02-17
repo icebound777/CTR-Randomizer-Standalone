@@ -505,120 +505,68 @@ fn get_item_placement(
         .1 = Some(RaceReward::BeatTheGame);
     // Pre-place items that the player does not want shuffled
     if !reward_shuffle.include_platinum_relics {
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CrashCove, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::MysteryCaves, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::SewerSpeedway, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::TigerTemple, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CocoPark, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::DingoCanyon, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::BlizzardBluff, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::PolarPass, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::TinyArena, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::NGinLabs, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CortexCastle, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::OxideStation, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::TurboTrack, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::SlideColiseum, racetype: RaceType::RelicRacePlatinum})
-            .unwrap()
-            .1 = Some(RaceReward::PlatinumRelic);
+        for level_id in [
+            // N.Sanity Beach
+            LevelID::CrashCove,
+            LevelID::RoosTubes,
+            LevelID::MysteryCaves,
+            LevelID::SewerSpeedway,
+            // The Lost Ruins
+            LevelID::TigerTemple,
+            LevelID::CocoPark,
+            LevelID::PapusPyramid,
+            LevelID::DingoCanyon,
+            // Glacier Park
+            LevelID::BlizzardBluff,
+            LevelID::DragonMines,
+            LevelID::PolarPass,
+            LevelID::TinyArena,
+            // Citadel City
+            LevelID::NGinLabs,
+            LevelID::CortexCastle,
+            LevelID::HotAirSkyway,
+            LevelID::OxideStation,
+            // Gem Stone Valley
+            LevelID::TurboTrack,
+            LevelID::SlideColiseum,
+        ] {
+            item_placement
+                .get_mut(&ItemLocation {
+                    levelid: level_id,
+                    racetype: RaceType::RelicRacePlatinum,
+                })
+                .unwrap()
+                .1 = Some(RaceReward::PlatinumRelic);
+        }
     }
 
     if !reward_shuffle.include_gems {
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CupRed, racetype: RaceType::GemCup})
-            .unwrap()
-            .1 = Some(RaceReward::RedGem);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CupGreen, racetype: RaceType::GemCup})
-            .unwrap()
-            .1 = Some(RaceReward::GreenGem);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CupBlue, racetype: RaceType::GemCup})
-            .unwrap()
-            .1 = Some(RaceReward::BlueGem);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CupYellow, racetype: RaceType::GemCup})
-            .unwrap()
-            .1 = Some(RaceReward::YellowGem);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::CupPurple, racetype: RaceType::GemCup})
-            .unwrap()
-            .1 = Some(RaceReward::PurpleGem);
+        for level_id in [
+            LevelID::CupRed,
+            LevelID::CupGreen,
+            LevelID::CupBlue,
+            LevelID::CupYellow,
+            LevelID::CupPurple,
+        ] {
+            item_placement
+                .get_mut(&ItemLocation{levelid: level_id, racetype: RaceType::GemCup})
+                .unwrap()
+                .1 = Some(RaceReward::RedGem);
+        }
     }
 
     if !reward_shuffle.include_keys {
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::BossRace})
-            .unwrap()
-            .1 = Some(RaceReward::Key);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::BossRace})
-            .unwrap()
-            .1 = Some(RaceReward::Key);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::BossRace})
-            .unwrap()
-            .1 = Some(RaceReward::Key);
-        item_placement
-            .get_mut(&ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::BossRace})
-            .unwrap()
-            .1 = Some(RaceReward::Key);
+        for level_id in [
+            LevelID::RoosTubes,
+            LevelID::PapusPyramid,
+            LevelID::DragonMines,
+            LevelID::HotAirSkyway,
+        ] {
+            item_placement
+                .get_mut(&ItemLocation{levelid: level_id, racetype: RaceType::BossRace})
+                .unwrap()
+                .1 = Some(RaceReward::Key);
+        }
     }
 
     item_pool.shuffle(seed);
