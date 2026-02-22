@@ -348,9 +348,17 @@ pub fn get_random_warppad_unlocks(
     // Requirements post processing:
     // Swap some token or relic requirements for "any" requirements
     // Lower some requirement counts by multiplying it by 0.8 and rounding up
+
+    // First pull random_unlocks into Vec, so values don't get visited randomly
+    let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> = Vec::new();
+    for (k, v) in &random_unlocks {
+        random_unlocks_vec.push((k.clone(), *v));
+    }
+    random_unlocks_vec.sort();
+
     let mut unlock_modifications: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
         HashMap::new();
-    for (k, opt_req) in &random_unlocks {
+    for (k, opt_req) in &random_unlocks_vec {
         let req = opt_req.unwrap();
         if matches!(
             req.item_type,
@@ -408,9 +416,15 @@ pub fn get_random_warppad_unlocks(
         let _ = random_unlocks.insert(k, v);
     }
 
+    // First pull random_unlocks into Vec, so values don't get visited randomly
+    let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> = Vec::new();
+    for (k, v) in &random_unlocks {
+        random_unlocks_vec.push((k.clone(), *v));
+    }
+    random_unlocks_vec.sort();
     let mut unlock_modifications: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
         HashMap::new();
-    for (k, opt_req) in &random_unlocks {
+    for (k, opt_req) in &random_unlocks_vec {
         if seed.random_range(0..100) < 66 {
             let req = opt_req.unwrap();
 
