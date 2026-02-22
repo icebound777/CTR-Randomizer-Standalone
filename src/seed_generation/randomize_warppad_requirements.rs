@@ -347,7 +347,8 @@ pub fn get_random_warppad_unlocks(
 
     // Requirements post processing:
     // Swap some token or relic requirements for "any" requirements
-    // Lower some requirement counts by multiplying it by 0.8 and rounding up
+    // Lower some requirement counts by multiplying it by 0.6 and rounding up
+    // Set "4 keys" requirements to "3 keys"
 
     // First pull random_unlocks into Vec, so values don't get visited randomly
     let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> =
@@ -427,9 +428,9 @@ pub fn get_random_warppad_unlocks(
     let mut unlock_modifications: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
         HashMap::new();
     for (k, opt_req) in &random_unlocks_vec {
-        if seed.random_range(0..100) < 66 {
-            let req = opt_req.unwrap();
+        let req = opt_req.unwrap();
 
+        if seed.random_range(0..100) < 66 {
             if req.count != 0 {
                 println!(
                     "Lowering {:?} {}",
@@ -444,6 +445,18 @@ pub fn get_random_warppad_unlocks(
                     }),
                 );
             }
+        } else if matches!(req.item_type, RequiredItem::Key) && req.count == 4 {
+            println!(
+                "Setting '4 keys' requirement to '3 keys' {:?}",
+                req,
+            );
+            unlock_modifications.insert(
+                k.clone(),
+                Some(UnlockRequirementItem {
+                    item_type: req.item_type,
+                    count: 3,
+                }),
+            );
         }
     }
     for (k, v) in unlock_modifications {
