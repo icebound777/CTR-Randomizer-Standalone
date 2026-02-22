@@ -72,7 +72,7 @@ impl std::fmt::Display for LevelID {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, PartialOrd, Ord)]
 pub enum UnlockStage {
     One,
     Two,
@@ -84,7 +84,7 @@ pub enum UnlockRequirement {
     LevelList(Vec<LevelID>)
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnlockRequirementItem {
     pub item_type: RequiredItem,
     pub count: u8,
