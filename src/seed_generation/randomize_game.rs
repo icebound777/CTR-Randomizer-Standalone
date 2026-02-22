@@ -124,6 +124,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 new_game_world.get_warppad_unlocks(),
                 new_game_world.get_garage_unlocks(),
                 new_game_world.get_hub_requirements(),
+                !matches!(&chosen_settings.randomization.warppad_unlock_requirements, WarppadUnlockRequirements::Vanilla),
             );
 
             if let Ok(new_reward_placement) = new_reward_placement {

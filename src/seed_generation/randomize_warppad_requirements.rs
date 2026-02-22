@@ -67,6 +67,7 @@ pub fn get_random_warppad_unlocks(
         free_warppads_warppad_unlocks.clone(),
         bossgarage_requirements.clone(),
         hub_requirements.clone(),
+        true,
     );
 
     let mut zeroed_out_item_placement: HashMap<ItemLocation, RaceReward>;

@@ -22,6 +22,7 @@ pub fn get_shuffled_rewards(
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
+    shuffled_warppad_requirements: bool,
 ) -> Result<HashMap<ItemLocation, RaceReward>, String> {
     // generate item pool, based on
     // * include_keys
@@ -49,6 +50,7 @@ pub fn get_shuffled_rewards(
             item_pool.clone(),
             reward_shuffle,
             location_list.clone(),
+            shuffled_warppad_requirements,
         );
         if let Ok(x) = placement_result {
             println!("Item placement needed {attempts} attempts.");
@@ -490,6 +492,7 @@ fn get_item_placement(
     mut item_pool: Vec<RaceReward>,
     reward_shuffle: &RewardShuffle,
     location_list: HashMap<ItemLocation, Vec<UnlockRequirement>>,
+    shuffled_warppad_requirements: bool,
 ) -> Result<HashMap<ItemLocation, RaceReward>, String> {
     let mut item_placement: HashMap<
         ItemLocation,
@@ -573,8 +576,10 @@ fn get_item_placement(
     }
 
     item_pool.shuffle(seed);
-    // Guarantee keys and trophies are placed first
-    item_pool.sort_by_key(|k| matches!(k, RaceReward::Trophy));
+    // Guarantee keys are placed first, and trophies if vanilla warppad reqs
+    if !shuffled_warppad_requirements {
+        item_pool.sort_by_key(|k| matches!(k, RaceReward::Trophy));
+    }
     item_pool.sort_by_key(|k| matches!(k, RaceReward::Key));
 
     let mut num_placed_items = 0;
