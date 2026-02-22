@@ -259,12 +259,12 @@ pub fn get_random_warppad_unlocks(
             (RequiredItem::GreenCtrToken, 3),
             (RequiredItem::BlueCtrToken, 3),
             (RequiredItem::YellowCtrToken, 3),
-            (RequiredItem::PurpleCtrToken, 3),
-            (RequiredItem::SapphireRelic, 5),
-            (RequiredItem::GoldRelic, 5),
-            (RequiredItem::PlatinumRelic, 5),
+            (RequiredItem::PurpleCtrToken, 2),
+            (RequiredItem::SapphireRelic, 4),
+            (RequiredItem::GoldRelic, 4),
+            (RequiredItem::PlatinumRelic, 4),
             (RequiredItem::Key, 5),
-            (RequiredItem::AnyGem, 5),
+            (RequiredItem::AnyGem, 2),
         ]);
         if !matches!(chosen_location.racetype, RaceType::BossRace) {
             let mut possible_reqs: Vec<(RequiredItem, u8)> = Vec::new();
