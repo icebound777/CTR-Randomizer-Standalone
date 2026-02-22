@@ -733,7 +733,7 @@ impl GameWorld {
     }
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Hubs {
     NSanityBeach,
     GemStoneValley,

@@ -12,10 +12,13 @@ use crate::seed_generation::{
     seed_settings::RewardShuffle,
 };
 
+/// Generate item pool, create a location list to get logical requirements,
+/// then run up to 1000 item placement attempts.
+/// Returns placement result or Err.
 pub fn get_shuffled_rewards(
     seed: &mut ChaCha8Rng,
     reward_shuffle: &RewardShuffle,
-    warppad_links: HashMap<LevelID, LevelID>,
+    warppad_links: &HashMap<LevelID, LevelID>,
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
@@ -161,8 +164,8 @@ pub fn build_item_pool(
     item_pool
 }
 
-fn get_location_list(
-    warppad_links: HashMap<LevelID, LevelID>,
+pub fn get_location_list(
+    warppad_links: &HashMap<LevelID, LevelID>,
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
     hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
@@ -410,7 +413,7 @@ fn get_location_list(
                     &mut location_list,
                     &warppad_unlocks,
                     static_requirements,
-                    x,
+                    *x,
                 );
             }
             x @ (LevelID::SkullRock
@@ -421,7 +424,7 @@ fn get_location_list(
                     &mut location_list,
                     &warppad_unlocks,
                     static_requirements,
-                    x,
+                    *x,
                 );
             }
             x @ (LevelID::CupRed
@@ -433,7 +436,7 @@ fn get_location_list(
                     &mut location_list,
                     &warppad_unlocks,
                     static_requirements,
-                    x,
+                    *x,
                 );
             }
             x @ (LevelID::TurboTrack | LevelID::SlideColiseum) => {
@@ -441,7 +444,7 @@ fn get_location_list(
                     &mut location_list,
                     &warppad_unlocks,
                     static_requirements,
-                    x,
+                    *x,
                 );
             }
         }

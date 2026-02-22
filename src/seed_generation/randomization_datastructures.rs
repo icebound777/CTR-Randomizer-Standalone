@@ -90,7 +90,7 @@ pub struct UnlockRequirementItem {
     pub count: u8,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 #[repr(u32)]
 pub enum RequiredItem {
     Trophy = 98,
@@ -111,6 +111,31 @@ pub enum RequiredItem {
     YellowGem = 863,
     PurpleGem = 1119,
     AnyGem = 1887,
+}
+
+impl TryFrom<RaceReward> for RequiredItem {
+    type Error = ();
+
+    fn try_from(v: RaceReward) -> Result<Self, Self::Error> {
+        match v {
+            RaceReward::Trophy => Ok(RequiredItem::Trophy),
+            RaceReward::RedCtrToken => Ok(RequiredItem::RedCtrToken),
+            RaceReward::GreenCtrToken => Ok(RequiredItem::GreenCtrToken),
+            RaceReward::BlueCtrToken => Ok(RequiredItem::BlueCtrToken),
+            RaceReward::YellowCtrToken => Ok(RequiredItem::YellowCtrToken),
+            RaceReward::PurpleCtrToken => Ok(RequiredItem::PurpleCtrToken),
+            RaceReward::SapphireRelic => Ok(RequiredItem::SapphireRelic),
+            RaceReward::GoldRelic => Ok(RequiredItem::GoldRelic),
+            RaceReward::PlatinumRelic => Ok(RequiredItem::PlatinumRelic),
+            RaceReward::Key => Ok(RequiredItem::Key),
+            RaceReward::RedGem => Ok(RequiredItem::RedGem),
+            RaceReward::GreenGem => Ok(RequiredItem::GreenGem),
+            RaceReward::BlueGem => Ok(RequiredItem::BlueGem),
+            RaceReward::YellowGem => Ok(RequiredItem::YellowGem),
+            RaceReward::PurpleGem => Ok(RequiredItem::PurpleGem),
+            _ => Err(()),
+        }
+    }
 }
 
 impl std::fmt::Display for RequiredItem {
@@ -156,7 +181,7 @@ pub enum RaceType {
     GemCup = 95,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 #[repr(u16)]
 pub enum RaceReward {
     Trophy = 98,
