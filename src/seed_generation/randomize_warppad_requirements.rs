@@ -350,7 +350,8 @@ pub fn get_random_warppad_unlocks(
     // Lower some requirement counts by multiplying it by 0.8 and rounding up
 
     // First pull random_unlocks into Vec, so values don't get visited randomly
-    let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> = Vec::new();
+    let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> =
+        Vec::new();
     for (k, v) in &random_unlocks {
         random_unlocks_vec.push((k.clone(), *v));
     }
@@ -417,7 +418,8 @@ pub fn get_random_warppad_unlocks(
     }
 
     // First pull random_unlocks into Vec, so values don't get visited randomly
-    let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> = Vec::new();
+    let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> =
+        Vec::new();
     for (k, v) in &random_unlocks {
         random_unlocks_vec.push((k.clone(), *v));
     }
@@ -448,5 +450,17 @@ pub fn get_random_warppad_unlocks(
         let _ = random_unlocks.insert(k, v);
     }
 
-    Ok(random_unlocks)
+    // Unlock requirements expects the warp pad level id to set the requirement
+    // for, not the actual level.
+    // So we have to get the warp pad level from the warppad links and adjust
+    // the return data accordingly
+    let mut random_unlocks_fixed: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
+        HashMap::new();
+    let inverted_warppad_links: HashMap<LevelID, LevelID> =
+        warppad_links.iter().map(|(k, v)| (*v, *k)).collect();
+    for (k, v) in random_unlocks {
+        random_unlocks_fixed.insert((*inverted_warppad_links.get(&k.0).unwrap(), k.1), v);
+    }
+
+    Ok(random_unlocks_fixed)
 }
