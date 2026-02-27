@@ -109,12 +109,12 @@ impl GameWorld {
         warppad_unlocks
     }
 
-    pub fn get_race_rewards(&self) -> Vec<(ItemLocation, RaceReward)> {
-        fn add_single_warppad_rewards(all_warppad_rewards: &mut Vec<(ItemLocation, RaceReward)>, warp_pad: WarpPad) {
-            fn add_single_reward(all_warppad_rewards: &mut Vec<(ItemLocation, RaceReward)>, level: LevelID, unlock: RaceUnlock) {
+    pub fn get_race_rewards(&self) -> HashMap<ItemLocation, RaceReward> {
+        fn add_single_warppad_rewards(all_warppad_rewards: &mut HashMap<ItemLocation, RaceReward>, warp_pad: WarpPad) {
+            fn add_single_reward(all_warppad_rewards: &mut HashMap<ItemLocation, RaceReward>, level: LevelID, unlock: RaceUnlock) {
                 match unlock.reward {
                     Rewards::TrophyRaceRewards(TrophyRaceRewards { trophy_reward: rew }) => {
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::TrophyRace}, rew));
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::TrophyRace}, rew);
                     },
                     Rewards::TokensAndRelicRewards(TokensAndRelicRewards {
                         token_reward,
@@ -122,28 +122,28 @@ impl GameWorld {
                         relic_gold_reward,
                         relic_platinum_reward
                     }) => {
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::CtrOrCrystalChallenge}, token_reward));
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceSapphire}, relic_sapphire_reward));
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceGold}, relic_gold_reward));
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRacePlatinum}, relic_platinum_reward));
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::CtrOrCrystalChallenge}, token_reward);
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::RelicRaceSapphire}, relic_sapphire_reward);
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::RelicRaceGold}, relic_gold_reward);
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::RelicRacePlatinum}, relic_platinum_reward);
                     },
                     Rewards::BattleArenaRewards(BattleArenaRewards { single_reward: rew}) => {
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::CtrOrCrystalChallenge}, rew));
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::CtrOrCrystalChallenge}, rew);
                     },
                     Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) => {
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::BossRace}, rew));
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::BossRace}, rew);
                     },
                     Rewards::RelicRaceOnlyRewards(RelicRaceOnlyRewards {
                         relic_sapphire_reward,
                         relic_gold_reward,
                         relic_platinum_reward
                     }) => {
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceSapphire}, relic_sapphire_reward));
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRaceGold}, relic_gold_reward));
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::RelicRacePlatinum}, relic_platinum_reward));
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::RelicRaceSapphire}, relic_sapphire_reward);
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::RelicRaceGold}, relic_gold_reward);
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::RelicRacePlatinum}, relic_platinum_reward);
                     },
                     Rewards::GemCupRewards(GemCupRewards { single_reward: rew }) => {
-                        all_warppad_rewards.push((ItemLocation{levelid: level, racetype: RaceType::GemCup}, rew));
+                        all_warppad_rewards.insert(ItemLocation{levelid: level, racetype: RaceType::GemCup}, rew);
                     }
                 }
             }
@@ -154,7 +154,7 @@ impl GameWorld {
             }
         }
 
-        let mut race_rewards = Vec::new();
+        let mut race_rewards = HashMap::new();
 
         // Hub 1 - N. Sanity Beach
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_1);
@@ -163,7 +163,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_1.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_1.boss_garage.reward {
-            race_rewards.push((ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::BossRace}, rew));
+            race_rewards.insert(ItemLocation{levelid: LevelID::RoosTubes, racetype: RaceType::BossRace}, rew);
         }
 
         // Hub 2 - Lost Temple
@@ -173,7 +173,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_2.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_2.boss_garage.reward {
-            race_rewards.push((ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::BossRace}, rew));
+            race_rewards.insert(ItemLocation{levelid: LevelID::PapusPyramid, racetype: RaceType::BossRace}, rew);
         }
 
         // Hub 3 - Glacial Park
@@ -183,7 +183,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_3.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_3.boss_garage.reward {
-            race_rewards.push((ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::BossRace}, rew));
+            race_rewards.insert(ItemLocation{levelid: LevelID::DragonMines, racetype: RaceType::BossRace}, rew);
         }
 
         // Hub 4 - Citadel City
@@ -193,7 +193,7 @@ impl GameWorld {
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_4);
         add_single_warppad_rewards(&mut race_rewards, self.hub_4.warppad_arena);
         if let Rewards::BossRaceRewards(BossRaceRewards { single_reward: rew }) = self.hub_4.boss_garage.reward {
-            race_rewards.push((ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::BossRace}, rew));
+            race_rewards.insert(ItemLocation{levelid: LevelID::HotAirSkyway, racetype: RaceType::BossRace}, rew);
         }
 
         // Hub 5? - Gem Stone Valley
