@@ -396,11 +396,17 @@ component RandomizationSubmenu inherits Rectangle {
         user_is_hovering: include_gemcups_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: warppad_unlocks_touch.x + 240px;
-        y: warppad_unlocks_touch.y + 100px; // <-- references any or no component, not necessarily a TouchArea
-        height: 2rem;
-        width: 16rem;
-        text: "NYI: NOT YET IMPLEMENTED";
+        x: warppad_unlocks_touch.x + 260px;
+        y: warppad_unlocks_touch.y + 80px; // <-- references any or no component, not necessarily a TouchArea
+        height: 15rem;
+        width: 25rem;
+        text: "Vanilla: Unchanged unlock requirements.\n\n"
+        + "Random: Randomize all unlock requirements.\n\n"
+        + "Random w/o 4 Keys: Randomize all unlock requirements, but guarantee "
+        + "that no warp pad requires 4 keys to open (to avoid locking races "
+        + "behind the end of the run).\n\n"
+        + "Note: Does not account for gems or platinum relics if the "
+        + "respective race rewards are not shuffled.";
         user_is_hovering: warppad_unlocks_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
