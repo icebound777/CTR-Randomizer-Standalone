@@ -44,9 +44,9 @@ fn get_database_vec(randomized_game: &GameSetup) -> Vec<u8> {
 
     // Race Rewards
     let db_prefix_rewards: u32 = 0xA100;
-    for (level_id, racetype, reward) in randomized_game.game_world.get_race_rewards() {
+    for (location, reward) in randomized_game.game_world.get_race_rewards() {
         key_value_db.insert(
-            ((db_prefix_rewards | level_id as u32) << 16) | racetype as u32,
+            ((db_prefix_rewards | location.levelid as u32) << 16) | location.racetype as u32,
             reward as u16
         );
     }

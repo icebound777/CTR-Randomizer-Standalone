@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::seed_generation::randomization_datastructures::{
     LevelID, RaceReward, RequiredItem, UnlockRequirement
 };
@@ -43,6 +45,32 @@ impl PlayerInventory {
             },
             beaten_tracks: Vec::new(),
         }
+    }
+
+    pub fn get_items(&self) -> HashMap<RaceReward, u8> {
+        let mut all_items = HashMap::new();
+
+        all_items.insert(RaceReward::Trophy, self.num_trophies);
+
+        all_items.insert(RaceReward::RedCtrToken, self.num_ctr_tokens_red);
+        all_items.insert(RaceReward::GreenCtrToken, self.num_ctr_tokens_green);
+        all_items.insert(RaceReward::BlueCtrToken, self.num_ctr_tokens_blue);
+        all_items.insert(RaceReward::YellowCtrToken, self.num_ctr_tokens_yellow);
+        all_items.insert(RaceReward::PurpleCtrToken, self.num_ctr_tokens_purple);
+
+        all_items.insert(RaceReward::SapphireRelic, self.num_relics_sapphire);
+        all_items.insert(RaceReward::GoldRelic, self.num_relics_gold);
+        all_items.insert(RaceReward::PlatinumRelic, self.num_relics_platinum);
+
+        all_items.insert(RaceReward::Key, self.num_keys);
+
+        all_items.insert(RaceReward::RedGem, self.collected_gems.red_gem.into());
+        all_items.insert(RaceReward::GreenGem, self.collected_gems.green_gem.into());
+        all_items.insert(RaceReward::BlueGem, self.collected_gems.blue_gem.into());
+        all_items.insert(RaceReward::YellowGem, self.collected_gems.yellow_gem.into());
+        all_items.insert(RaceReward::PurpleGem, self.collected_gems.purple_gem.into());
+
+        all_items
     }
 
     pub fn add_item(&mut self, new_item: RaceReward) {
