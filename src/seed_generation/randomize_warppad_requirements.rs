@@ -4,7 +4,7 @@ use rand::{seq::IndexedRandom, Rng};
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
-    game_world::{BossCharacter, Hubs},
+    game_world::{get_vanilla_gameworld, BossCharacter, Hubs},
     item_randomization::{
         player_inventory::PlayerInventory,
         randomize_items::{get_location_list, get_shuffled_rewards},
@@ -59,16 +59,19 @@ pub fn get_random_warppad_unlocks(
         );
     }
 
-    //todo if let Some(reward_shuffle) = opt_reward_shuffle
-    let res_zeroed_out_item_placement = get_shuffled_rewards(
-        seed,
-        &opt_reward_shuffle.unwrap(),
-        &warppad_links,
-        free_warppads_warppad_unlocks.clone(),
-        bossgarage_requirements.clone(),
-        hub_requirements.clone(),
-        true,
-    );
+    let res_zeroed_out_item_placement = if let Some(reward_shuffle) = opt_reward_shuffle {
+        get_shuffled_rewards(
+            seed,
+            &reward_shuffle,
+            &warppad_links,
+            free_warppads_warppad_unlocks.clone(),
+            bossgarage_requirements.clone(),
+            hub_requirements.clone(),
+            true,
+        )
+    } else {
+        Ok(get_vanilla_gameworld().get_race_rewards())
+    };
 
     let mut zeroed_out_item_placement: HashMap<ItemLocation, RaceReward>;
     if res_zeroed_out_item_placement.is_ok() {
@@ -133,6 +136,7 @@ pub fn get_random_warppad_unlocks(
     let mut inventory = PlayerInventory::new();
     let mut filled_locations: Vec<ItemLocation> = Vec::new();
 
+    println!("{:?}", zeroed_out_item_placement);
     for (levelid, _) in random_unlocks.keys() {
         inventory.add_track(*levelid);
 
@@ -180,9 +184,11 @@ pub fn get_random_warppad_unlocks(
                     levelid: *levelid,
                     racetype: RaceType::RelicRacePlatinum,
                 };
-                if opt_reward_shuffle.unwrap().include_platinum_relics {
-                    let item = zeroed_out_item_placement.get(&location).unwrap();
-                    inventory.add_item(*item);
+                if let Some(reward_shuffle) = opt_reward_shuffle {
+                    if reward_shuffle.include_platinum_relics {
+                        let item = zeroed_out_item_placement.get(&location).unwrap();
+                        inventory.add_item(*item);
+                    }
                 }
                 zeroed_out_item_placement
                     .remove(&location)
@@ -277,7 +283,8 @@ pub fn get_random_warppad_unlocks(
             let current_items = inventory.get_items();
             for (item, count) in &current_items {
                 if (!matches!(item, RaceReward::PlatinumRelic)
-                    || opt_reward_shuffle.unwrap().include_platinum_relics)
+                    || (opt_reward_shuffle.is_some()
+                        && opt_reward_shuffle.unwrap().include_platinum_relics))
                     && (!matches!(
                         item,
                         RaceReward::RedGem
@@ -285,7 +292,8 @@ pub fn get_random_warppad_unlocks(
                             | RaceReward::BlueGem
                             | RaceReward::YellowGem
                             | RaceReward::PurpleGem
-                    ) || opt_reward_shuffle.unwrap().include_gems)
+                    ) || (opt_reward_shuffle.is_some()
+                        && opt_reward_shuffle.unwrap().include_gems))
                 {
                     if count > &0u8 {
                         possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
@@ -336,6 +344,7 @@ pub fn get_random_warppad_unlocks(
                     for (item, count) in current_items {
                         if matches!(item, RaceReward::SapphireRelic | RaceReward::GoldRelic)
                             || (matches!(item, RaceReward::PlatinumRelic)
+                                && opt_reward_shuffle.is_some()
                                 && opt_reward_shuffle.unwrap().include_platinum_relics)
                         {
                             required_amount += count;
