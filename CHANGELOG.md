@@ -1,12 +1,21 @@
 # Changelog
 
-## next version
+## beta 1
 
 ### Features (seed generator)
 
 * Warp Pad Unlock Requirements
   * Can now choose between `Vanilla` (unchanged), `Random`, and `Random w/o 4 Keys`.
   * `Random` and `Random w/o 4 Keys` will not account for gems or platinum relics if the respective race rewards are not shuffled.
+
+### Bug Fixes (base mod)
+
+* Relic Races
+  * Fix 10 second bonus counter for perfect runs resetting to `-10` after counting to zero.
+  * Fix 10 second bonus counter for perfect runs staying on screen instead of vanishing.
+  * Fix `PERFECT` text for perfect runs not doing a fade-out to the right-side screen edge.
+* Adventure Mode save screen
+  * Fix not being able to close the green save screen by pressing Triangle or Square
 
 ## alpha 3
 
