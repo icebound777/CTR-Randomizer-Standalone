@@ -276,8 +276,16 @@ pub fn get_random_warppad_unlocks(
             let mut possible_reqs: Vec<(RequiredItem, u8)> = Vec::new();
             let current_items = inventory.get_items();
             for (item, count) in &current_items {
-                if !matches!(item, RaceReward::PlatinumRelic)
-                    || opt_reward_shuffle.unwrap().include_platinum_relics
+                if (!matches!(item, RaceReward::PlatinumRelic)
+                    || opt_reward_shuffle.unwrap().include_platinum_relics)
+                    && (!matches!(
+                        item,
+                        RaceReward::RedGem
+                            | RaceReward::GreenGem
+                            | RaceReward::BlueGem
+                            | RaceReward::YellowGem
+                            | RaceReward::PurpleGem
+                    ) || opt_reward_shuffle.unwrap().include_gems)
                 {
                     if count > &0u8 {
                         possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
