@@ -74,7 +74,7 @@ component TitleBar inherits Rectangle {
         }
 
         Text {
-            text: "CTR-Randomizer (alpha 3)";
+            text: "CTR-Randomizer (beta 1)";
             font-weight: 800;
             font-size: 40pt;
             horizontal-alignment: center;
@@ -278,11 +278,10 @@ component RandomizationSubmenu inherits Rectangle {
                     font-size: 10pt;
                 }
                 warppad_unlocks := ComboBox {
-                    enabled: false;
                     y: warppad_unlocks_text.y - 8px;
                     x: 10px;
                     width: 190px;
-                    model: ["Vanilla", "Shuffled", "Chaotic"];
+                    model: ["Vanilla", "Random", "Random w/o 4 Keys"];
                 }
             }
             bossgarage_unlocks_touch := TouchArea {
@@ -397,16 +396,22 @@ component RandomizationSubmenu inherits Rectangle {
         user_is_hovering: include_gemcups_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: warppad_unlocks_touch.x + 240px;
-        y: warppad_unlocks_touch.y + 100px; // <-- references any or no component, not necessarily a TouchArea
-        height: 2rem;
-        width: 16rem;
-        text: "NYI: NOT YET IMPLEMENTED";
+        x: warppad_unlocks_touch.x + 280px;
+        y: warppad_unlocks_touch.y + 40px; // <-- references any or no component, not necessarily a TouchArea
+        height: 15rem;
+        width: 25rem;
+        text: "Vanilla: Unchanged unlock requirements.\n\n"
+        + "Random: Randomize all unlock requirements.\n\n"
+        + "Random w/o 4 Keys: Randomize all unlock requirements, but guarantee "
+        + "that no warp pad requires 4 keys to open (to avoid locking races "
+        + "behind the end of the run).\n\n"
+        + "Note: Does not account for gems or platinum relics if the "
+        + "respective race rewards are not shuffled.";
         user_is_hovering: warppad_unlocks_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: bossgarage_unlocks_touch.x + 240px;
-        y: bossgarage_unlocks_touch.y + 100px; // <-- references any or no component, not necessarily a TouchArea
+        x: bossgarage_unlocks_touch.x + 280px;
+        y: bossgarage_unlocks_touch.y + 60px; // <-- references any or no component, not necessarily a TouchArea
         height: 10rem;
         width: 25rem;
         text: "Choose how the regular boss garages get unlocked.\n"
@@ -416,8 +421,8 @@ component RandomizationSubmenu inherits Rectangle {
         user_is_hovering: bossgarage_unlocks_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: auto_unlock_stagetwo_touch.x + 220px;
-        y: auto_unlock_stagetwo_touch.y + 38px; // <-- references any or no component, not necessarily a TouchArea
+        x: auto_unlock_stagetwo_touch.x + 240px;
+        y: auto_unlock_stagetwo_touch.y - 10px; // <-- references any or no component, not necessarily a TouchArea
         height: 12rem;
         width: 25rem;
         text: "OFF: The second stage unlock for warp pads, which opens the "

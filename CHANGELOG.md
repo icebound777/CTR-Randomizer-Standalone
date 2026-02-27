@@ -1,8 +1,25 @@
 # Changelog
 
-## alpha 3
+## beta 1
 
 ### Features (seed generator)
+
+* Warp Pad Unlock Requirements
+  * Can now choose between `Vanilla` (unchanged), `Random`, and `Random w/o 4 Keys`.
+  * `Random` and `Random w/o 4 Keys` will not account for gems or platinum relics if the respective race rewards are not shuffled.
+
+### Bug Fixes (base mod)
+
+* Relic Races
+  * Fix 10 second bonus counter for perfect runs resetting to `-10` after counting to zero.
+  * Fix 10 second bonus counter for perfect runs staying on screen instead of vanishing.
+  * Fix `PERFECT` text for perfect runs not doing a fade-out to the right-side screen edge.
+* Adventure Mode save screen
+  * Fix not being able to close the green save screen by pressing Triangle or Square
+
+## alpha 3
+
+### Features (seed generator) (alpha 3)
 
 * Auto-Unlock CTR Challenge & Relic Race
   * If this setting is turned on, then all warp pads' second stage unlock, the CTR Challenge and Relic Race, is always "free" and available right after beating the warp pad's Trophy Race.  
@@ -22,7 +39,7 @@
   * Hide the Relic at the end of a successful Relic Race
   * Change the displayed text from `RELIC AWARDED!` to `<type> TIME BEATEN` (type being `SAPPHIRE`, `GOLD`, `PLATINUM`)
 
-### Bug Fixes (seed generator)
+### Bug Fixes (seed generator) (alpha 3)
 
 * Oxide's Final Challenge Unlock
   * Fix an issue where the Final Challenge Unlock dropdown menu did absolutely nothing, and that setting instead falsely used the "Relic Races: Required Minimum Time" dropdown. This resulted in unexpected requirements for Oxide's Final Challenge, and the seed generator crashing if "Relic Races: Required Minimum Time" was set to "Platinum Time".

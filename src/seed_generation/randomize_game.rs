@@ -6,7 +6,7 @@ use rand_chacha::ChaCha8Rng;
 use crate::seed_generation::{
     game_world::{BossCharacter, get_vanilla_gameworld}, item_randomization::randomize_items::get_shuffled_rewards, randomization_datastructures::{
         GameSetup, LevelID, RequiredItem, SettingID, SettingValue, UnlockRequirement, UnlockRequirementItem, UnlockStage
-    }, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
+    }, randomize_warppad_requirements::get_random_warppad_unlocks, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime, SeedSettings, WarppadUnlockRequirements}
 };
 
 fn get_vanilla_game() -> GameSetup {
@@ -76,22 +76,9 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 limit_arena_gemcup_shuffle,
             );
 
+            println!("{:?}", new_warppads);
             new_game_world.set_warppad_links(new_warppads);
         }
-
-        // Warppad Unlocks
-        let mut new_warppad_unlocks = match chosen_settings.randomization.warppad_unlock_requirements {
-            WarppadUnlockRequirements::Vanilla => {
-                vanilla_gameworld.get_warppad_unlocks()
-            },
-            _ => todo!()
-        };
-
-        if chosen_settings.randomization.autounlock_ctrchallenge_relicrace {
-            new_warppad_unlocks = clear_stage2_unlocks(new_warppad_unlocks);
-        }
-
-        new_game_world.set_warppad_unlocks(new_warppad_unlocks);
 
         // Boss Garage requirements
         // Don't modify if Original4Tracks, as we expect that to be set by default
@@ -104,15 +91,40 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
             new_game_world.set_garage_unlocks(new_garage_unlocks);
         }
 
+        // Warppad Unlocks
+        let mut new_warppad_unlocks = match &chosen_settings.randomization.warppad_unlock_requirements {
+            WarppadUnlockRequirements::Vanilla => {
+                vanilla_gameworld.get_warppad_unlocks()
+            },
+            x => {
+                get_random_warppad_unlocks(
+                    &mut seed,
+                    x,
+                    &chosen_settings.randomization.shuffle_race_rewards,
+                    new_game_world.get_warppad_links(),
+                    new_game_world.get_warppad_unlocks(),
+                    new_game_world.get_garage_unlocks(),
+                    new_game_world.get_hub_requirements(),
+                ).unwrap()
+            }
+        };
+
+        if chosen_settings.randomization.autounlock_ctrchallenge_relicrace {
+            new_warppad_unlocks = clear_stage2_unlocks(new_warppad_unlocks);
+        }
+
+        new_game_world.set_warppad_unlocks(new_warppad_unlocks);
+
         // Race Rewards
         if let Some(reward_shuffle) = &chosen_settings.randomization.shuffle_race_rewards {
             let new_reward_placement = get_shuffled_rewards(
                 &mut seed,
                 reward_shuffle,
-                new_game_world.get_warppad_links(),
+                &new_game_world.get_warppad_links(),
                 new_game_world.get_warppad_unlocks(),
                 new_game_world.get_garage_unlocks(),
                 new_game_world.get_hub_requirements(),
+                !matches!(&chosen_settings.randomization.warppad_unlock_requirements, WarppadUnlockRequirements::Vanilla),
             );
 
             if let Ok(new_reward_placement) = new_reward_placement {
