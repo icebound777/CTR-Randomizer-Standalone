@@ -279,16 +279,92 @@ pub fn get_random_warppad_unlocks(
                 }
             }
             possible_reqs.sort();
+            println!("{:?}", possible_reqs);
             let chosen_reward = possible_reqs
-                .choose_weighted(seed, |x| req_chances.get(&x.0).unwrap())
-                .unwrap();
-            let required_item = RequiredItem::try_from(chosen_reward.0).unwrap();
+                .choose_weighted(seed, |x| req_chances.get(&x.0).unwrap());
+            println!("{:?}", chosen_reward);
+            let chosen_reward = chosen_reward.unwrap();
+            let mut required_item = RequiredItem::try_from(chosen_reward.0).unwrap();
+            let mut required_amount = chosen_reward.1;
+
+            if matches!(
+                required_item,
+                RequiredItem::RedCtrToken
+                    | RequiredItem::GreenCtrToken
+                    | RequiredItem::BlueCtrToken
+                    | RequiredItem::YellowCtrToken
+                    | RequiredItem::PurpleCtrToken
+            ) {
+                if seed.random_range(0..100) < 33 {
+                    required_item = RequiredItem::AnyCtrToken;
+                    required_amount = 0;
+                    for (item, count) in &current_items {
+                        if matches!(
+                            item,
+                            RaceReward::RedCtrToken
+                                | RaceReward::GreenCtrToken
+                                | RaceReward::BlueCtrToken
+                                | RaceReward::YellowCtrToken
+                                | RaceReward::PurpleCtrToken
+                        ) {
+                            required_amount += count;
+                        }
+                    }
+                    required_amount = (((required_amount as f32) * 0.6).ceil()) as u8;
+                }
+            } else if matches!(
+                required_item,
+                RequiredItem::SapphireRelic | RequiredItem::GoldRelic | RequiredItem::PlatinumRelic
+            ) {
+                if seed.random_range(0..100) < 20 {
+                    required_item = RequiredItem::AnyRelic;
+                    required_amount = 0;
+                    for (item, count) in current_items {
+                        if matches!(
+                            item,
+                            RaceReward::SapphireRelic
+                                | RaceReward::GoldRelic
+                                | RaceReward::PlatinumRelic
+                        ) {
+                            required_amount += count;
+                        }
+                    }
+                    required_amount = (((required_amount as f32) * 0.3).ceil()) as u8;
+                }
+            } else if matches!(
+                required_item,
+                RequiredItem::RedGem
+                    | RequiredItem::GreenGem
+                    | RequiredItem::BlueGem
+                    | RequiredItem::YellowGem
+                    | RequiredItem::PurpleGem
+            ) {
+                if seed.random_range(0..100) < 80 {
+                    required_item = RequiredItem::AnyGem;
+                    required_amount = 0;
+                    for (item, count) in current_items {
+                        if matches!(
+                            item,
+                            RaceReward::RedGem
+                                | RaceReward::GreenGem
+                                | RaceReward::BlueGem
+                                | RaceReward::YellowGem
+                                | RaceReward::PurpleGem
+                        ) {
+                            required_amount += count;
+                        }
+                        if required_amount > 1 {
+                            required_amount -= 1;
+                        }
+                    }
+                }
+            }
 
             random_unlocks.insert(
                 (chosen_location.levelid, get_unlock_stage(*chosen_location)),
                 Some(UnlockRequirementItem {
                     item_type: required_item,
-                    count: chosen_reward.1,
+                    count: required_amount,
                 }),
             );
         }
@@ -342,11 +418,11 @@ pub fn get_random_warppad_unlocks(
     //println!("{:?}", random_unlocks);
 
     // Requirements post processing:
-    // Swap some token or relic requirements for "any" requirements
     // Lower some requirement counts by multiplying it by 0.6 and rounding up
     // Set "4 keys" requirements to "3 keys" if needed
 
     // First pull random_unlocks into Vec, so values don't get visited randomly
+    /*
     let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> =
         Vec::new();
     for (k, v) in &random_unlocks {
@@ -356,42 +432,7 @@ pub fn get_random_warppad_unlocks(
 
     let mut unlock_modifications: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
         HashMap::new();
-    for (k, opt_req) in &random_unlocks_vec {
-        let req = opt_req.unwrap();
-        if matches!(
-            req.item_type,
-            RequiredItem::RedCtrToken
-                | RequiredItem::GreenCtrToken
-                | RequiredItem::BlueCtrToken
-                | RequiredItem::YellowCtrToken
-                | RequiredItem::PurpleCtrToken
-        ) {
-            if seed.random_range(0..100) < 10 {
-                println!("Genericifying {:?}", req);
-                unlock_modifications.insert(
-                    k.clone(),
-                    Some(UnlockRequirementItem {
-                        item_type: RequiredItem::AnyCtrToken,
-                        count: req.count,
-                    }),
-                );
-            }
-        } else if matches!(
-            req.item_type,
-            RequiredItem::SapphireRelic | RequiredItem::GoldRelic | RequiredItem::PlatinumRelic
-        ) {
-            if seed.random_range(0..100) < 20 {
-                println!("Genericifying {:?}", req);
-                unlock_modifications.insert(
-                    k.clone(),
-                    Some(UnlockRequirementItem {
-                        item_type: RequiredItem::AnyRelic,
-                        count: req.count,
-                    }),
-                );
-            }
-        }
-        //else if matches!(
+    for (k, opt_req) in &random_unlocks_vec { if matches!(
         //    req.item_type,
         //    RequiredItem::RedGem
         //        | RequiredItem::GreenGem
@@ -413,6 +454,7 @@ pub fn get_random_warppad_unlocks(
     for (k, v) in unlock_modifications {
         let _ = random_unlocks.insert(k, v);
     }
+    */
 
     // First pull random_unlocks into Vec, so values don't get visited randomly
     let mut random_unlocks_vec: Vec<((LevelID, UnlockStage), Option<UnlockRequirementItem>)> =
