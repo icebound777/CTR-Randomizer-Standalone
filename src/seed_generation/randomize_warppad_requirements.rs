@@ -62,7 +62,7 @@ pub fn get_random_warppad_unlocks(
     let res_zeroed_out_item_placement = if let Some(reward_shuffle) = opt_reward_shuffle {
         get_shuffled_rewards(
             seed,
-            &reward_shuffle,
+            reward_shuffle,
             &warppad_links,
             free_warppads_warppad_unlocks.clone(),
             bossgarage_requirements.clone(),
@@ -73,12 +73,11 @@ pub fn get_random_warppad_unlocks(
         Ok(get_vanilla_gameworld().get_race_rewards())
     };
 
-    let mut zeroed_out_item_placement: HashMap<ItemLocation, RaceReward>;
-    if res_zeroed_out_item_placement.is_ok() {
-        zeroed_out_item_placement = res_zeroed_out_item_placement.unwrap();
-    } else {
+    if res_zeroed_out_item_placement.is_err() {
         return Err(());
     }
+
+    let mut zeroed_out_item_placement = res_zeroed_out_item_placement.unwrap();
 
     // We only have item placements, but are missing static unlock requirements,
     // so we have to generate those after the fact now.
@@ -294,10 +293,9 @@ pub fn get_random_warppad_unlocks(
                             | RaceReward::PurpleGem
                     ) || (opt_reward_shuffle.is_some()
                         && opt_reward_shuffle.unwrap().include_gems))
+                    && count > &0u8
                 {
-                    if count > &0u8 {
-                        possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
-                    }
+                    possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
                 }
             }
             possible_reqs.sort();
@@ -306,7 +304,7 @@ pub fn get_random_warppad_unlocks(
                 possible_reqs.choose_weighted(seed, |x| req_chances.get(&x.0).unwrap());
             println!("{:?}", chosen_reward);
             let chosen_reward = chosen_reward.unwrap();
-            let mut required_item = RequiredItem::try_from(chosen_reward.0).unwrap();
+            let mut required_item = chosen_reward.0;
             let mut required_amount = chosen_reward.1;
 
             if matches!(
@@ -359,24 +357,23 @@ pub fn get_random_warppad_unlocks(
                     | RequiredItem::BlueGem
                     | RequiredItem::YellowGem
                     | RequiredItem::PurpleGem
-            ) {
-                if seed.random_range(0..100) < 80 {
-                    required_item = RequiredItem::AnyGem;
-                    required_amount = 0;
-                    for (item, count) in current_items {
-                        if matches!(
-                            item,
-                            RaceReward::RedGem
-                                | RaceReward::GreenGem
-                                | RaceReward::BlueGem
-                                | RaceReward::YellowGem
-                                | RaceReward::PurpleGem
-                        ) {
-                            required_amount += count;
-                        }
-                        if required_amount > 1 {
-                            required_amount -= 1;
-                        }
+            ) && seed.random_range(0..100) < 80
+            {
+                required_item = RequiredItem::AnyGem;
+                required_amount = 0;
+                for (item, count) in current_items {
+                    if matches!(
+                        item,
+                        RaceReward::RedGem
+                            | RaceReward::GreenGem
+                            | RaceReward::BlueGem
+                            | RaceReward::YellowGem
+                            | RaceReward::PurpleGem
+                    ) {
+                        required_amount += count;
+                    }
+                    if required_amount > 1 {
+                        required_amount -= 1;
                     }
                 }
             }
