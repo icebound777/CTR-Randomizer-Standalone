@@ -253,34 +253,29 @@ pub fn get_random_warppad_unlocks(
         // We want an unequal weighting between the different item types,
         // otherwise tokens and relics are vastly overrepresented
         // We also tone down the chance for gems and keys
-        let req_chances: HashMap<RequiredItem, u8> = HashMap::from([
-            (RequiredItem::Trophy, 20),
-            (RequiredItem::RedCtrToken, 3),
-            (RequiredItem::GreenCtrToken, 3),
-            (RequiredItem::BlueCtrToken, 3),
-            (RequiredItem::YellowCtrToken, 3),
-            (RequiredItem::PurpleCtrToken, 2),
-            (RequiredItem::SapphireRelic, 4),
-            (RequiredItem::GoldRelic, 4),
-            (RequiredItem::PlatinumRelic, 4),
-            (RequiredItem::Key, 5),
-            (RequiredItem::AnyGem, 2),
+        let req_chances: HashMap<RequiredItem, u16> = HashMap::from([
+            (RequiredItem::Trophy, 100),
+            (RequiredItem::RedCtrToken, 15),
+            (RequiredItem::GreenCtrToken, 15),
+            (RequiredItem::BlueCtrToken, 15),
+            (RequiredItem::YellowCtrToken, 15),
+            (RequiredItem::PurpleCtrToken, 10),
+            (RequiredItem::SapphireRelic, 20),
+            (RequiredItem::GoldRelic, 20),
+            (RequiredItem::PlatinumRelic, 20),
+            (RequiredItem::Key, 25),
+            (RequiredItem::RedGem, 2),
+            (RequiredItem::GreenGem, 2),
+            (RequiredItem::BlueGem, 2),
+            (RequiredItem::YellowGem, 2),
+            (RequiredItem::PurpleGem, 2),
         ]);
         if !matches!(chosen_location.racetype, RaceType::BossRace) {
             let mut possible_reqs: Vec<(RequiredItem, u8)> = Vec::new();
-            for (item, count) in inventory.get_items() {
-                if count > 0 {
-                    possible_reqs.push((
-                        match RequiredItem::try_from(item).unwrap() {
-                            RequiredItem::RedGem
-                            | RequiredItem::GreenGem
-                            | RequiredItem::BlueGem
-                            | RequiredItem::YellowGem
-                            | RequiredItem::PurpleGem => RequiredItem::AnyGem,
-                            _ => RequiredItem::try_from(item).unwrap(),
-                        },
-                        count,
-                    ));
+            let current_items = inventory.get_items();
+            for (item, count) in &current_items {
+                if count > &0u8 {
+                    possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
                 }
             }
             possible_reqs.sort();
