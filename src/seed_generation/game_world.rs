@@ -823,7 +823,7 @@ impl WarpPad {
                             4
                         }
                     }),
-                    reward: Rewards::GemCupRewards(GemCupRewards { single_reward:RaceReward::PurpleCtrToken })
+                    reward: Rewards::BattleArenaRewards(BattleArenaRewards { single_reward:RaceReward::PurpleCtrToken })
                 }
             },
             // Relic Race only tracks
