@@ -1,8 +1,16 @@
 # Changelog
 
-## alpha 3
+## next version
 
 ### Features (seed generator)
+
+* Warp Pad Unlock Requirements
+  * Can now choose between `Vanilla` (unchanged), `Random`, and `Random w/o 4 Keys`.
+  * `Random` and `Random w/o 4 Keys` will not account for gems or platinum relics if the respective race rewards are not shuffled.
+
+## alpha 3
+
+### Features (seed generator) (alpha 3)
 
 * Auto-Unlock CTR Challenge & Relic Race
   * If this setting is turned on, then all warp pads' second stage unlock, the CTR Challenge and Relic Race, is always "free" and available right after beating the warp pad's Trophy Race.  
@@ -10,7 +18,7 @@
 * Spoiler log
   * Now includes the settings chosen for the seed.
 
-### Bug Fixes (seed generator)
+### Bug Fixes (seed generator) (alpha 3)
 
 * Oxide's Final Challenge Unlock
   * Fix an issue where the Final Challenge Unlock dropdown menu did absolutely nothing, and that setting instead falsely used the "Relic Races: Required Minimum Time" dropdown. This resulted in unexpected requirements for Oxide's Final Challenge, and the seed generator crashing if "Relic Races: Required Minimum Time" was set to "Platinum Time".
