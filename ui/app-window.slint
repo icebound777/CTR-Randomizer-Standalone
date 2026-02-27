@@ -396,8 +396,8 @@ component RandomizationSubmenu inherits Rectangle {
         user_is_hovering: include_gemcups_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: warppad_unlocks_touch.x + 260px;
-        y: warppad_unlocks_touch.y + 80px; // <-- references any or no component, not necessarily a TouchArea
+        x: warppad_unlocks_touch.x + 280px;
+        y: warppad_unlocks_touch.y + 40px; // <-- references any or no component, not necessarily a TouchArea
         height: 15rem;
         width: 25rem;
         text: "Vanilla: Unchanged unlock requirements.\n\n"
@@ -410,8 +410,8 @@ component RandomizationSubmenu inherits Rectangle {
         user_is_hovering: warppad_unlocks_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: bossgarage_unlocks_touch.x + 240px;
-        y: bossgarage_unlocks_touch.y + 100px; // <-- references any or no component, not necessarily a TouchArea
+        x: bossgarage_unlocks_touch.x + 280px;
+        y: bossgarage_unlocks_touch.y + 60px; // <-- references any or no component, not necessarily a TouchArea
         height: 10rem;
         width: 25rem;
         text: "Choose how the regular boss garages get unlocked.\n"
@@ -421,8 +421,8 @@ component RandomizationSubmenu inherits Rectangle {
         user_is_hovering: bossgarage_unlocks_touch.has-hover; // <-- references one or more TouchArea below
     }
     ToolTip {
-        x: auto_unlock_stagetwo_touch.x + 220px;
-        y: auto_unlock_stagetwo_touch.y + 38px; // <-- references any or no component, not necessarily a TouchArea
+        x: auto_unlock_stagetwo_touch.x + 240px;
+        y: auto_unlock_stagetwo_touch.y - 10px; // <-- references any or no component, not necessarily a TouchArea
         height: 12rem;
         width: 25rem;
         text: "OFF: The second stage unlock for warp pads, which opens the "
