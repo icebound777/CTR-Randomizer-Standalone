@@ -180,8 +180,10 @@ pub fn get_random_warppad_unlocks(
                     levelid: *levelid,
                     racetype: RaceType::RelicRacePlatinum,
                 };
-                let item = zeroed_out_item_placement.get(&location).unwrap();
-                inventory.add_item(*item);
+                if opt_reward_shuffle.unwrap().include_platinum_relics {
+                    let item = zeroed_out_item_placement.get(&location).unwrap();
+                    inventory.add_item(*item);
+                }
                 zeroed_out_item_placement
                     .remove(&location)
                     .expect("Should be in there");
@@ -274,14 +276,18 @@ pub fn get_random_warppad_unlocks(
             let mut possible_reqs: Vec<(RequiredItem, u8)> = Vec::new();
             let current_items = inventory.get_items();
             for (item, count) in &current_items {
-                if count > &0u8 {
-                    possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
+                if !matches!(item, RaceReward::PlatinumRelic)
+                    || opt_reward_shuffle.unwrap().include_platinum_relics
+                {
+                    if count > &0u8 {
+                        possible_reqs.push((RequiredItem::try_from(*item).unwrap(), *count));
+                    }
                 }
             }
             possible_reqs.sort();
             println!("{:?}", possible_reqs);
-            let chosen_reward = possible_reqs
-                .choose_weighted(seed, |x| req_chances.get(&x.0).unwrap());
+            let chosen_reward =
+                possible_reqs.choose_weighted(seed, |x| req_chances.get(&x.0).unwrap());
             println!("{:?}", chosen_reward);
             let chosen_reward = chosen_reward.unwrap();
             let mut required_item = RequiredItem::try_from(chosen_reward.0).unwrap();
@@ -320,12 +326,10 @@ pub fn get_random_warppad_unlocks(
                     required_item = RequiredItem::AnyRelic;
                     required_amount = 0;
                     for (item, count) in current_items {
-                        if matches!(
-                            item,
-                            RaceReward::SapphireRelic
-                                | RaceReward::GoldRelic
-                                | RaceReward::PlatinumRelic
-                        ) {
+                        if matches!(item, RaceReward::SapphireRelic | RaceReward::GoldRelic)
+                            || (matches!(item, RaceReward::PlatinumRelic)
+                                && opt_reward_shuffle.unwrap().include_platinum_relics)
+                        {
                             required_amount += count;
                         }
                     }
