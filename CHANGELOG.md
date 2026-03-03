@@ -8,6 +8,8 @@
   * Add `Generate Patch File` toggle for writing a patch file for sharing the generating seed with others.
   * Add `Patch File Select` tab for directly patching a seed from a patch file generated via the `Generate Patch File` functionality.
   * Add `Clear` button for clearing out the selected patch file within the `Patch File Select`.
+* More gracious error handling
+  * Instead of crashing when failing to generate a seed, the generator will now just show a popup message with some info about what happened, including the failed generation's seed and settings.
 
 ## beta 1
 
