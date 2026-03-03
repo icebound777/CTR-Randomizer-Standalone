@@ -964,12 +964,12 @@ component RomOutputBar inherits Rectangle {
             border-color: black;
             border-width: 1px;
             FileSelectMenu {
-                pick_rom() => root.pick_rom();
+                pick_rom() => {root.pick_rom()};
                 rom_path: root.rom_path;
                 rom_valid_state: root.rom_valid_state;
-                pick_patchfile() => root.pick_patchfile();
+                pick_patchfile() => {root.pick_patchfile()};
                 patchfile_path: root.patchfile_path;
-                clear_patchfile_path() => root.clear_patchfile_path();
+                clear_patchfile_path() => {root.clear_patchfile_path()};
             }
         }
         Rectangle {
