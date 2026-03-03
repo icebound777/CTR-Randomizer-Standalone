@@ -844,6 +844,7 @@ component RomOutputBar inherits Rectangle {
     in property <int> rom_valid_state;
 
     out property <bool> write_spoilerlog: true;
+    out property <bool> write_patchfile: false;
 
     HorizontalLayout {
         Rectangle {
@@ -889,11 +890,22 @@ component RomOutputBar inherits Rectangle {
             border-color: black;
             border-width: 1px;
 
-            Switch {
-                x: 30px;
-                text: "Generate Spoilerlog";
-                checked: true;
-                toggled => { root.write_spoilerlog = self.checked }
+            VerticalLayout {
+                spacing: -15px;
+
+                Switch {
+                    x: 30px;
+                    text: "Generate Spoilerlog";
+                    checked: true;
+                    toggled => { root.write_spoilerlog = self.checked }
+                }
+
+                Switch {
+                    x: 30px;
+                    text: "Generate Patch File";
+                    checked: false;
+                    toggled => { root.write_patchfile = self.checked }
+                }
             }
 
             Button {
@@ -922,6 +934,7 @@ export component MainWindow inherits Window {
     in property <int> rom_valid_state: 0;
 
     out property <bool> write_spoilerlog <=> romoutput.write_spoilerlog;
+    out property <bool> write_patchfile <=> romoutput.write_patchfile;
 
     out property <int> shuffle_adventure <=> settings.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> settings.shuffle_race_rewards;

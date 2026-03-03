@@ -97,7 +97,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             qol: chosen_qol_settings,
             tricks: chosen_trick_settings,
             write_spoilerlog: main_window.get_write_spoilerlog(),
-            write_patchfile: false,
+            write_patchfile: main_window.get_write_patchfile(),
         };
 
         // Generate seed
