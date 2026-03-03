@@ -7,6 +7,92 @@ pub struct SeedSettings {
     pub write_patchfile: bool,
 }
 
+impl std::fmt::Display for SeedSettings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut setting_representation = String::new();
+
+        setting_representation.push_str("rnd");
+        if !self.randomization.shuffle_adventure {
+            setting_representation.push('-');
+            setting_representation.push(';');
+        } else {
+            setting_representation.push('1');
+            setting_representation.push(';');
+
+            if let Some(shuffle_race_rewards) = self.randomization.shuffle_race_rewards {
+                setting_representation.push(if shuffle_race_rewards.include_keys {'1'} else {'0'});
+                setting_representation.push(if shuffle_race_rewards.include_gems {'1'} else {'0'});
+                setting_representation.push(if shuffle_race_rewards.include_platinum_relics {'1'} else {'0'});
+            } else {
+                setting_representation.push('-');
+            }
+            setting_representation.push(';');
+
+            if let Some(warppad_shuffle) = self.randomization.warppad_shuffle {
+                setting_representation.push(if warppad_shuffle.include_battle_arenas {'1'} else {'0'});
+                setting_representation.push(if warppad_shuffle.include_gem_cups {'1'} else {'0'});
+            } else {
+                setting_representation.push('-');
+            }
+            setting_representation.push(';');
+
+            setting_representation.push(match self.randomization.warppad_unlock_requirements {
+                WarppadUnlockRequirements::Vanilla => '0',
+                WarppadUnlockRequirements::Random => '1',
+                WarppadUnlockRequirements::RandomWithout4Keys => '2',
+            });
+            setting_representation.push(';');
+
+            setting_representation.push(match self.randomization.bossgarage_unlock_requirements {
+                BossGarageRequirements::Original4Tracks => '0',
+                BossGarageRequirements::SameHubTracks => '1',
+                BossGarageRequirements::Trophies => '2',
+            });
+            setting_representation.push(';');
+
+            setting_representation.push(if self.randomization.autounlock_ctrchallenge_relicrace {'1'} else {'0'});
+            setting_representation.push(';');
+        }
+        setting_representation.push('\n');
+
+        setting_representation.push_str("gen");
+        setting_representation.push(match self.general.rr_required_minimum_time {
+            RelicTime::SapphireTime => '0',
+            RelicTime::GoldTime => '1',
+            RelicTime::PlatinumTime => '2',
+        });
+        setting_representation.push(if self.general.rr_require_perfects {'1'} else {'0'});
+        setting_representation.push(match self.general.oxide_final_challenge_unlock {
+            FinalOxideUnlock::SappireRelics18 => '0',
+            FinalOxideUnlock::GoldAndPlatinumRelics18 => '1',
+        });
+        setting_representation.push(';');
+        setting_representation.push('\n');
+
+        setting_representation.push_str("qol");
+        setting_representation.push(if self.qol.skip_mask_hints {'1'} else {'0'});
+        setting_representation.push(if self.qol.autoskip_podium_cutscenes {'1'} else {'0'});
+        setting_representation.push(if self.qol.skip_mask_congrats {'1'} else {'0'});
+        setting_representation.push(if self.qol.skip_mask_congrats {'1'} else {'0'});
+        setting_representation.push(if self.qol.skip_mask_congrats {'1'} else {'0'});
+        setting_representation.push(';');
+        setting_representation.push('\n');
+
+        setting_representation.push_str("trk");
+        setting_representation.push(if self.tricks.helper_tiziano {'1'} else {'0'});
+        setting_representation.push(if self.tricks.helper_ta {'1'} else {'0'});
+        setting_representation.push(';');
+        setting_representation.push('\n');
+
+        setting_representation.push_str("wrt");
+        setting_representation.push(if self.write_spoilerlog {'1'} else {'0'});
+        setting_representation.push(if self.write_patchfile {'1'} else {'0'});
+        setting_representation.push(';');
+
+        write!(f, "{}", setting_representation)
+    }
+}
+
 pub struct RandomizationSettings {
     pub shuffle_adventure: bool,
     pub shuffle_race_rewards: Option<RewardShuffle>,

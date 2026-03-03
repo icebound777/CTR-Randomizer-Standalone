@@ -10,7 +10,7 @@ use crate::seed_generation::write_rando_db::write_db_to_rom;
 use std::time::Instant;
 
 
-pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<(), &'a str> {
+pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<(), String> {
     let now = Instant::now();
 
     let mut seed: u32;
@@ -40,7 +40,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
                 // write randomization to rom
                 let write_result = write_db_to_rom(&new_rom, &randomized_game);
                 if write_result.is_err() {
-                    return Err(write_result.expect_err("str type error"));
+                    return Err(write_result.expect_err("str type error").to_owned());
                 }
 
                 // if needed, write patch file
@@ -48,7 +48,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
                     let filepath_new_patch = create_patchfile(rom_filepath, &new_rom);
 
                     if filepath_new_patch.is_err() {
-                        return Err("Could not create patch file!");
+                        return Err("Could not create patch file!".to_owned());
                     }
                 }
 
@@ -57,14 +57,24 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
                     let log_success = write_spoilerlog(new_rom, randomized_game, seed, chosen_settings);
 
                     if log_success.is_err() {
-                        return Err("Could not create spoiler log file!");
+                        return Err("Could not create spoiler log file!".to_owned());
                     }
                 }
             },
-            _ => { return Err("Could not apply base patch to vanilla ROM!");}
+            _ => { return Err("Could not apply base patch to vanilla ROM!".to_owned());}
         }
     } else {
-        return Err("Failed to generate a randomized game! Seed: {seed}");
+        return Err(format!(
+            "Failed to generate a randomized game!\nThis can rarely happen, just retry it.\n\
+             If this continues happening, screenshot the following info\n\
+             and send it to Icebound777 via GitHub or Discord:\n\n\
+             Seed: {}\n\
+             Version: {}\n\
+             Settings:\n{}",
+            seed,
+            "beta 1",
+            chosen_settings
+        ));
     }
 
     Ok(())

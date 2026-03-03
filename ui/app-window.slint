@@ -1114,4 +1114,36 @@ export component MainWindow inherits Window {
             clear_patchfile_path() => { root.clear_patchfile_path(); }
         }
     }
+
+    public function show-error-popup(err-msg: string) {
+        error_popup_msg = err-msg;
+        error_msg_popup.show();
+    }
+
+    property <string> error_popup_msg;
+
+    error_msg_popup := PopupWindow {
+        x: (root.width / 2) - (self.width / 2);
+        y: (root.height / 2) - (self.height / 2);
+        height: 250px;
+        width: 500px;
+        Rectangle {
+            border-width: 2px;
+            border-color: black;
+            height: 100%;
+            width: 100%;
+            background: lightgray;
+
+            Text {
+                y: 10px;
+                text: "Error";
+                font-weight: 800;
+            }
+
+            Text {
+                y: 40px;
+                text: root.error_popup_msg;
+            }
+        }
+    }
 }

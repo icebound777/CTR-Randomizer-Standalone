@@ -117,7 +117,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let rom_path = rom_path.as_str();
             let gen_result = generate_seed(rom_path, &chosen_settings);
             if gen_result.is_err() {
-                panic!()
+                main_window.invoke_show_error_popup(SharedString::from(gen_result.err().unwrap()));
             }
         }
     });
