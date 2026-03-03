@@ -846,6 +846,8 @@ component RomOutputBar inherits Rectangle {
     out property <bool> write_spoilerlog: true;
     out property <bool> write_patchfile: false;
 
+    property <bool> displayed_patch_warning: false;
+
     HorizontalLayout {
         Rectangle {
             width: parent.width / 2;
@@ -904,7 +906,13 @@ component RomOutputBar inherits Rectangle {
                     x: 30px;
                     text: "Generate Patch File";
                     checked: false;
-                    toggled => { root.write_patchfile = self.checked }
+                    toggled => {
+                        root.write_patchfile = self.checked;
+                        if !root.displayed_patch_warning {
+                            root.displayed_patch_warning = true;
+                            patchfile_warning.show();
+                        }
+                    }
                 }
             }
 
@@ -915,6 +923,40 @@ component RomOutputBar inherits Rectangle {
                 height: parent.height * (2/3);
                 enabled: can_generate;
                 clicked => {root.gen_seed()}
+            }
+        }
+
+        patchfile_warning := PopupWindow {
+            x: (root.width / 2) - (self.width / 2);
+            y: -260px;
+            height: 150px;
+            width: 500px;
+            Rectangle {
+                border-width: 2px;
+                border-color: black;
+                height: 100%;
+                width: 100%;
+                background: lightgray;
+
+                Text {
+                    y: 10px;
+                    text: "Generating Patch File info:";
+                    font-weight: 800;
+                }
+
+                Text {
+                    y: 40px;
+                    text: "Generating a patch file is not required when "
+                    + "playing by yourself.\n"
+                    + "Patch files are for sharing the generated seed with "
+                    + "someone else,\n"
+                    + "for doing races or co-op runs.\n"
+                    + "Generating a patch file increases generation time "
+                    + "SIGNIFICANTLY,\n"
+                    + "often by several minutes, during which "
+                    + "the seed generator\n"
+                    + "may be unresponsive!";
+                }
             }
         }
     }
