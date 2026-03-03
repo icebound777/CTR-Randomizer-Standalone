@@ -1,13 +1,8 @@
-use std::{env::current_exe, io, path::PathBuf};
+use std::{io, path::PathBuf};
 
 use qbsdiff::{Bsdiff, Bspatch};
 
 pub fn apply_patchfile(old_rom_path: &str, seed: u32) -> Result<PathBuf, Box<dyn std::error::Error>> {
-    let mut patchfile_path = current_exe().unwrap();
-    patchfile_path.pop();
-    patchfile_path.push("res");
-    patchfile_path.push("base_patch.bsdiff4");
-
     let old_rom = std::fs::read(old_rom_path)?;
     let patch = include_bytes!("../../../res/base_patch.bsdiff4");
 
