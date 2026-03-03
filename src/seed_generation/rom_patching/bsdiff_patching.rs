@@ -5,18 +5,33 @@ use qbsdiff::{Bsdiff, Bspatch};
 pub fn apply_base_patchfile(old_rom_path: &str, seed: u32) -> Result<PathBuf, Box<dyn std::error::Error>> {
     let patchdata = include_bytes!("../../../res/base_patch.bsdiff4");
 
-    apply_patch(old_rom_path, SeedOrFilename::Seed(seed), patchdata)
+    apply_patch(old_rom_path, SeedOrFilename::Seed(seed), Vec::from(patchdata))
 }
 enum SeedOrFilename {
     Seed(u32),
     Filename(String),
 }
 
-fn apply_patch(old_rom_path: &str, seed_or_filename: SeedOrFilename, patchdata: &[u8]) -> Result<PathBuf, Box<dyn std::error::Error>> {
-    let old_rom = std::fs::read(old_rom_path)?;
+pub fn apply_patchfile(old_rom_path: &str, patch_file_path: &str) -> Result<PathBuf, Box<dyn std::error::Error>> {
+    let patch_file_path = PathBuf::from(patch_file_path);
 
+    let file_stem = patch_file_path.clone();
+    let file_stem = format!("{}{}", file_stem.file_stem().unwrap().to_str().unwrap(), ".bin") ;
+
+    let patchdata = std::fs::read(patch_file_path).unwrap();
+
+    apply_patch(old_rom_path, SeedOrFilename::Filename(file_stem), patchdata)
+}
+
+fn apply_patch(old_rom_path: &str, seed_or_filename: SeedOrFilename, patchdata: Vec<u8>) -> Result<PathBuf, Box<dyn std::error::Error>> {
+    let old_rom = std::fs::read(old_rom_path)?;
     let mut new_rom = Vec::new();
-    let patcher = Bspatch::new(patchdata)?;
+
+    let mut patchdata_array: [u8; 1000000] = [0u8; 1000000]; // jank bs
+    for (i, byte) in patchdata.iter().enumerate() {
+        patchdata_array[i] = *byte;
+    }
+    let patcher = Bspatch::new(&patchdata_array)?;
     patcher.apply(&old_rom, io::Cursor::new(&mut new_rom))?;
 
     let new_rom_name = match seed_or_filename {

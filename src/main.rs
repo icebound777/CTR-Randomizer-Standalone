@@ -9,6 +9,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+use crate::seed_generation::rom_patching::bsdiff_patching::apply_patchfile;
 use crate::seed_generation::seed_gen_main::generate_seed;
 use crate::seed_generation::seed_settings::{
     BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedSettings, TrickSettings, WarppadShuffle, WarppadUnlockRequirements
@@ -44,68 +45,80 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     ui.on_gen_seed(move || {
-        // Collect settings chosen via UI
-        let chosen_rando_settings = RandomizationSettings {
-            shuffle_adventure: main_window.get_shuffle_adventure() == 1,
-            shuffle_race_rewards: if main_window.get_shuffle_race_rewards() {
-                Some(RewardShuffle {
-                    include_keys: main_window.get_shuffle_race_rewards_keys(),
-                    include_gems: main_window.get_shuffle_race_rewards_gems(),
-                    include_platinum_relics: main_window.get_shuffle_race_rewards_plat_relics(),
-                })
-            } else {
-                None
-            },
-            warppad_shuffle: if main_window.get_shuffle_warppads() {
-                Some(WarppadShuffle {
-                    include_battle_arenas: main_window.get_shuffle_warppads_battlearenas(),
-                    include_gem_cups: main_window.get_shuffle_warppads_gemcups(),
-                })
-            } else {
-                None
-            },
-            warppad_unlock_requirements: WarppadUnlockRequirements::try_from(
-                main_window.get_warppad_unlock_requirements(),
-            )
-            .unwrap(),
-            bossgarage_unlock_requirements: BossGarageRequirements::try_from(main_window.get_bossgarage_unlock_requirements()).unwrap(),
-            autounlock_ctrchallenge_relicrace: main_window.get_autounlock_ctrchallenge_relicrace(),
-        };
-        let chosen_qol_settings = QualityOfLifeSettings {
-            skip_mask_hints: main_window.get_qol_skip_mask_hints(),
-            autoskip_podium_cutscenes: main_window.get_qol_skip_podium(),
-            skip_mask_congrats: main_window.get_qol_skip_mask_congrats(),
-        };
-        let chosen_trick_settings = TrickSettings {
-            helper_tiziano: main_window.get_trick_helper_tiziano(),
-            helper_ta: main_window.get_trick_helper_ta(),
-        };
-        let chosen_general_settings = GeneralSettings {
-            rr_required_minimum_time: RelicTime::try_from(
-                main_window.get_rr_required_minimum_time(),
-            )
-            .unwrap(),
-            rr_require_perfects: main_window.get_rr_require_perfects(),
-            oxide_final_challenge_unlock: FinalOxideUnlock::try_from(
-                main_window.get_oxide_final_challenge_unlock(),
-            )
-            .unwrap(),
-        };
-        let chosen_settings = SeedSettings {
-            randomization: chosen_rando_settings,
-            general: chosen_general_settings,
-            qol: chosen_qol_settings,
-            tricks: chosen_trick_settings,
-            write_spoilerlog: main_window.get_write_spoilerlog(),
-            write_patchfile: main_window.get_write_patchfile(),
-        };
+        // Check if patch file is present: if it is, just patch ROM, otherwise
+        // run seed generation
+        if !main_window.get_patchfile_path().is_empty() {
+            let patch_result = apply_patchfile(
+                main_window.get_rom_path().as_str(),
+                main_window.get_patchfile_path().as_str(),
+            );
+            if patch_result.is_err() {
+                panic!()
+            }
+        } else {
+            // Collect settings chosen via UI
+            let chosen_rando_settings = RandomizationSettings {
+                shuffle_adventure: main_window.get_shuffle_adventure() == 1,
+                shuffle_race_rewards: if main_window.get_shuffle_race_rewards() {
+                    Some(RewardShuffle {
+                        include_keys: main_window.get_shuffle_race_rewards_keys(),
+                        include_gems: main_window.get_shuffle_race_rewards_gems(),
+                        include_platinum_relics: main_window.get_shuffle_race_rewards_plat_relics(),
+                    })
+                } else {
+                    None
+                },
+                warppad_shuffle: if main_window.get_shuffle_warppads() {
+                    Some(WarppadShuffle {
+                        include_battle_arenas: main_window.get_shuffle_warppads_battlearenas(),
+                        include_gem_cups: main_window.get_shuffle_warppads_gemcups(),
+                    })
+                } else {
+                    None
+                },
+                warppad_unlock_requirements: WarppadUnlockRequirements::try_from(
+                    main_window.get_warppad_unlock_requirements(),
+                )
+                .unwrap(),
+                bossgarage_unlock_requirements: BossGarageRequirements::try_from(main_window.get_bossgarage_unlock_requirements()).unwrap(),
+                autounlock_ctrchallenge_relicrace: main_window.get_autounlock_ctrchallenge_relicrace(),
+            };
+            let chosen_qol_settings = QualityOfLifeSettings {
+                skip_mask_hints: main_window.get_qol_skip_mask_hints(),
+                autoskip_podium_cutscenes: main_window.get_qol_skip_podium(),
+                skip_mask_congrats: main_window.get_qol_skip_mask_congrats(),
+            };
+            let chosen_trick_settings = TrickSettings {
+                helper_tiziano: main_window.get_trick_helper_tiziano(),
+                helper_ta: main_window.get_trick_helper_ta(),
+            };
+            let chosen_general_settings = GeneralSettings {
+                rr_required_minimum_time: RelicTime::try_from(
+                    main_window.get_rr_required_minimum_time(),
+                )
+                .unwrap(),
+                rr_require_perfects: main_window.get_rr_require_perfects(),
+                oxide_final_challenge_unlock: FinalOxideUnlock::try_from(
+                    main_window.get_oxide_final_challenge_unlock(),
+                )
+                .unwrap(),
+            };
+            let chosen_settings = SeedSettings {
+                randomization: chosen_rando_settings,
+                general: chosen_general_settings,
+                qol: chosen_qol_settings,
+                tricks: chosen_trick_settings,
+                write_spoilerlog: main_window.get_write_spoilerlog(),
+                write_patchfile: main_window.get_write_patchfile(),
+            };
 
-        // Generate seed
-        let rom_path = main_window.get_rom_path();
-        let rom_path = rom_path.as_str();
-        let gen_result = generate_seed(rom_path, &chosen_settings);
-        if gen_result.is_err() {
-            panic!()
+            // Generate seed
+            let rom_path = main_window.get_rom_path();
+            let rom_path = rom_path.as_str();
+            let gen_result = generate_seed(rom_path, &chosen_settings);
+            if gen_result.is_err() {
+                panic!()
+            }
         }
     });
 
@@ -144,6 +157,18 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
 
             main_window.set_rom_path(SharedString::from(rom_path_str));
+        }
+    });
+
+    let main_ui_weak = ui.as_weak();
+    let main_window = main_ui_weak.unwrap();
+    ui.on_pick_patchfile(move || {
+        // Open File Picker Dialog
+        let files = FileDialog::new().add_filter(".bsdiff4", &["bsdiff4"]).pick_file();
+        if let Some(pathbuf) = files {
+            let patchfile_path_str = pathbuf.to_str().unwrap();
+
+            main_window.set_patchfile_path(SharedString::from(patchfile_path_str));
         }
     });
 

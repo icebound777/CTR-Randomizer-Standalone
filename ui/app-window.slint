@@ -881,14 +881,38 @@ component ROMSelectSubmenu inherits Rectangle {
 }
 
 component PatchSelectSubmenu inherits Rectangle {
+    callback pick_patchfile();
+
+    in-out property <string> patchfile_path;
+
     border-color: black;
     border-width: 1px;
+
+    Text {
+        x: 16px;
+        text: "Patch:";
+        font-weight: 800;
+        vertical-alignment: center;
+    }
+    TouchArea {
+        x: 66px;
+        width: 344px;
+        height: parent.height / 2;
+        clicked => {root.pick_patchfile()}
+        LineEdit {
+            width: 344px;
+            placeholder-text: patchfile_path.is-empty ? "Click here to choose Patch File ..." : patchfile_path;
+            enabled: false;
+        }
+    }
 }
 
 component FileSelectMenu inherits TabWidget {
     callback pick_rom();
+    callback pick_patchfile();
     in-out property <string> rom_path;
     in property <int> rom_valid_state;
+    in-out property <string> patchfile_path;
 
     current-index: 0;
     Tab {
@@ -901,17 +925,22 @@ component FileSelectMenu inherits TabWidget {
     }
     Tab {
         title: "Patch File Select";
-        PatchSelectSubmenu {}
+        PatchSelectSubmenu {
+            pick_patchfile() => { root.pick_patchfile(); };
+            patchfile_path: root.patchfile_path;
+        }
     }
 }
 
 component RomOutputBar inherits Rectangle {
     callback gen_seed();
     callback pick_rom();
+    callback pick_patchfile();
 
     in-out property <string> rom_path;
     in property <bool> can_generate;
     in property <int> rom_valid_state;
+    in-out property <string> patchfile_path;
 
     out property <bool> write_spoilerlog: true;
     out property <bool> write_patchfile: false;
@@ -927,6 +956,8 @@ component RomOutputBar inherits Rectangle {
                 pick_rom() => root.pick_rom();
                 rom_path: root.rom_path;
                 rom_valid_state: root.rom_valid_state;
+                pick_patchfile() => root.pick_patchfile();
+                patchfile_path: root.patchfile_path;
             }
         }
         Rectangle {
@@ -940,6 +971,7 @@ component RomOutputBar inherits Rectangle {
                     x: 30px;
                     text: "Generate Spoilerlog";
                     checked: true;
+                    enabled: patchfile_path.is-empty;
                     toggled => { root.write_spoilerlog = self.checked }
                 }
 
@@ -947,6 +979,7 @@ component RomOutputBar inherits Rectangle {
                     x: 30px;
                     text: "Generate Patch File";
                     checked: false;
+                    enabled: patchfile_path.is-empty;
                     toggled => {
                         root.write_patchfile = self.checked;
                         if !root.displayed_patch_warning {
@@ -960,7 +993,7 @@ component RomOutputBar inherits Rectangle {
             Button {
                 x: 250px;
                 width: 200px;
-                text: "Generate Seed";
+                text: !patchfile_path.is-empty ? "Apply Patch" : "Generate Seed";
                 height: parent.height * (2/3);
                 enabled: can_generate;
                 clicked => {root.gen_seed()}
@@ -1009,12 +1042,14 @@ export component MainWindow inherits Window {
     height: 600px;
     callback gen_seed();
     callback pick_rom();
+    callback pick_patchfile();
     callback sources_generator();
     callback sources_mod();
     callback sources_handbook();
     in-out property <string> rom_path;
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
+    in-out property <string> patchfile_path;
 
     out property <bool> write_spoilerlog <=> romoutput.write_spoilerlog;
     out property <bool> write_patchfile <=> romoutput.write_patchfile;
@@ -1058,9 +1093,11 @@ export component MainWindow inherits Window {
             rom_path: root.rom_path;
             can_generate: root.can_generate;
             rom_valid_state: root.rom_valid_state;
+            patchfile_path: root.patchfile_path;
 
             gen_seed() => { root.gen_seed(); }
             pick_rom() => { root.pick_rom(); }
+            pick_patchfile() => { root.pick_patchfile(); }
         }
     }
 }
