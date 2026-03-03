@@ -882,6 +882,7 @@ component ROMSelectSubmenu inherits Rectangle {
 
 component PatchSelectSubmenu inherits Rectangle {
     callback pick_patchfile();
+    callback clear_patchfile_path();
 
     in-out property <string> patchfile_path;
 
@@ -894,7 +895,7 @@ component PatchSelectSubmenu inherits Rectangle {
         font-weight: 800;
         vertical-alignment: center;
     }
-    TouchArea {
+    toucharea := TouchArea {
         x: 66px;
         width: 344px;
         height: parent.height / 2;
@@ -905,11 +906,19 @@ component PatchSelectSubmenu inherits Rectangle {
             enabled: false;
         }
     }
+    Button {
+        x: toucharea.x + toucharea.width + 12px;
+        width: 60px;
+        text: "Clear";
+        enabled: !patchfile_path.is-empty;
+        clicked => { clear_patchfile_path() }
+    }
 }
 
 component FileSelectMenu inherits TabWidget {
     callback pick_rom();
     callback pick_patchfile();
+    callback clear_patchfile_path();
     in-out property <string> rom_path;
     in property <int> rom_valid_state;
     in-out property <string> patchfile_path;
@@ -927,6 +936,7 @@ component FileSelectMenu inherits TabWidget {
         title: "Patch File Select";
         PatchSelectSubmenu {
             pick_patchfile() => { root.pick_patchfile(); };
+            clear_patchfile_path() => { root.clear_patchfile_path(); };
             patchfile_path: root.patchfile_path;
         }
     }
@@ -936,6 +946,7 @@ component RomOutputBar inherits Rectangle {
     callback gen_seed();
     callback pick_rom();
     callback pick_patchfile();
+    callback clear_patchfile_path();
 
     in-out property <string> rom_path;
     in property <bool> can_generate;
@@ -958,6 +969,7 @@ component RomOutputBar inherits Rectangle {
                 rom_valid_state: root.rom_valid_state;
                 pick_patchfile() => root.pick_patchfile();
                 patchfile_path: root.patchfile_path;
+                clear_patchfile_path() => root.clear_patchfile_path();
             }
         }
         Rectangle {
@@ -1043,6 +1055,7 @@ export component MainWindow inherits Window {
     callback gen_seed();
     callback pick_rom();
     callback pick_patchfile();
+    callback clear_patchfile_path();
     callback sources_generator();
     callback sources_mod();
     callback sources_handbook();
@@ -1098,6 +1111,7 @@ export component MainWindow inherits Window {
             gen_seed() => { root.gen_seed(); }
             pick_rom() => { root.pick_rom(); }
             pick_patchfile() => { root.pick_patchfile(); }
+            clear_patchfile_path() => { root.clear_patchfile_path(); }
         }
     }
 }

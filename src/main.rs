@@ -172,6 +172,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     });
 
+
+    let main_ui_weak = ui.as_weak();
+    let main_window = main_ui_weak.unwrap();
+    ui.on_clear_patchfile_path(move || {
+        main_window.set_patchfile_path(SharedString::from(""));
+    });
+
     let _ = ui.run();
 
     Ok(())
