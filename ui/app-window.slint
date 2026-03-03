@@ -836,9 +836,79 @@ component SettingsMenu inherits TabWidget {
     }
 }
 
+component ROMSelectSubmenu inherits Rectangle {
+    callback pick_rom();
+
+    in-out property <string> rom_path;
+    in property <int> rom_valid_state;
+
+    border-color: black;
+    border-width: 1px;
+
+    Text {
+        x: 16px;
+        text: "ROM:";
+        font-weight: 800;
+        vertical-alignment: center;
+    }
+    TouchArea {
+        x: 60px;
+        width: 350px;
+        height: parent.height / 2;
+        clicked => {root.pick_rom()}
+        LineEdit {
+            width: 350px;
+            placeholder-text: rom_path.is-empty ? "Click here to choose CTR NTSC-U ROM ..." : rom_path;
+            enabled: false;
+        }
+    }
+    Text {
+        visible: root.rom_valid_state == 2 || root.rom_valid_state == 3;
+        x: 430px;
+        text: root.rom_valid_state == 3 ? "Valid": "Invalid";
+        font-weight: 800;
+        color: root.rom_valid_state == 3 ? green : red;
+        vertical-alignment: center;
+    }
+    Text {
+        visible: rom_valid_state == 1;
+        x: 430px;
+        text: "Validating ROM ...";
+        font-weight: 800;
+        color: red;
+        vertical-alignment: center;
+    }
+}
+
+component PatchSelectSubmenu inherits Rectangle {
+    border-color: black;
+    border-width: 1px;
+}
+
+component FileSelectMenu inherits TabWidget {
+    callback pick_rom();
+    in-out property <string> rom_path;
+    in property <int> rom_valid_state;
+
+    current-index: 0;
+    Tab {
+        title: "ROM Select";
+        ROMSelectSubmenu {
+            pick_rom() => { root.pick_rom(); };
+            rom_path: root.rom_path;
+            rom_valid_state: root.rom_valid_state;
+        }
+    }
+    Tab {
+        title: "Patch File Select";
+        PatchSelectSubmenu {}
+    }
+}
+
 component RomOutputBar inherits Rectangle {
     callback gen_seed();
     callback pick_rom();
+
     in-out property <string> rom_path;
     in property <bool> can_generate;
     in property <int> rom_valid_state;
@@ -850,42 +920,13 @@ component RomOutputBar inherits Rectangle {
 
     HorizontalLayout {
         Rectangle {
-            width: parent.width / 2;
+                width: root.width / 2;
             border-color: black;
             border-width: 1px;
-
-            Text {
-                x: 16px;
-                text: "ROM:";
-                font-weight: 800;
-                vertical-alignment: center;
-            }
-            TouchArea {
-                x: 60px;
-                width: 350px;
-                height: parent.height / 2;
-                clicked => {root.pick_rom()}
-                LineEdit {
-                    width: 350px;
-                    placeholder-text: rom_path.is-empty ? "Click here to choose CTR NTSC-U ROM ..." : rom_path;
-                    enabled: false;
-                }
-            }
-            Text {
-                visible: root.rom_valid_state == 2 || root.rom_valid_state == 3;
-                x: 430px;
-                text: root.rom_valid_state == 3 ? "Valid": "Invalid";
-                font-weight: 800;
-                color: root.rom_valid_state == 3 ? green : red;
-                vertical-alignment: center;
-            }
-            Text {
-                visible: rom_valid_state == 1;
-                x: 430px;
-                text: "Validating ROM ...";
-                font-weight: 800;
-                color: red;
-                vertical-alignment: center;
+            FileSelectMenu {
+                pick_rom() => root.pick_rom();
+                rom_path: root.rom_path;
+                rom_valid_state: root.rom_valid_state;
             }
         }
         Rectangle {
