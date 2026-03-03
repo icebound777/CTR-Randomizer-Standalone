@@ -2,7 +2,7 @@ use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::randomize_game::get_randomized_game;
-use crate::seed_generation::rom_patching::bsdiff_patching::{apply_patchfile, create_patchfile};
+use crate::seed_generation::rom_patching::bsdiff_patching::{apply_base_patchfile, create_patchfile};
 use crate::seed_generation::seed_settings::SeedSettings;
 use crate::seed_generation::spoilerlog::write_spoilerlog;
 use crate::seed_generation::write_rando_db::write_db_to_rom;
@@ -33,7 +33,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
 
     if let Ok(randomized_game) = randomized_game {
         // apply base mod patch to rom
-        let filepath_new_rom = apply_patchfile(rom_filepath, seed);
+        let filepath_new_rom = apply_base_patchfile(rom_filepath, seed);
 
         match filepath_new_rom {
             Ok(new_rom) => {

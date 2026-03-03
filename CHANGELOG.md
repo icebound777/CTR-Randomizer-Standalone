@@ -1,14 +1,23 @@
 # Changelog
 
-## beta 1
+## next version
 
 ### Features (seed generator)
+
+* Sharing seeds
+  * Add `Generate Patch File` toggle for writing a patch file for sharing the generating seed with others.
+  * Add `Patch File Select` tab for directly patching a seed from a patch file generated via the `Generate Patch File` functionality.
+  * Add `Clear` button for clearing out the selected patch file within the `Patch File Select`.
+
+## beta 1
+
+### Features (seed generator) (beta 1)
 
 * Warp Pad Unlock Requirements
   * Can now choose between `Vanilla` (unchanged), `Random`, and `Random w/o 4 Keys`.
   * `Random` and `Random w/o 4 Keys` will not account for gems or platinum relics if the respective race rewards are not shuffled.
 
-### Bug Fixes (base mod)
+### Bug Fixes (base mod) (beta 1)
 
 * Relic Races
   * Fix 10 second bonus counter for perfect runs resetting to `-10` after counting to zero.
