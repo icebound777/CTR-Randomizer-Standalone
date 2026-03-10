@@ -4,13 +4,19 @@ use rand_chacha::ChaCha8Rng;
 use crate::seed_generation::randomize_game::get_randomized_game;
 use crate::seed_generation::rom_patching::bsdiff_patching::{apply_base_patchfile, create_patchfile};
 use crate::seed_generation::seed_settings::SeedSettings;
-use crate::seed_generation::spoilerlog::write_spoilerlog;
+use crate::seed_generation::spoilerlog::{get_seed_hash, write_spoilerlog};
 use crate::seed_generation::write_rando_db::write_db_to_rom;
 
 use std::time::Instant;
 
 
-pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<(), String> {
+pub struct SeedMetadata {
+    pub seed_filename: String,
+    pub seed_hash: String,
+}
+
+
+pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<SeedMetadata, String> {
     let now = Instant::now();
 
     let mut seed: u32;
@@ -54,28 +60,33 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
 
                 // if needed, write spoiler log
                 if chosen_settings.write_spoilerlog {
-                    let log_success = write_spoilerlog(new_rom, randomized_game, seed, chosen_settings);
+                    let log_success = write_spoilerlog(&new_rom, randomized_game, seed, chosen_settings);
 
                     if log_success.is_err() {
                         return Err("Could not create spoiler log file!".to_owned());
                     }
                 }
+
+                return Ok(
+                    SeedMetadata {
+                        seed_filename: new_rom.file_name().unwrap().to_string_lossy().to_string(),
+                        seed_hash: get_seed_hash(seed),
+                    }
+                );
             },
             _ => { return Err("Could not apply base patch to vanilla ROM!".to_owned());}
         }
-    } else {
-        return Err(format!(
-            "Failed to generate a randomized game!\nThis can rarely happen, just retry it.\n\
-             If this continues happening, screenshot the following info\n\
-             and send it to Icebound777 via GitHub or Discord:\n\n\
-             Seed: {}\n\
-             Version: {}\n\
-             Settings:\n{}",
-            seed,
-            "beta 2",
-            chosen_settings
-        ));
     }
 
-    Ok(())
+    Err(format!(
+        "Failed to generate a randomized game!\nThis can rarely happen, just retry it.\n\
+            If this continues happening, screenshot the following info\n\
+            and send it to Icebound777 via GitHub or Discord:\n\n\
+            Seed: {}\n\
+            Version: {}\n\
+            Settings:\n{}",
+        seed,
+        "beta 2",
+        chosen_settings
+    ))
 }

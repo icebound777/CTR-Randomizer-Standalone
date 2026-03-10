@@ -1115,6 +1115,41 @@ export component MainWindow inherits Window {
         }
     }
 
+    property <string> seed_filename;
+    property <string> seed_hash;
+
+    public function show-gen-success-popup(seed_filename: string, seed_hash: string) {
+        root.seed_filename = seed_filename;
+        root.seed_hash = seed_hash;
+        gen_success_popup.show();
+    }
+
+    gen_success_popup := PopupWindow {
+        x: (root.width / 2) - (self.width / 2);
+        y: (root.height / 2) - (self.height / 2);
+        height: 80px;
+        width: 400px;
+        Rectangle {
+            border-width: 2px;
+            border-color: black;
+            height: 100%;
+            width: 100%;
+            background: lightgray;
+
+            Text {
+                y: 10px;
+                text: "Generation successful!";
+                font-weight: 800;
+            }
+
+            Text {
+                y: 40px;
+                text: "Seed file: " + root.seed_filename + "\n"
+                + "Seed hash: " + root.seed_hash;
+            }
+        }
+    }
+
     public function show-error-popup(err-msg: string) {
         error_popup_msg = err-msg;
         error_msg_popup.show();

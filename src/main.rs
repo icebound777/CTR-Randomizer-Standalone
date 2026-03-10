@@ -116,9 +116,18 @@ fn main() -> Result<(), Box<dyn Error>> {
             let rom_path = main_window.get_rom_path();
             let rom_path = rom_path.as_str();
             let gen_result = generate_seed(rom_path, &chosen_settings);
-            if gen_result.is_err() {
-                main_window.invoke_show_error_popup(SharedString::from(gen_result.err().unwrap()));
-            }
+
+            match gen_result {
+                Ok(seed_meta) => {
+                    main_window.invoke_show_gen_success_popup(
+                        SharedString::from(seed_meta.seed_filename),
+                        SharedString::from(seed_meta.seed_hash),
+                    );
+                },
+                Err(msg) => {
+                    main_window.invoke_show_error_popup(SharedString::from(msg));
+                },
+            };
         }
     });
 
