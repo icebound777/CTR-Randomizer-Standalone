@@ -10,6 +10,8 @@
   * Add `Clear` button for clearing out the selected patch file within the `Patch File Select`.
 * More gracious error handling
   * Instead of crashing when failing to generate a seed, the generator will now just show a popup message with some info about what happened, including the failed generation's seed and settings.
+* Turbo Track item locations
+  * If unlock requirements are set to `Vanilla`, and the gems are not shuffled, then the vanilla Turbo Track warp pad location is now forced to always lead to Turbo Track (even if warp pads are shuffled), and all Turbo Track rewards are forced to the original relics. The goal of this change is to never force a player to collect all CTR tokens, to then race all gem cups, to then get a required item off of the Turbo Track warp pad.
 
 ### Bug Fixes (seed generator)
 

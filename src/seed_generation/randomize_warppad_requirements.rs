@@ -20,6 +20,7 @@ pub fn get_random_warppad_unlocks(
     seed: &mut ChaCha8Rng,
     requirement_setting: &WarppadUnlockRequirements,
     opt_reward_shuffle: &Option<RewardShuffle>,
+    force_vanilla_turbotrack: bool,
     warppad_links: HashMap<LevelID, LevelID>,
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
@@ -63,6 +64,7 @@ pub fn get_random_warppad_unlocks(
         get_shuffled_rewards(
             seed,
             reward_shuffle,
+            force_vanilla_turbotrack,
             &warppad_links,
             free_warppads_warppad_unlocks.clone(),
             bossgarage_requirements.clone(),
