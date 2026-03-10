@@ -55,6 +55,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             if patch_result.is_err() {
                 panic!()
             }
+            main_window.invoke_show_gen_success_popup(
+                SharedString::from(patch_result.unwrap().file_name().unwrap().to_string_lossy().to_string()),
+                SharedString::from(""),
+            );
         } else {
             // Collect settings chosen via UI
             let chosen_rando_settings = RandomizationSettings {

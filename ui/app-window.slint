@@ -1138,14 +1138,19 @@ export component MainWindow inherits Window {
 
             Text {
                 y: 10px;
-                text: "Generation successful!";
+                text: root.seed_hash.is-empty ? "Patching successful!" : "Generation successful!";
                 font-weight: 800;
             }
 
             Text {
                 y: 40px;
-                text: "Seed file: " + root.seed_filename + "\n"
-                + "Seed hash: " + root.seed_hash;
+                text: "Seed file: " + root.seed_filename;
+            }
+
+            Text {
+                visible: !root.seed_hash.is-empty;
+                y: 55px;
+                text: "Seed hash: " + root.seed_hash;
             }
         }
     }
