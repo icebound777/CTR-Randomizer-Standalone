@@ -72,7 +72,7 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
              Version: {}\n\
              Settings:\n{}",
             seed,
-            "beta 1",
+            "beta 2",
             chosen_settings
         ));
     }
