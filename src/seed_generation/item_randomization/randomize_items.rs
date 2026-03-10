@@ -547,18 +547,26 @@ fn get_item_placement(
     }
 
     if !reward_shuffle.include_gems {
-        for level_id in [
-            LevelID::CupRed,
-            LevelID::CupGreen,
-            LevelID::CupBlue,
-            LevelID::CupYellow,
-            LevelID::CupPurple,
-        ] {
-            item_placement
-                .get_mut(&ItemLocation{levelid: level_id, racetype: RaceType::GemCup})
-                .unwrap()
-                .1 = Some(RaceReward::RedGem);
-        }
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupRed, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::RedGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupGreen, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::GreenGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupBlue, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::BlueGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupYellow, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::YellowGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupPurple, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::PurpleGem);
     }
 
     if !reward_shuffle.include_keys {
@@ -582,6 +590,7 @@ fn get_item_placement(
     }
     item_pool.sort_by_key(|k| matches!(k, RaceReward::Key));
 
+    let num_items_to_place = item_pool.len();
     let mut num_placed_items = 0;
     let mut item_placement_success = true;
 
@@ -639,7 +648,7 @@ fn get_item_placement(
             }
         }
         if reachable_empty_locations.is_empty() {
-            print!("{num_placed_items} placed before abort - ");
+            print!("{num_placed_items} of {num_items_to_place} placed before abort - ");
             println!("reachable_empty_locations.is_empty()");
             //println!("{inventory:?}");
             //println!("{item_pool:?}");
@@ -660,7 +669,7 @@ fn get_item_placement(
 
     if item_placement_success {
         if !item_pool.is_empty() {
-            print!("{num_placed_items} placed before abort - ");
+            print!("{num_placed_items} of {num_items_to_place} placed before abort - ");
             println!("!item_pool.is_empty()");
             //println!("{item_pool:?}");
             //println!("{item_placement:?}");

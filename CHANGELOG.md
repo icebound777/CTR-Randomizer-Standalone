@@ -11,6 +11,11 @@
 * More gracious error handling
   * Instead of crashing when failing to generate a seed, the generator will now just show a popup message with some info about what happened, including the failed generation's seed and settings.
 
+### Bug Fixes (seed generator)
+
+* Seed generation
+  * Fix not shuffling gems always leading to a seed generation failure. This was caused by non-shuffled gems setting the reward for all gem cups to the red gem.
+
 ### Bug Fixes (base mod)
 
 * Mask Hints
