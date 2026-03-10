@@ -17,6 +17,7 @@
 
 * Seed generation
   * Fix not shuffling gems always leading to a seed generation failure. This was caused by non-shuffled gems setting the reward for all gem cups to the red gem.
+  * Fix shuffling gem cup warp pads or battle arena warp pads sometimes causing seed generation failure if keys were not shuffled. Before they were able to occupy all spots of the first hub, and with `Vanilla` unlock requirements there would not be enough item locations for placing all required trophies.
 
 ### Bug Fixes (base mod)
 

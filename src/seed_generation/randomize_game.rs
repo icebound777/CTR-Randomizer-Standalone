@@ -77,11 +77,15 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             let limit_arena_gemcup_shuffle =
-                chosen_settings.randomization.shuffle_race_rewards.is_none()
-                    && matches!(
-                        chosen_settings.randomization.warppad_unlock_requirements,
-                        WarppadUnlockRequirements::Vanilla
-                    );
+                matches!(
+                    chosen_settings.randomization.warppad_unlock_requirements,
+                    WarppadUnlockRequirements::Vanilla
+                ) && (chosen_settings.randomization.shuffle_race_rewards.is_none()
+                    || !chosen_settings
+                        .randomization
+                        .shuffle_race_rewards
+                        .unwrap()
+                        .include_gems);
 
             let new_warppads = get_shuffled_warppads(
                 &mut seed,
