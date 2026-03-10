@@ -1,6 +1,6 @@
 # Changelog
 
-## next version
+## beta 2
 
 ### Features (seed generator)
 
@@ -10,6 +10,11 @@
   * Add `Clear` button for clearing out the selected patch file within the `Patch File Select`.
 * More gracious error handling
   * Instead of crashing when failing to generate a seed, the generator will now just show a popup message with some info about what happened, including the failed generation's seed and settings.
+
+### Bug Fixes (base mod)
+
+* Mask Hints
+  * Fix a possible game crash after opening the first key door, if `Skip Mask Hints` was turned off. Fixed by always skipping the "opening first door" mask hint, even if `Skip Mask Hints` is disabled.
 
 ## beta 1
 
