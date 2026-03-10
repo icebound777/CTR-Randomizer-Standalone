@@ -18,6 +18,7 @@ use crate::seed_generation::{
 pub fn get_shuffled_rewards(
     seed: &mut ChaCha8Rng,
     reward_shuffle: &RewardShuffle,
+    force_vanilla_turbotrack: bool,
     warppad_links: &HashMap<LevelID, LevelID>,
     warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
     bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
@@ -29,7 +30,8 @@ pub fn get_shuffled_rewards(
     // * include_gems
     // * include_platinum_relics
     let item_pool = build_item_pool(
-        reward_shuffle
+        reward_shuffle,
+        force_vanilla_turbotrack,
     );
 
     // generate logical requirements from warppad links, warppad_unlocks, hub requirements, and garage unlocks
@@ -49,6 +51,7 @@ pub fn get_shuffled_rewards(
             seed,
             item_pool.clone(),
             reward_shuffle,
+            force_vanilla_turbotrack,
             location_list.clone(),
             shuffled_warppad_requirements,
         );
@@ -64,6 +67,7 @@ pub fn get_shuffled_rewards(
 
 pub fn build_item_pool(
     reward_shuffle: &RewardShuffle,
+    force_vanilla_turbotrack: bool,
 ) -> Vec<RaceReward> {
     let mut item_pool: Vec<RaceReward> = vec![
         // 16 Trophies
@@ -104,7 +108,7 @@ pub fn build_item_pool(
         RaceReward::PurpleCtrToken,
         RaceReward::PurpleCtrToken,
         RaceReward::PurpleCtrToken,
-        // 18 Sapphire & 18 Gold Relics
+        // 17 Sapphire & 17 Gold Relics (1 of each are Turbo Track special-cased)
         RaceReward::SapphireRelic,
         RaceReward::SapphireRelic,
         RaceReward::SapphireRelic,
@@ -122,8 +126,6 @@ pub fn build_item_pool(
         RaceReward::SapphireRelic,
         RaceReward::SapphireRelic,
         RaceReward::SapphireRelic,
-        RaceReward::SapphireRelic,
-        RaceReward::GoldRelic,
         RaceReward::GoldRelic,
         RaceReward::GoldRelic,
         RaceReward::GoldRelic,
@@ -157,8 +159,16 @@ pub fn build_item_pool(
         item_pool.push(RaceReward::PurpleGem);
     }
 
+    if !force_vanilla_turbotrack {
+        item_pool.push(RaceReward::SapphireRelic);
+        item_pool.push(RaceReward::GoldRelic);
+    }
+
     if reward_shuffle.include_platinum_relics {
-        for _ in 0..18 {
+        for _ in 0..17 {
+            item_pool.push(RaceReward::PlatinumRelic);
+        }
+        if !force_vanilla_turbotrack {
             item_pool.push(RaceReward::PlatinumRelic);
         }
     }
@@ -491,6 +501,7 @@ fn get_item_placement(
     seed: &mut ChaCha8Rng,
     mut item_pool: Vec<RaceReward>,
     reward_shuffle: &RewardShuffle,
+    force_vanilla_turbotrack: bool,
     location_list: HashMap<ItemLocation, Vec<UnlockRequirement>>,
     shuffled_warppad_requirements: bool,
 ) -> Result<HashMap<ItemLocation, RaceReward>, String> {
@@ -544,21 +555,54 @@ fn get_item_placement(
                 .unwrap()
                 .1 = Some(RaceReward::PlatinumRelic);
         }
+    } else if force_vanilla_turbotrack {
+        item_placement
+            .get_mut(&ItemLocation {
+                levelid: LevelID::TurboTrack,
+                racetype: RaceType::RelicRacePlatinum,
+            })
+            .unwrap()
+            .1 = Some(RaceReward::PlatinumRelic);
+    }
+
+    if force_vanilla_turbotrack {
+        item_placement
+            .get_mut(&ItemLocation {
+                levelid: LevelID::TurboTrack,
+                racetype: RaceType::RelicRaceSapphire,
+            })
+            .unwrap()
+            .1 = Some(RaceReward::SapphireRelic);
+        item_placement
+            .get_mut(&ItemLocation {
+                levelid: LevelID::TurboTrack,
+                racetype: RaceType::RelicRaceGold,
+            })
+            .unwrap()
+            .1 = Some(RaceReward::GoldRelic);
     }
 
     if !reward_shuffle.include_gems {
-        for level_id in [
-            LevelID::CupRed,
-            LevelID::CupGreen,
-            LevelID::CupBlue,
-            LevelID::CupYellow,
-            LevelID::CupPurple,
-        ] {
-            item_placement
-                .get_mut(&ItemLocation{levelid: level_id, racetype: RaceType::GemCup})
-                .unwrap()
-                .1 = Some(RaceReward::RedGem);
-        }
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupRed, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::RedGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupGreen, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::GreenGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupBlue, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::BlueGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupYellow, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::YellowGem);
+        item_placement
+            .get_mut(&ItemLocation{levelid: LevelID::CupPurple, racetype: RaceType::GemCup})
+            .unwrap()
+            .1 = Some(RaceReward::PurpleGem);
     }
 
     if !reward_shuffle.include_keys {
@@ -582,6 +626,7 @@ fn get_item_placement(
     }
     item_pool.sort_by_key(|k| matches!(k, RaceReward::Key));
 
+    let num_items_to_place = item_pool.len();
     let mut num_placed_items = 0;
     let mut item_placement_success = true;
 
@@ -639,7 +684,7 @@ fn get_item_placement(
             }
         }
         if reachable_empty_locations.is_empty() {
-            print!("{num_placed_items} placed before abort - ");
+            print!("{num_placed_items} of {num_items_to_place} placed before abort - ");
             println!("reachable_empty_locations.is_empty()");
             //println!("{inventory:?}");
             //println!("{item_pool:?}");
@@ -660,7 +705,7 @@ fn get_item_placement(
 
     if item_placement_success {
         if !item_pool.is_empty() {
-            print!("{num_placed_items} placed before abort - ");
+            print!("{num_placed_items} of {num_items_to_place} placed before abort - ");
             println!("!item_pool.is_empty()");
             //println!("{item_pool:?}");
             //println!("{item_placement:?}");
