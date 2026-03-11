@@ -13,7 +13,7 @@ use crate::seed_generation::{
 };
 
 pub fn write_spoilerlog(
-    new_rom_path: PathBuf,
+    new_rom_path: &PathBuf,
     game_setup: GameSetup,
     seed: u32,
     chosen_settings: &SeedSettings,
@@ -91,7 +91,7 @@ pub fn write_spoilerlog(
         }
     });
 
-    let mut spoilerlog_path = new_rom_path;
+    let mut spoilerlog_path = new_rom_path.clone();
     let file_stem = spoilerlog_path.clone();
     let file_stem = file_stem.file_stem().unwrap();
     spoilerlog_path.pop();
@@ -104,7 +104,7 @@ pub fn write_spoilerlog(
     std::fs::write(&spoilerlog_path, to_string_pretty(&spoilerlog).unwrap())
 }
 
-fn get_seed_hash(seed: u32) -> String {
+pub fn get_seed_hash(seed: u32) -> String {
     fn get_character(seed_short: u8) -> String {
         let character_id: u8 = seed_short % 16;
         match character_id {

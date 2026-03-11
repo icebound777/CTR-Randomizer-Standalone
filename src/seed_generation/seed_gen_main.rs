@@ -2,15 +2,21 @@ use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::randomize_game::get_randomized_game;
-use crate::seed_generation::rom_patching::bsdiff_patching::{apply_patchfile, create_patchfile};
+use crate::seed_generation::rom_patching::bsdiff_patching::{apply_base_patchfile, create_patchfile};
 use crate::seed_generation::seed_settings::SeedSettings;
-use crate::seed_generation::spoilerlog::write_spoilerlog;
+use crate::seed_generation::spoilerlog::{get_seed_hash, write_spoilerlog};
 use crate::seed_generation::write_rando_db::write_db_to_rom;
 
 use std::time::Instant;
 
 
-pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<(), &'a str> {
+pub struct SeedMetadata {
+    pub seed_filename: String,
+    pub seed_hash: String,
+}
+
+
+pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<SeedMetadata, String> {
     let now = Instant::now();
 
     let mut seed: u32;
@@ -33,14 +39,14 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
 
     if let Ok(randomized_game) = randomized_game {
         // apply base mod patch to rom
-        let filepath_new_rom = apply_patchfile(rom_filepath, seed);
+        let filepath_new_rom = apply_base_patchfile(rom_filepath, seed);
 
         match filepath_new_rom {
             Ok(new_rom) => {
                 // write randomization to rom
                 let write_result = write_db_to_rom(&new_rom, &randomized_game);
                 if write_result.is_err() {
-                    return Err(write_result.expect_err("str type error"));
+                    return Err(write_result.expect_err("str type error").to_owned());
                 }
 
                 // if needed, write patch file
@@ -48,24 +54,39 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
                     let filepath_new_patch = create_patchfile(rom_filepath, &new_rom);
 
                     if filepath_new_patch.is_err() {
-                        return Err("Could not create patch file!");
+                        return Err("Could not create patch file!".to_owned());
                     }
                 }
 
                 // if needed, write spoiler log
                 if chosen_settings.write_spoilerlog {
-                    let log_success = write_spoilerlog(new_rom, randomized_game, seed, chosen_settings);
+                    let log_success = write_spoilerlog(&new_rom, randomized_game, seed, chosen_settings);
 
                     if log_success.is_err() {
-                        return Err("Could not create spoiler log file!");
+                        return Err("Could not create spoiler log file!".to_owned());
                     }
                 }
+
+                return Ok(
+                    SeedMetadata {
+                        seed_filename: new_rom.file_name().unwrap().to_string_lossy().to_string(),
+                        seed_hash: get_seed_hash(seed),
+                    }
+                );
             },
-            _ => { return Err("Could not apply base patch to vanilla ROM!");}
+            _ => { return Err("Could not apply base patch to vanilla ROM!".to_owned());}
         }
-    } else {
-        return Err("Failed to generate a randomized game! Seed: {seed}");
     }
 
-    Ok(())
+    Err(format!(
+        "Failed to generate a randomized game!\nThis can rarely happen, just retry it.\n\
+            If this continues happening, screenshot the following info\n\
+            and send it to Icebound777 via GitHub or Discord:\n\n\
+            Seed: {}\n\
+            Version: {}\n\
+            Settings:\n{}",
+        seed,
+        "beta 2",
+        chosen_settings
+    ))
 }

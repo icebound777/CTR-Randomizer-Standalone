@@ -59,14 +59,33 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
         };
 
     let shuffling_ok: Result<(), ()> = if chosen_settings.randomization.shuffle_adventure {
+        // Turbo Track's vanilla warp pad location is in a really awkward to
+        // handle spot if it requires 5 gems and we don't want to do any of the
+        // gem cups for the gems. So as workaround we just force the warp pad
+        // to be completely vanilla in this case.
+        let force_vanilla_turbotrack =
+            matches!(
+                &chosen_settings.randomization.warppad_unlock_requirements,
+                WarppadUnlockRequirements::Vanilla,
+            ) && (chosen_settings.randomization.shuffle_race_rewards.is_none()
+                || !chosen_settings
+                    .randomization
+                    .shuffle_race_rewards
+                    .unwrap()
+                    .include_gems);
+
         // Warppads
         if let Some(warppad_shuffle) = &chosen_settings.randomization.warppad_shuffle {
             let limit_arena_gemcup_shuffle =
-                chosen_settings.randomization.shuffle_race_rewards.is_none()
-                    && matches!(
-                        chosen_settings.randomization.warppad_unlock_requirements,
-                        WarppadUnlockRequirements::Vanilla
-                    );
+                matches!(
+                    chosen_settings.randomization.warppad_unlock_requirements,
+                    WarppadUnlockRequirements::Vanilla
+                ) && (chosen_settings.randomization.shuffle_race_rewards.is_none()
+                    || !chosen_settings
+                        .randomization
+                        .shuffle_race_rewards
+                        .unwrap()
+                        .include_gems);
 
             let new_warppads = get_shuffled_warppads(
                 &mut seed,
@@ -74,6 +93,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 warppad_shuffle.include_battle_arenas,
                 warppad_shuffle.include_gem_cups,
                 limit_arena_gemcup_shuffle,
+                force_vanilla_turbotrack,
             );
 
             println!("{:?}", new_warppads);
@@ -101,6 +121,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                     &mut seed,
                     x,
                     &chosen_settings.randomization.shuffle_race_rewards,
+                    force_vanilla_turbotrack,
                     new_game_world.get_warppad_links(),
                     new_game_world.get_warppad_unlocks(),
                     new_game_world.get_garage_unlocks(),
@@ -120,6 +141,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
             let new_reward_placement = get_shuffled_rewards(
                 &mut seed,
                 reward_shuffle,
+                force_vanilla_turbotrack,
                 &new_game_world.get_warppad_links(),
                 new_game_world.get_warppad_unlocks(),
                 new_game_world.get_garage_unlocks(),
@@ -207,6 +229,7 @@ fn get_shuffled_warppads(
     include_battle_arenas: bool,
     include_gem_cups: bool,
     limit_arena_gemcup_shuffle: bool,
+    force_vanilla_turbotrack: bool,
 ) -> HashMap<LevelID, LevelID> {
     let mut randomized_levels: HashMap<LevelID, LevelID> = original_warppads.clone();
     let mut untouched_levels: HashMap<LevelID, LevelID> = HashMap::new();
@@ -244,6 +267,10 @@ fn get_shuffled_warppads(
                 level_map.insert(*level_key, *level_key);
             }
         }
+    }
+
+    if force_vanilla_turbotrack {
+        untouched_levels.insert(LevelID::TurboTrack, LevelID::TurboTrack);
     }
 
     if limit_arena_gemcup_shuffle {

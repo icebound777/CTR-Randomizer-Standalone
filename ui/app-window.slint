@@ -74,7 +74,7 @@ component TitleBar inherits Rectangle {
         }
 
         Text {
-            text: "CTR-Randomizer (beta 1)";
+            text: "CTR-Randomizer (beta 2)";
             font-weight: 800;
             font-size: 40pt;
             horizontal-alignment: center;
@@ -836,73 +836,213 @@ component SettingsMenu inherits TabWidget {
     }
 }
 
+component ROMSelectSubmenu inherits Rectangle {
+    callback pick_rom();
+
+    in-out property <string> rom_path;
+    in property <int> rom_valid_state;
+
+    border-color: black;
+    border-width: 1px;
+
+    Text {
+        x: 16px;
+        text: "ROM:";
+        font-weight: 800;
+        vertical-alignment: center;
+    }
+    TouchArea {
+        x: 60px;
+        width: 350px;
+        height: parent.height / 2;
+        clicked => {root.pick_rom()}
+        LineEdit {
+            width: 350px;
+            placeholder-text: rom_path.is-empty ? "Click here to choose CTR NTSC-U ROM ..." : rom_path;
+            enabled: false;
+        }
+    }
+    Text {
+        visible: root.rom_valid_state == 2 || root.rom_valid_state == 3;
+        x: 430px;
+        text: root.rom_valid_state == 3 ? "Valid": "Invalid";
+        font-weight: 800;
+        color: root.rom_valid_state == 3 ? green : red;
+        vertical-alignment: center;
+    }
+    Text {
+        visible: rom_valid_state == 1;
+        x: 430px;
+        text: "Validating ROM ...";
+        font-weight: 800;
+        color: red;
+        vertical-alignment: center;
+    }
+}
+
+component PatchSelectSubmenu inherits Rectangle {
+    callback pick_patchfile();
+    callback clear_patchfile_path();
+
+    in-out property <string> patchfile_path;
+
+    border-color: black;
+    border-width: 1px;
+
+    Text {
+        x: 16px;
+        text: "Patch:";
+        font-weight: 800;
+        vertical-alignment: center;
+    }
+    toucharea := TouchArea {
+        x: 66px;
+        width: 344px;
+        height: parent.height / 2;
+        clicked => {root.pick_patchfile()}
+        LineEdit {
+            width: 344px;
+            placeholder-text: patchfile_path.is-empty ? "Click here to choose Patch File ..." : patchfile_path;
+            enabled: false;
+        }
+    }
+    Button {
+        x: toucharea.x + toucharea.width + 12px;
+        width: 60px;
+        text: "Clear";
+        enabled: !patchfile_path.is-empty;
+        clicked => { clear_patchfile_path() }
+    }
+}
+
+component FileSelectMenu inherits TabWidget {
+    callback pick_rom();
+    callback pick_patchfile();
+    callback clear_patchfile_path();
+    in-out property <string> rom_path;
+    in property <int> rom_valid_state;
+    in-out property <string> patchfile_path;
+
+    current-index: 0;
+    Tab {
+        title: "ROM Select";
+        ROMSelectSubmenu {
+            pick_rom() => { root.pick_rom(); };
+            rom_path: root.rom_path;
+            rom_valid_state: root.rom_valid_state;
+        }
+    }
+    Tab {
+        title: "Patch File Select";
+        PatchSelectSubmenu {
+            pick_patchfile() => { root.pick_patchfile(); };
+            clear_patchfile_path() => { root.clear_patchfile_path(); };
+            patchfile_path: root.patchfile_path;
+        }
+    }
+}
+
 component RomOutputBar inherits Rectangle {
     callback gen_seed();
     callback pick_rom();
+    callback pick_patchfile();
+    callback clear_patchfile_path();
+
     in-out property <string> rom_path;
     in property <bool> can_generate;
     in property <int> rom_valid_state;
+    in-out property <string> patchfile_path;
 
     out property <bool> write_spoilerlog: true;
+    out property <bool> write_patchfile: false;
+
+    property <bool> displayed_patch_warning: false;
 
     HorizontalLayout {
         Rectangle {
-            width: parent.width / 2;
+                width: root.width / 2;
             border-color: black;
             border-width: 1px;
-
-            Text {
-                x: 16px;
-                text: "ROM:";
-                font-weight: 800;
-                vertical-alignment: center;
-            }
-            TouchArea {
-                x: 60px;
-                width: 350px;
-                height: parent.height / 2;
-                clicked => {root.pick_rom()}
-                LineEdit {
-                    width: 350px;
-                    placeholder-text: rom_path.is-empty ? "Click here to choose CTR NTSC-U ROM ..." : rom_path;
-                    enabled: false;
-                }
-            }
-            Text {
-                visible: root.rom_valid_state == 2 || root.rom_valid_state == 3;
-                x: 430px;
-                text: root.rom_valid_state == 3 ? "Valid": "Invalid";
-                font-weight: 800;
-                color: root.rom_valid_state == 3 ? green : red;
-                vertical-alignment: center;
-            }
-            Text {
-                visible: rom_valid_state == 1;
-                x: 430px;
-                text: "Validating ROM ...";
-                font-weight: 800;
-                color: red;
-                vertical-alignment: center;
+            FileSelectMenu {
+                pick_rom() => {root.pick_rom()};
+                rom_path: root.rom_path;
+                rom_valid_state: root.rom_valid_state;
+                pick_patchfile() => {root.pick_patchfile()};
+                patchfile_path: root.patchfile_path;
+                clear_patchfile_path() => {root.clear_patchfile_path()};
             }
         }
         Rectangle {
             border-color: black;
             border-width: 1px;
 
-            Switch {
-                x: 30px;
-                text: "Generate Spoilerlog";
-                checked: true;
-                toggled => { root.write_spoilerlog = self.checked }
+            VerticalLayout {
+                spacing: -15px;
+
+                Switch {
+                    x: 30px;
+                    text: "Generate Spoilerlog";
+                    checked: true;
+                    enabled: patchfile_path.is-empty;
+                    toggled => { root.write_spoilerlog = self.checked }
+                }
+
+                Switch {
+                    x: 30px;
+                    text: "Generate Patch File";
+                    checked: false;
+                    enabled: patchfile_path.is-empty;
+                    toggled => {
+                        root.write_patchfile = self.checked;
+                        if !root.displayed_patch_warning {
+                            root.displayed_patch_warning = true;
+                            patchfile_warning.show();
+                        }
+                    }
+                }
             }
 
             Button {
                 x: 250px;
                 width: 200px;
-                text: "Generate Seed";
+                text: !patchfile_path.is-empty ? "Apply Patch" : "Generate Seed";
                 height: parent.height * (2/3);
                 enabled: can_generate;
                 clicked => {root.gen_seed()}
+            }
+        }
+
+        patchfile_warning := PopupWindow {
+            x: (root.width / 2) - (self.width / 2);
+            y: -260px;
+            height: 150px;
+            width: 500px;
+            Rectangle {
+                border-width: 2px;
+                border-color: black;
+                height: 100%;
+                width: 100%;
+                background: lightgray;
+
+                Text {
+                    y: 10px;
+                    text: "Generating Patch File info:";
+                    font-weight: 800;
+                }
+
+                Text {
+                    y: 40px;
+                    text: "Generating a patch file is not required when "
+                    + "playing by yourself.\n"
+                    + "Patch files are for sharing the generated seed with "
+                    + "someone else,\n"
+                    + "for doing races or co-op runs.\n"
+                    + "Generating a patch file increases generation time "
+                    + "SIGNIFICANTLY,\n"
+                    + "often by several minutes, during which "
+                    + "the seed generator\n"
+                    + "may be unresponsive!";
+                }
             }
         }
     }
@@ -914,14 +1054,18 @@ export component MainWindow inherits Window {
     height: 600px;
     callback gen_seed();
     callback pick_rom();
+    callback pick_patchfile();
+    callback clear_patchfile_path();
     callback sources_generator();
     callback sources_mod();
     callback sources_handbook();
     in-out property <string> rom_path;
     in property <bool> can_generate: false;
     in property <int> rom_valid_state: 0;
+    in-out property <string> patchfile_path;
 
     out property <bool> write_spoilerlog <=> romoutput.write_spoilerlog;
+    out property <bool> write_patchfile <=> romoutput.write_patchfile;
 
     out property <int> shuffle_adventure <=> settings.shuffle_adventure;
     out property <bool> shuffle_race_rewards <=> settings.shuffle_race_rewards;
@@ -962,9 +1106,84 @@ export component MainWindow inherits Window {
             rom_path: root.rom_path;
             can_generate: root.can_generate;
             rom_valid_state: root.rom_valid_state;
+            patchfile_path: root.patchfile_path;
 
             gen_seed() => { root.gen_seed(); }
             pick_rom() => { root.pick_rom(); }
+            pick_patchfile() => { root.pick_patchfile(); }
+            clear_patchfile_path() => { root.clear_patchfile_path(); }
+        }
+    }
+
+    property <string> seed_filename;
+    property <string> seed_hash;
+
+    public function show-gen-success-popup(seed_filename: string, seed_hash: string) {
+        root.seed_filename = seed_filename;
+        root.seed_hash = seed_hash;
+        gen_success_popup.show();
+    }
+
+    gen_success_popup := PopupWindow {
+        x: (root.width / 2) - (self.width / 2);
+        y: (root.height / 2) - (self.height / 2);
+        height: 80px;
+        width: 400px;
+        Rectangle {
+            border-width: 2px;
+            border-color: black;
+            height: 100%;
+            width: 100%;
+            background: lightgray;
+
+            Text {
+                y: 10px;
+                text: root.seed_hash.is-empty ? "Patching successful!" : "Generation successful!";
+                font-weight: 800;
+            }
+
+            Text {
+                y: 40px;
+                text: "Seed file: " + root.seed_filename;
+            }
+
+            Text {
+                visible: !root.seed_hash.is-empty;
+                y: 55px;
+                text: "Seed hash: " + root.seed_hash;
+            }
+        }
+    }
+
+    public function show-error-popup(err-msg: string) {
+        error_popup_msg = err-msg;
+        error_msg_popup.show();
+    }
+
+    property <string> error_popup_msg;
+
+    error_msg_popup := PopupWindow {
+        x: (root.width / 2) - (self.width / 2);
+        y: (root.height / 2) - (self.height / 2);
+        height: 250px;
+        width: 500px;
+        Rectangle {
+            border-width: 2px;
+            border-color: black;
+            height: 100%;
+            width: 100%;
+            background: lightgray;
+
+            Text {
+                y: 10px;
+                text: "Error";
+                font-weight: 800;
+            }
+
+            Text {
+                y: 40px;
+                text: root.error_popup_msg;
+            }
         }
     }
 }
