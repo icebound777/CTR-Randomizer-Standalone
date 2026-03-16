@@ -1,5 +1,11 @@
 # Changelog
 
+## next version
+
+### CTR Randomizer Handbook4
+
+* Added cheat code reference.
+
 ## beta 2
 
 ### Features (seed generator)
