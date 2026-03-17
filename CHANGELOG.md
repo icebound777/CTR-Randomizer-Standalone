@@ -1,14 +1,21 @@
 # Changelog
 
-## next version
+## beta 3
 
-### CTR Randomizer Handbook4
+### Bug Fixes (base mod)
+
+* Mask Hints
+  * Fix issue introduced in `beta 2` that played the "post-opening a door" mask hint if mask hints were turned off, causing the crash to actually happen to more players.
+* Menu Graphics
+  * Fix the background of the `SAVING TO MEMORY CARD` screen not being transparent.
+
+### CTR Randomizer Handbook
 
 * Added cheat code reference.
 
 ## beta 2
 
-### Features (seed generator)
+### Features (seed generator) (beta 2)
 
 * Sharing seeds
   * Add `Generate Patch File` toggle for writing a patch file for sharing the generating seed with others.
@@ -21,13 +28,13 @@
 * Turbo Track item locations
   * If unlock requirements are set to `Vanilla`, and the gems are not shuffled, then the vanilla Turbo Track warp pad location is now forced to always lead to Turbo Track (even if warp pads are shuffled), and all Turbo Track rewards are forced to the original relics. The goal of this change is to never force a player to collect all CTR tokens, to then race all gem cups, to then get a required item off of the Turbo Track warp pad.
 
-### Bug Fixes (seed generator)
+### Bug Fixes (seed generator) (beta 2)
 
 * Seed generation
   * Fix not shuffling gems always leading to a seed generation failure. This was caused by non-shuffled gems setting the reward for all gem cups to the red gem.
   * Fix shuffling gem cup warp pads or battle arena warp pads sometimes causing seed generation failure if keys were not shuffled. Before they were able to occupy all spots of the first hub, and with `Vanilla` unlock requirements there would not be enough item locations for placing all required trophies.
 
-### Bug Fixes (base mod)
+### Bug Fixes (base mod) (beta 2)
 
 * Mask Hints
   * Fix a possible game crash after opening the first key door, if `Skip Mask Hints` was turned off. Fixed by always skipping the "opening first door" mask hint, even if `Skip Mask Hints` is disabled.
