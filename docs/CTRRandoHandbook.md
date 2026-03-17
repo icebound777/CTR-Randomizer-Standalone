@@ -267,6 +267,62 @@ Winning **Oxide's Challenge** plays the "you haven't gathered the time relics" c
 Winning **Oxide's Final Challenge** plays the "you beat me again" cutscene, and shows the epilogue credits.  
 Winning **Oxide's Final Challenge** while having a **101% save file** plays the "you beat me again" cutscene, and shows the epilogue credits with lots of confetti.
 
+## Cheat Codes
+
+The following cheat codes are available in CTR. They're activated by holding `L1` & `R1` while in the main menu, then inputting the corresponding code. Successful input of a cheat code plays a chime.
+
+The inputs for the cheat codes actually spell out words! Knowing this can make them easier to remember.
+
+* Cross means the letter `X`
+* Circle means the letter `O`
+* Triangle means the letter `A`
+* Up means either the letter `U` (Up) or `N` (North)
+* Right means either the letter `R` (Right) or `E` (East)
+* Down means either the letter `D` (Down) or `S` (South)
+* Left means either the letter `L` (Left) or `W` (West)
+
+| Cheat | Code | Word | Notes |
+| ----------- | ----------- | ----------- | ----------- |
+| Spyro 2: Ripto's Rage! Demo | Down, Circle, Triangle, Right | SOAR | |
+| Unlock Ripper Roo | Right, Circle, Circle, Down, Up, Down, Right | ROODUDE | |
+| Unlock Papu Papu | Left, Triangle, Right, Down, Right, Circle, Left, Left, Down | LARDROLLS | |
+| Unlock Komodo Joe | Down, Circle, Left, Left, Triangle, Right, Down | DOLLARS | |
+| Unlock Pinstripe | Left, Right, Triangle, Down, Right, Down | LEADED | |
+| Unlock Fake Crash | Circle, Down, Down, Up, Circle, Circle, Down, Left, Right | ODDNOODLE | |
+| Unlock Penta | Down, Right, Triangle, Down, Left, Triangle, Up | SEASWAN | This is the only way to unlock this character |
+| Unlock N.Tropy | Down, Left, Right, Up, Down, Right, Right | SLENDER | |
+| Unlock Scrapbook | Up, Up, Down, Right, Right, Left, Right, Triangle, Right | UNDERWEAR | |
+| Unlock Turbo Track and All Arenas | Right, Right, Left, Triangle, Right, Down, Down | REWARDS | |
+| Unlimited Wumpa Fruit | Down, Right, Right, Down, Down | SEEDS | |
+| Unlimited Masks | Left, Triangle, Right, Left, Circle, Right, Down, Down | WARLORDS | |
+| Unlimited Bowling Bombs | Triangle, Right, Down, Right, Up, Triangle, Left | ARSENAL | |
+| Unlimited Turbos | Triangle, Cross, Right, Left, Left, Triangle, Cross | AXELWAX | |
+| Permanent Invisibility | Up, Up, Down, Right, Right, Up | UNSEEN | Does not make the player invincible, though |
+| Super Engine Mode | Up, Up, Left, Right, Triangle, Down, Right, Down | UNLEADED | Accelerating automatically gives a "Red Fire" boost state. Also unlocks Pinstripe |
+| Adventure Hard Mode (aka "Beakers and Explosive Crates Only") | Right, Up, Down, Up, Right, Circle | ENDNEO | |
+| Super Hard Mode | Down, Right, Left, Up, Cross, Right | DELUXE | Applies to arcade mode races, ignores chosen difficulty setting |
+| Super Turbo Pads | Triangle, Right, Right, Circle, Left | ARROW | Turns all turbo pads into Super Turbo Pads (also known as "Ultimate Sacred Fire" (USF) turbo pads). |
+| Icy Tracks | Down, Left, Right, Down, Right, Circle, Triangle, Down | SLEDROAD | |
+| 1 Lap Races | Down, Up, Down, Down, Right, Up, Down, Right, Triangle, Down | SUDDENDEAD | |
+| Display Boost Counter | Triangle, Down, Down, Circle, Up | ADDON | |
+
+When entering the Adventure Mode or Time Trial the following cheat codes immediately turn off:
+
+* Unlimited Wumpa Fruit
+* Unlimited Mask Items
+* Unlimited Bowling Bombs
+* Unlimited Turbos
+* Super Engine Mode
+* 1 Lap Races
+
+Notably, these cheat codes stay active in both Adventure Mode and Time Trial:
+
+* Icy Tracks
+* Super Turbo Pads
+
+Other cheats only turn off when resetting the game.  
+"Unlock" cheat codes never turn off.
+
 ## Randomizer
 
 ### General randomizer changes
