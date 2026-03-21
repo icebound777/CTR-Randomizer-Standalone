@@ -129,6 +129,7 @@ component RandomizationSubmenu inherits Rectangle {
     out property <int> warppad_unlock_requirements <=> warppad_unlocks.current-index;
     out property <bool> autounlock_ctrchallenge_relicrace;
     out property <int> bossgarage_unlock_requirements <=> bossgarage_unlocks.current-index;
+    out property <int> seed_length <=> seed_length.current-index;
 
     VerticalLayout {
         Rectangle {
@@ -315,6 +316,24 @@ component RandomizationSubmenu inherits Rectangle {
                     toggled => {root.autounlock_ctrchallenge_relicrace = self.checked}
                 }
             }
+
+            seed_length_touch := TouchArea {
+                width: 420px;
+                height: 34px;
+                y: auto_unlock_stagetwo_touch.y + 38px;
+                seed_length_text := Text {
+                    x: bossgarage_unlocks.x + 200px;
+                    text: "Seed Length";
+                    font-size: 10pt;
+                }
+                seed_length := ComboBox {
+                    y: seed_length_text.y - 8px;
+                    x: 10px;
+                    current-index: 0;
+                    width: 190px;
+                    model: ["Random", "Short", "Medium", "Long", "Very Long"];
+                }
+            }
         }
     }
 
@@ -432,6 +451,24 @@ component RandomizationSubmenu inherits Rectangle {
         + "and Relic Race available immediately after beating that warp pad's "
         + "trophy race.";
         user_is_hovering: auto_unlock_stagetwo_touch.has-hover; // <-- references one or more TouchArea below
+    }
+    ToolTip {
+        x: seed_length_touch.x + 280px;
+        y: seed_length_touch.y - 170px; // <-- references any or no component, not necessarily a TouchArea
+        height: 22rem;
+        width: 25rem;
+        text: "Choose the approximate length of the generated game.\n\n"
+        + "Random: Generate one seed of random length.\n\n"
+        + "For the other options, 10 seeds will be generated at once, then one "
+        + "of them will be selected that fits the chosen length the best. "
+        + "If multiple of these generated seeds fit into the chosen length, "
+        + "one of those will be selected at random.\n\n"
+        + "Blitz: 15 races or less required\n"
+        + "Short: About 20 races required (approx. any% speedrun)\n"
+        + "Medium: About 30 races required\n"
+        + "Long: About 40 races required\n"
+        + "Very Long: 50 races or more required\n";
+        user_is_hovering: seed_length_touch.has-hover; // <-- references one or more TouchArea below
     }
 }
 
@@ -802,6 +839,7 @@ component SettingsMenu inherits TabWidget {
     out property <int> warppad_unlock_requirements <=> randomization.warppad_unlock_requirements;
     out property <bool> autounlock_ctrchallenge_relicrace <=> randomization.autounlock_ctrchallenge_relicrace;
     out property <int> bossgarage_unlock_requirements <=> randomization.bossgarage_unlock_requirements;
+    out property <int> seed_length <=> randomization.seed_length;
 
     out property <int> rr_required_minimum_time <=> generalmenu.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> generalmenu.rr_require_perfects;
@@ -1078,6 +1116,7 @@ export component MainWindow inherits Window {
     out property <int> warppad_unlock_requirements <=> settings.warppad_unlock_requirements;
     out property <bool> autounlock_ctrchallenge_relicrace <=> settings.autounlock_ctrchallenge_relicrace;
     out property <int> bossgarage_unlock_requirements <=> settings.bossgarage_unlock_requirements;
+    out property <int> seed_length <=> settings.seed_length;
 
     out property <int> rr_required_minimum_time <=> settings.rr_required_minimum_time;
     out property <bool> rr_require_perfects <=> settings.rr_require_perfects;
