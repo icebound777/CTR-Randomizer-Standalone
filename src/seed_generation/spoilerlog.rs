@@ -73,6 +73,7 @@ pub fn write_spoilerlog(
                 "warppad_unlock_requirements": chosen_settings.randomization.warppad_unlock_requirements.to_string(),
                 "bossgarage_unlock_requirements": chosen_settings.randomization.bossgarage_unlock_requirements.to_string(),
                 "autounlock_ctrchallenge_relicrace": chosen_settings.randomization.autounlock_ctrchallenge_relicrace.to_string(),
+                "seed_length": chosen_settings.randomization.seed_length.to_string(),
             },
             "general": {
                 "relicrace_required_minimum_time": chosen_settings.general.rr_required_minimum_time.to_string(),

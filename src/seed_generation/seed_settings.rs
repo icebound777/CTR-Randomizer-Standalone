@@ -52,6 +52,16 @@ impl std::fmt::Display for SeedSettings {
 
             setting_representation.push(if self.randomization.autounlock_ctrchallenge_relicrace {'1'} else {'0'});
             setting_representation.push(';');
+
+            setting_representation.push(match self.randomization.seed_length {
+                SeedLength::Random => '0',
+                SeedLength::Blitz => '1',
+                SeedLength::Short => '2',
+                SeedLength::Medium => '3',
+                SeedLength::Long => '4',
+                SeedLength::VeryLong => '5',
+            });
+            setting_representation.push(';');
         }
         setting_representation.push('\n');
 
@@ -100,6 +110,7 @@ pub struct RandomizationSettings {
     pub warppad_unlock_requirements: WarppadUnlockRequirements,
     pub bossgarage_unlock_requirements: BossGarageRequirements,
     pub autounlock_ctrchallenge_relicrace: bool,
+    pub seed_length: SeedLength,
 }
 
 pub struct GeneralSettings {
@@ -264,5 +275,55 @@ impl std::fmt::Display for FinalOxideUnlock {
             FinalOxideUnlock::SappireRelics18 => String::from("SappireRelics18"),
             FinalOxideUnlock::GoldAndPlatinumRelics18 => String::from("GoldAndPlatinumRelics18"),
         })
+    }
+}
+
+pub enum SeedLength {
+    Random = 0,
+    Blitz = 1,
+    Short = 2,
+    Medium = 3,
+    Long = 4,
+    VeryLong = 5,
+}
+
+impl std::fmt::Display for SeedLength {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            SeedLength::Random => String::from("VRandoma"),
+            SeedLength::Blitz => String::from("Blitz"),
+            SeedLength::Short => String::from("Short"),
+            SeedLength::Medium => String::from("Medium"),
+            SeedLength::Long => String::from("Long"),
+            SeedLength::VeryLong => String::from("VeryLong"),
+        })
+    }
+}
+
+impl TryFrom<i32> for SeedLength {
+    type Error = ();
+
+    fn try_from(v: i32) -> Result<Self, Self::Error> {
+        match v {
+            x if x == SeedLength::Random as i32 => {
+                Ok(SeedLength::Random)
+            }
+            x if x == SeedLength::Blitz as i32 => {
+                Ok(SeedLength::Blitz)
+            }
+            x if x == SeedLength::Short as i32 => {
+                Ok(SeedLength::Short)
+            }
+            x if x == SeedLength::Medium as i32 => {
+                Ok(SeedLength::Medium)
+            }
+            x if x == SeedLength::Long as i32 => {
+                Ok(SeedLength::Long)
+            }
+            x if x == SeedLength::VeryLong as i32 => {
+                Ok(SeedLength::VeryLong)
+            }
+            _ => Err(()),
+        }
     }
 }

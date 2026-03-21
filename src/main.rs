@@ -12,7 +12,7 @@ use std::io::{BufRead, BufReader};
 use crate::seed_generation::rom_patching::bsdiff_patching::apply_patchfile;
 use crate::seed_generation::seed_gen_main::generate_seed;
 use crate::seed_generation::seed_settings::{
-    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedSettings, TrickSettings, WarppadShuffle, WarppadUnlockRequirements
+    BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedLength, SeedSettings, TrickSettings, WarppadShuffle, WarppadUnlockRequirements
 };
 
 slint::include_modules!();
@@ -86,6 +86,10 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .unwrap(),
                 bossgarage_unlock_requirements: BossGarageRequirements::try_from(main_window.get_bossgarage_unlock_requirements()).unwrap(),
                 autounlock_ctrchallenge_relicrace: main_window.get_autounlock_ctrchallenge_relicrace(),
+                seed_length: SeedLength::try_from(
+                    main_window.get_seed_length()
+                )
+                .unwrap(),
             };
             let chosen_qol_settings = QualityOfLifeSettings {
                 skip_mask_hints: main_window.get_qol_skip_mask_hints(),
