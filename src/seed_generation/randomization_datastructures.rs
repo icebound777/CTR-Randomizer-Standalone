@@ -1,6 +1,6 @@
 use crate::seed_generation::{game_world::GameWorld, seed_settings::{BossGarageRequirements, FinalOxideUnlock, RelicTime}};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GameSetup {
     pub game_world: GameWorld,
     pub settings: Vec<(SettingID, SettingValue)>,
@@ -240,7 +240,7 @@ pub enum SettingID {
     HelperTA = 10,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum SettingValue {
     Boolean(bool),
     RelicDifficulty(RelicTime),
