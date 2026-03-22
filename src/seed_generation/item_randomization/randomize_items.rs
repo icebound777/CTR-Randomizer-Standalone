@@ -19,10 +19,7 @@ pub fn get_shuffled_rewards(
     seed: &mut ChaCha8Rng,
     reward_shuffle: &RewardShuffle,
     force_vanilla_turbotrack: bool,
-    warppad_links: &HashMap<LevelID, LevelID>,
-    warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-    bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
-    hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
+    location_list: &HashMap<ItemLocation, Vec<UnlockRequirement>>,
     shuffled_warppad_requirements: bool,
 ) -> Result<HashMap<ItemLocation, RaceReward>, String> {
     // generate item pool, based on
@@ -37,12 +34,12 @@ pub fn get_shuffled_rewards(
     // generate logical requirements from warppad links, warppad_unlocks, hub requirements, and garage unlocks
     // The warppad_links here are VanillaTrackLocation: ActualTrack
     // The warppad_unlocks here are (ActualTrack, UnlockStage, Option<UnlockRequirement>)
-    let location_list = get_location_list(
-        warppad_links,
-        warppad_unlocks,
-        bossgarage_requirements,
-        hub_requirements,
-    );
+    //let location_list = get_location_list(
+    //    warppad_links,
+    //    warppad_unlocks,
+    //    bossgarage_requirements,
+    //    hub_requirements,
+    //);
 
     // run and return item placement
     let num_max_attempts = 1000;

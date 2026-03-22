@@ -122,10 +122,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                     x,
                     &chosen_settings.randomization.shuffle_race_rewards,
                     force_vanilla_turbotrack,
-                    new_game_world.get_warppad_links(),
-                    new_game_world.get_warppad_unlocks(),
-                    new_game_world.get_garage_unlocks(),
-                    new_game_world.get_hub_requirements(),
+                    &new_game_world
                 ).unwrap()
             }
         };
@@ -142,10 +139,7 @@ pub fn get_randomized_game(mut seed: ChaCha8Rng, seed_as_number: u32, chosen_set
                 &mut seed,
                 reward_shuffle,
                 force_vanilla_turbotrack,
-                &new_game_world.get_warppad_links(),
-                new_game_world.get_warppad_unlocks(),
-                new_game_world.get_garage_unlocks(),
-                new_game_world.get_hub_requirements(),
+                &new_game_world.get_location_list(None),
                 !matches!(&chosen_settings.randomization.warppad_unlock_requirements, WarppadUnlockRequirements::Vanilla),
             );
 

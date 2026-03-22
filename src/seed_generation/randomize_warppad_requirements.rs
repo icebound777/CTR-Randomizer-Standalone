@@ -4,13 +4,13 @@ use rand::{seq::IndexedRandom, Rng};
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
-    game_world::{get_vanilla_gameworld, BossCharacter, Hubs},
+    game_world::{GameWorld, get_vanilla_gameworld},
     item_randomization::{
         player_inventory::PlayerInventory,
-        randomize_items::{get_location_list, get_shuffled_rewards},
+        randomize_items::get_shuffled_rewards,
     },
     randomization_datastructures::{
-        ItemLocation, LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement,
+        ItemLocation, LevelID, RaceReward, RaceType, RequiredItem,
         UnlockRequirementItem, UnlockStage,
     },
     seed_settings::{RewardShuffle, WarppadUnlockRequirements},
@@ -21,10 +21,7 @@ pub fn get_random_warppad_unlocks(
     requirement_setting: &WarppadUnlockRequirements,
     opt_reward_shuffle: &Option<RewardShuffle>,
     force_vanilla_turbotrack: bool,
-    warppad_links: HashMap<LevelID, LevelID>,
-    warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-    bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
-    hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
+    game_world: &GameWorld,
 ) -> Result<HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>, ()> {
     fn get_unlock_stage(location: ItemLocation) -> UnlockStage {
         match location.racetype {
@@ -45,12 +42,14 @@ pub fn get_random_warppad_unlocks(
         }
     }
 
+    let warppad_links = game_world.get_warppad_links();
+
     //
     let mut free_warppads_warppad_unlocks: HashMap<
         (LevelID, UnlockStage),
         Option<UnlockRequirementItem>,
     > = HashMap::new();
-    for ((levelid, stage), _) in warppad_unlocks {
+    for ((levelid, stage), _) in game_world.get_warppad_unlocks() {
         free_warppads_warppad_unlocks.insert(
             (levelid, stage),
             Some(UnlockRequirementItem {
@@ -60,15 +59,14 @@ pub fn get_random_warppad_unlocks(
         );
     }
 
+    let mut location_list = game_world.get_location_list(Some(free_warppads_warppad_unlocks));
+
     let res_zeroed_out_item_placement = if let Some(reward_shuffle) = opt_reward_shuffle {
         get_shuffled_rewards(
             seed,
             reward_shuffle,
             force_vanilla_turbotrack,
-            &warppad_links,
-            free_warppads_warppad_unlocks.clone(),
-            bossgarage_requirements.clone(),
-            hub_requirements.clone(),
+            &location_list,
             true,
         )
     } else {
@@ -80,16 +78,6 @@ pub fn get_random_warppad_unlocks(
     }
 
     let mut zeroed_out_item_placement = res_zeroed_out_item_placement.unwrap();
-
-    // We only have item placements, but are missing static unlock requirements,
-    // so we have to generate those after the fact now.
-    // Sadly `get_shuffled_rewards` does not return its location list too
-    let mut location_list = get_location_list(
-        &warppad_links,
-        free_warppads_warppad_unlocks,
-        bossgarage_requirements,
-        hub_requirements,
-    );
 
     // Filter out 2nd stage unlocks
     // They're currently also set to "free", but we have to set the requirements
