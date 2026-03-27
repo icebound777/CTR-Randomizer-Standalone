@@ -1,15 +1,27 @@
 # Changelog
 
-## beta 3
+## beta 4
 
 ### Bug Fixes (base mod)
+
+* Pause menu item display
+  * Fix the gems showing as unlocked in the pause menu after winning their original gem cup, even if the player never actually found the gem item. These "fake gems" did not count for warp pad unlocks, though, so this was a purely visual bug.
+
+### Misc. (seed generator)
+
+* Generator Logo
+  * Add simplistic logo for the randomizer
+
+## beta 3
+
+### Bug Fixes (base mod) (beta 3)
 
 * Mask Hints
   * Fix issue introduced in `beta 2` that played the "post-opening a door" mask hint if mask hints were turned off, causing the crash to actually happen to more players.
 * Menu Graphics
   * Fix the background of the `SAVING TO MEMORY CARD` screen not being transparent.
 
-### CTR Randomizer Handbook
+### CTR Randomizer Handbook (beta 3)
 
 * Added cheat code reference.
 

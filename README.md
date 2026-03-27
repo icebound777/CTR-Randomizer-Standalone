@@ -12,6 +12,12 @@ The tool will allow you to verify you have the correct ROM, lets you choose your
 
 Then just load the randomized ROM into your emulator (or console) of choice, and start your engines!
 
+## CTR Randomizer Handbook
+
+A handbook that gives a deeper look into several mechanics of the base game, and goes into detail on several changes specific to the randomizer.
+
+Read it here: [CTR Randomizer Handbook](https://github.com/icebound777/CTR-Randomizer-Standalone/blob/master/docs/CTRRandoHandbook.md)
+
 ## Related repositories
 
 * [Github: Randomizer base mod](https://github.com/icebound777/CTR-Randomizer)

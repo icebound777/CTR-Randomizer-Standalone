@@ -4,13 +4,13 @@ use rand::{seq::IndexedRandom, Rng};
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::{
-    game_world::{get_vanilla_gameworld, BossCharacter, Hubs},
+    game_world::{GameWorld, get_vanilla_gameworld},
     item_randomization::{
         player_inventory::PlayerInventory,
-        randomize_items::{get_location_list, get_shuffled_rewards},
+        randomize_items::get_shuffled_rewards,
     },
     randomization_datastructures::{
-        ItemLocation, LevelID, RaceReward, RaceType, RequiredItem, UnlockRequirement,
+        ItemLocation, LevelID, RaceReward, RaceType, RequiredItem,
         UnlockRequirementItem, UnlockStage,
     },
     seed_settings::{RewardShuffle, WarppadUnlockRequirements},
@@ -21,10 +21,7 @@ pub fn get_random_warppad_unlocks(
     requirement_setting: &WarppadUnlockRequirements,
     opt_reward_shuffle: &Option<RewardShuffle>,
     force_vanilla_turbotrack: bool,
-    warppad_links: HashMap<LevelID, LevelID>,
-    warppad_unlocks: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-    bossgarage_requirements: HashMap<BossCharacter, UnlockRequirement>,
-    hub_requirements: HashMap<Hubs, Option<UnlockRequirementItem>>,
+    game_world: &GameWorld,
 ) -> Result<HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>, ()> {
     fn get_unlock_stage(location: ItemLocation) -> UnlockStage {
         match location.racetype {
@@ -45,12 +42,14 @@ pub fn get_random_warppad_unlocks(
         }
     }
 
+    let warppad_links = game_world.get_warppad_links();
+
     //
     let mut free_warppads_warppad_unlocks: HashMap<
         (LevelID, UnlockStage),
         Option<UnlockRequirementItem>,
     > = HashMap::new();
-    for ((levelid, stage), _) in warppad_unlocks {
+    for ((levelid, stage), _) in game_world.get_warppad_unlocks() {
         free_warppads_warppad_unlocks.insert(
             (levelid, stage),
             Some(UnlockRequirementItem {
@@ -60,15 +59,14 @@ pub fn get_random_warppad_unlocks(
         );
     }
 
+    let mut location_list = game_world.get_location_list(Some(free_warppads_warppad_unlocks));
+
     let res_zeroed_out_item_placement = if let Some(reward_shuffle) = opt_reward_shuffle {
         get_shuffled_rewards(
             seed,
             reward_shuffle,
             force_vanilla_turbotrack,
-            &warppad_links,
-            free_warppads_warppad_unlocks.clone(),
-            bossgarage_requirements.clone(),
-            hub_requirements.clone(),
+            &location_list,
             true,
         )
     } else {
@@ -80,16 +78,6 @@ pub fn get_random_warppad_unlocks(
     }
 
     let mut zeroed_out_item_placement = res_zeroed_out_item_placement.unwrap();
-
-    // We only have item placements, but are missing static unlock requirements,
-    // so we have to generate those after the fact now.
-    // Sadly `get_shuffled_rewards` does not return its location list too
-    let mut location_list = get_location_list(
-        &warppad_links,
-        free_warppads_warppad_unlocks,
-        bossgarage_requirements,
-        hub_requirements,
-    );
 
     // Filter out 2nd stage unlocks
     // They're currently also set to "free", but we have to set the requirements
@@ -125,10 +113,7 @@ pub fn get_random_warppad_unlocks(
         let actual_level = warppad_links.get(x).expect("Links should have every level");
         random_unlocks.insert(
             (*actual_level, UnlockStage::One),
-            Some(UnlockRequirementItem {
-                item_type: RequiredItem::Trophy,
-                count: 0,
-            }),
+            None,
         );
     }
 
@@ -486,38 +471,38 @@ pub fn get_random_warppad_unlocks(
     let mut unlock_modifications: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
         HashMap::new();
     for (k, opt_req) in &random_unlocks_vec {
-        let req = opt_req.unwrap();
-
-        if seed.random_range(0..100) < 66 {
-            if req.count != 0 {
-                println!(
-                    "Lowering {:?} {}",
-                    req,
-                    ((req.count as f32) * 0.6).ceil() as u8
-                );
+        if let Some(req) = opt_req {
+            if seed.random_range(0..100) < 66 {
+                if req.count != 0 {
+                    println!(
+                        "Lowering {:?} {}",
+                        req,
+                        ((req.count as f32) * 0.6).ceil() as u8
+                    );
+                    unlock_modifications.insert(
+                        k.clone(),
+                        Some(UnlockRequirementItem {
+                            item_type: req.item_type,
+                            count: ((req.count as f32) * 0.6).ceil() as u8,
+                        }),
+                    );
+                }
+            } else if matches!(req.item_type, RequiredItem::Key)
+                && req.count == 4
+                && matches!(
+                    requirement_setting,
+                    WarppadUnlockRequirements::RandomWithout4Keys
+                )
+            {
+                println!("Setting '4 keys' requirement to '3 keys' {:?}", req,);
                 unlock_modifications.insert(
                     k.clone(),
                     Some(UnlockRequirementItem {
                         item_type: req.item_type,
-                        count: ((req.count as f32) * 0.6).ceil() as u8,
+                        count: 3,
                     }),
                 );
             }
-        } else if matches!(req.item_type, RequiredItem::Key)
-            && req.count == 4
-            && matches!(
-                requirement_setting,
-                WarppadUnlockRequirements::RandomWithout4Keys
-            )
-        {
-            println!("Setting '4 keys' requirement to '3 keys' {:?}", req,);
-            unlock_modifications.insert(
-                k.clone(),
-                Some(UnlockRequirementItem {
-                    item_type: req.item_type,
-                    count: 3,
-                }),
-            );
         }
     }
     for (k, v) in unlock_modifications {

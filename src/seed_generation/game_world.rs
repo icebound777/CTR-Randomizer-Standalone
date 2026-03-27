@@ -11,6 +11,8 @@ pub struct GameWorld {
     pub gemstone_valley: GemStoneValleyHub,
 }
 
+type LocationList = HashMap<ItemLocation, Vec<UnlockRequirement>>;
+
 impl GameWorld {
     pub fn get_warppad_links(&self) -> HashMap<LevelID, LevelID> {
         HashMap::from([
@@ -366,7 +368,7 @@ impl GameWorld {
 
             match stage {
                 UnlockStage::One => {
-                    warppad_to_modify.set_unlock_1(unlock_req.expect("stage one should always exist"));
+                    warppad_to_modify.set_unlock_1(unlock_req);
 
                     if warppad_to_modify.get_unlock_2().is_some() && !modifies_second_unlock.contains(&levelid) {
                         warppad_to_modify.set_unlock_2(unlock_req.expect("stage one should always exist"));
@@ -731,6 +733,320 @@ impl GameWorld {
             };
         }
     }
+
+    pub fn get_location_list(
+        &self,
+        overwritten_warppad_unlocks: Option<HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>>
+    ) -> LocationList {
+        let mut location_list = HashMap::new();
+
+        let warppad_links = self.get_warppad_links();
+        let chosen_warppad_unlocks = if let Some(warppad_unlocks) = overwritten_warppad_unlocks {
+            warppad_unlocks
+        } else {
+            self.get_warppad_unlocks()
+        };
+        let bossgarage_requirements = self.get_garage_unlocks();
+        let hub_requirements = self.get_hub_requirements();
+
+        fn insert_trophy_warppad(
+            location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
+            warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
+            static_requirements: Vec<UnlockRequirement>,
+            level_id: LevelID,
+        ) {
+            let mut unlocks = static_requirements;
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::TrophyRace}, unlocks.clone());
+
+            unlocks.push(UnlockRequirement::Item(
+                warppad_unlocks
+                    .get(&(level_id, UnlockStage::Two))
+                    .unwrap()
+                    .unwrap(),
+            ));
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::CtrOrCrystalChallenge}, unlocks.clone());
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceSapphire}, unlocks.clone());
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceGold}, unlocks.clone());
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRacePlatinum}, unlocks);
+        }
+
+        fn insert_arena_warppad(
+            location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
+            warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
+            static_requirements: Vec<UnlockRequirement>,
+            level_id: LevelID,
+        ) {
+            let mut unlocks = static_requirements;
+
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
+
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::CtrOrCrystalChallenge}, unlocks);
+        }
+
+        fn insert_gemcup_warppad(
+            location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
+            warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
+            static_requirements: Vec<UnlockRequirement>,
+            level_id: LevelID,
+        ) {
+            let mut unlocks = static_requirements;
+
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
+
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::GemCup}, unlocks);
+        }
+
+        fn insert_reliconly_warppad(
+            location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
+            warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
+            static_requirements: Vec<UnlockRequirement>,
+            level_id: LevelID,
+        ) {
+            let mut unlocks = static_requirements;
+
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
+
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceSapphire}, unlocks.clone());
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceGold}, unlocks.clone());
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRacePlatinum}, unlocks);
+        }
+
+        fn insert_boss_garage(
+            location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
+            bossgarage_requirements: &HashMap<BossCharacter, UnlockRequirement>,
+            hub_requirements: &HashMap<Hubs, Option<UnlockRequirementItem>>,
+            level_id: LevelID,
+        ) {
+            let mut req_list = vec![bossgarage_requirements
+                .get(match level_id {
+                    LevelID::RoosTubes => &BossCharacter::RipperRoo,
+                    LevelID::PapusPyramid => &BossCharacter::PapuPapu,
+                    LevelID::DragonMines => &BossCharacter::KomodoJoe,
+                    LevelID::HotAirSkyway => &BossCharacter::Pinstripe,
+                    LevelID::OxideStation => &BossCharacter::NOxide,
+                    _ => panic!("should never happen"),
+                })
+                .unwrap()
+                .clone()];
+
+            let hub_req = hub_requirements
+                .get(match level_id {
+                    LevelID::RoosTubes => &Hubs::NSanityBeach,
+                    LevelID::PapusPyramid => &Hubs::TheLostRuins,
+                    LevelID::DragonMines => &Hubs::GlacierPark,
+                    LevelID::HotAirSkyway => &Hubs::CitadelCity,
+                    LevelID::OxideStation => &Hubs::GemStoneValley,
+                    _ => panic!("should never happen"),
+                })
+                .unwrap();
+
+            if let Some(x) = hub_req {
+                req_list.push(UnlockRequirement::Item(*x));
+            }
+
+            location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::BossRace}, req_list);
+        }
+
+        for (original_level, current_level) in warppad_links {
+            // get static requirements for original warppad location:
+            // this for the most part is equal to hub requirements, but
+            // the Gem Cup pads in Gemstone Valley add another key door
+            let static_requirements: Vec<UnlockRequirement> = match original_level {
+                LevelID::CrashCove
+                | LevelID::RoosTubes
+                | LevelID::MysteryCaves
+                | LevelID::SewerSpeedway
+                | LevelID::SkullRock => {
+                    let hubreq = hub_requirements
+                        .get(&Hubs::NSanityBeach)
+                        .expect("has to exist");
+                    if hubreq.is_some() {
+                        vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                    } else {
+                        Vec::new()
+                    }
+                }
+                LevelID::TigerTemple
+                | LevelID::CocoPark
+                | LevelID::PapusPyramid
+                | LevelID::DingoCanyon
+                | LevelID::RampageRuins =>  {
+                    let hubreq = hub_requirements
+                        .get(&Hubs::TheLostRuins)
+                        .expect("has to exist");
+                    if hubreq.is_some() {
+                        vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                    } else {
+                        Vec::new()
+                    }
+                },
+                LevelID::TurboTrack
+                | LevelID::SlideColiseum => {
+                    let hubreq = hub_requirements
+                        .get(&Hubs::GemStoneValley)
+                        .expect("has to exist");
+                    if hubreq.is_some() {
+                        vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                    } else {
+                        Vec::new()
+                    }
+                },
+                LevelID::CupRed
+                | LevelID::CupGreen
+                | LevelID::CupBlue
+                | LevelID::CupYellow
+                | LevelID::CupPurple => {
+                    let hubreq = hub_requirements
+                        .get(&Hubs::GemStoneValley)
+                        .expect("has to exist");
+                    if hubreq.is_some() {
+                        vec![
+                            UnlockRequirement::Item(hubreq.expect("checked by if")),
+                            // Special Gemstone Valley internal door requirement
+                            UnlockRequirement::Item(UnlockRequirementItem {
+                                item_type: RequiredItem::Key,
+                                count: 2,
+                            }),
+                        ]
+                    } else {
+                        vec![UnlockRequirement::Item(UnlockRequirementItem {
+                            item_type: RequiredItem::Key,
+                            count: 2,
+                        })]
+                    }
+                }
+                LevelID::BlizzardBluff
+                | LevelID::DragonMines
+                | LevelID::PolarPass
+                | LevelID::TinyArena
+                | LevelID::RockyRoad => {
+                    let hubreq = hub_requirements
+                        .get(&Hubs::GlacierPark)
+                        .expect("has to exist");
+                    if hubreq.is_some() {
+                        vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                    } else {
+                        Vec::new()
+                    }
+                }
+                LevelID::NGinLabs
+                | LevelID::CortexCastle
+                | LevelID::HotAirSkyway
+                | LevelID::OxideStation
+                | LevelID::NitroCourt => {
+                    let hubreq = hub_requirements
+                        .get(&Hubs::CitadelCity)
+                        .expect("has to exist");
+                    if hubreq.is_some() {
+                        vec![UnlockRequirement::Item(hubreq.expect("checked by if"))]
+                    } else {
+                        Vec::new()
+                    }
+                }
+            };
+
+            // get race type and unlock stages based on current level
+            match current_level {
+                x @ (LevelID::CrashCove
+                | LevelID::RoosTubes
+                | LevelID::MysteryCaves
+                | LevelID::SewerSpeedway
+                | LevelID::TigerTemple
+                | LevelID::CocoPark
+                | LevelID::PapusPyramid
+                | LevelID::DingoCanyon
+                | LevelID::BlizzardBluff
+                | LevelID::DragonMines
+                | LevelID::PolarPass
+                | LevelID::TinyArena
+                | LevelID::NGinLabs
+                | LevelID::CortexCastle
+                | LevelID::HotAirSkyway
+                | LevelID::OxideStation) => {
+                    insert_trophy_warppad(
+                        &mut location_list,
+                        &chosen_warppad_unlocks,
+                        static_requirements,
+                        x,
+                    );
+                }
+                x @ (LevelID::SkullRock
+                | LevelID::RampageRuins
+                | LevelID::RockyRoad
+                | LevelID::NitroCourt) => {
+                    insert_arena_warppad(
+                        &mut location_list,
+                        &chosen_warppad_unlocks,
+                        static_requirements,
+                        x,
+                    );
+                }
+                x @ (LevelID::CupRed
+                | LevelID::CupGreen
+                | LevelID::CupBlue
+                | LevelID::CupYellow
+                | LevelID::CupPurple) => {
+                    insert_gemcup_warppad(
+                        &mut location_list,
+                        &chosen_warppad_unlocks,
+                        static_requirements,
+                        x,
+                    );
+                }
+                x @ (LevelID::TurboTrack | LevelID::SlideColiseum) => {
+                    insert_reliconly_warppad(
+                        &mut location_list,
+                        &chosen_warppad_unlocks,
+                        static_requirements,
+                        x,
+                    );
+                }
+            }
+        }
+
+        // Boss garages
+        insert_boss_garage(
+            &mut location_list,
+            &bossgarage_requirements,
+            &hub_requirements,
+            LevelID::RoosTubes,
+        );
+        insert_boss_garage(
+            &mut location_list,
+            &bossgarage_requirements,
+            &hub_requirements,
+            LevelID::PapusPyramid,
+        );
+        insert_boss_garage(
+            &mut location_list,
+            &bossgarage_requirements,
+            &hub_requirements,
+            LevelID::DragonMines,
+        );
+        insert_boss_garage(
+            &mut location_list,
+            &bossgarage_requirements,
+            &hub_requirements,
+            LevelID::HotAirSkyway,
+        );
+        insert_boss_garage(
+            &mut location_list,
+            &bossgarage_requirements,
+            &hub_requirements,
+            LevelID::OxideStation,
+        );
+
+        location_list
+    }
 }
 
 #[derive(PartialEq, Eq, Hash, Clone)]
@@ -845,35 +1161,34 @@ impl WarpPad {
             x => {
                 RaceUnlock {
                     reward: Rewards::TrophyRaceRewards(TrophyRaceRewards { trophy_reward: RaceReward::Trophy }),
-                    requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count:
+                    requirement:
                         if x == LevelID::CrashCove || x == LevelID::RoosTubes {
-                            0
+                            None
                         } else if x == LevelID::MysteryCaves {
-                            1
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 1 })
                         } else if x == LevelID::SewerSpeedway {
-                            3
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 3 })
                         } else if x == LevelID::CocoPark || x == LevelID::TigerTemple {
-                            4
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 4 })
                         } else if x == LevelID::PapusPyramid {
-                            6
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 6 })
                         } else if x == LevelID::DingoCanyon {
-                            7
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 7 })
                         } else if x == LevelID::BlizzardBluff {
-                            8
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 8 })
                         } else if x == LevelID::DragonMines {
-                            9
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 9 })
                         } else if x == LevelID::PolarPass {
-                            10
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 10 })
                         } else if x == LevelID::TinyArena {
-                            11
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 11 })
                         } else if x == LevelID::NGinLabs || x == LevelID::CortexCastle {
-                            12
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 12 })
                         } else if x == LevelID::HotAirSkyway {
-                            14
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 14 })
                         } else { //if x == LevelID::OxideStation {
-                            15
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 15 })
                         }
-                    })
                 }
             }
         };
@@ -926,8 +1241,8 @@ impl WarpPad {
         self.unlock_1
     }
 
-    pub fn set_unlock_1(&mut self, requirement: UnlockRequirementItem) {
-        self.unlock_1.requirement = Some(requirement);
+    pub fn set_unlock_1(&mut self, requirement: Option<UnlockRequirementItem>) {
+        self.unlock_1.requirement = requirement;
     }
 
     pub fn get_unlock_2(&self) -> Option<RaceUnlock> {
