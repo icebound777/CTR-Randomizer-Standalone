@@ -368,7 +368,7 @@ impl GameWorld {
 
             match stage {
                 UnlockStage::One => {
-                    warppad_to_modify.set_unlock_1(unlock_req.expect("stage one should always exist"));
+                    warppad_to_modify.set_unlock_1(unlock_req);
 
                     if warppad_to_modify.get_unlock_2().is_some() && !modifies_second_unlock.contains(&levelid) {
                         warppad_to_modify.set_unlock_2(unlock_req.expect("stage one should always exist"));
@@ -756,12 +756,9 @@ impl GameWorld {
             level_id: LevelID,
         ) {
             let mut unlocks = static_requirements;
-            unlocks.push(UnlockRequirement::Item(
-                warppad_unlocks
-                    .get(&(level_id, UnlockStage::One))
-                    .unwrap()
-                    .unwrap(),
-            ));
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
             location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::TrophyRace}, unlocks.clone());
 
             unlocks.push(UnlockRequirement::Item(
@@ -784,12 +781,9 @@ impl GameWorld {
         ) {
             let mut unlocks = static_requirements;
 
-            unlocks.push(UnlockRequirement::Item(
-                warppad_unlocks
-                    .get(&(level_id, UnlockStage::One))
-                    .unwrap()
-                    .unwrap(),
-            ));
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
 
             location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::CtrOrCrystalChallenge}, unlocks);
         }
@@ -802,12 +796,9 @@ impl GameWorld {
         ) {
             let mut unlocks = static_requirements;
 
-            unlocks.push(UnlockRequirement::Item(
-                warppad_unlocks
-                    .get(&(level_id, UnlockStage::One))
-                    .unwrap()
-                    .unwrap(),
-            ));
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
 
             location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::GemCup}, unlocks);
         }
@@ -815,19 +806,14 @@ impl GameWorld {
         fn insert_reliconly_warppad(
             location_list: &mut HashMap<ItemLocation, Vec<UnlockRequirement>>,
             warppad_unlocks: &HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>>,
-            mut static_requirements: Vec<UnlockRequirement>,
+            static_requirements: Vec<UnlockRequirement>,
             level_id: LevelID,
         ) {
-            let mut unlocks: Vec<UnlockRequirement> = vec![
-                UnlockRequirement::Item(
-                    warppad_unlocks
-                        .get(&(level_id, UnlockStage::One))
-                        .unwrap()
-                        .unwrap(),
-                ),
-            ];
+            let mut unlocks = static_requirements;
 
-            unlocks.append(&mut static_requirements);
+            if let Some(stage_one_unlock) = warppad_unlocks.get(&(level_id, UnlockStage::One)).unwrap() {
+                unlocks.push(UnlockRequirement::Item(*stage_one_unlock));
+            }
 
             location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceSapphire}, unlocks.clone());
             location_list.insert(ItemLocation{levelid: level_id, racetype: RaceType::RelicRaceGold}, unlocks.clone());
@@ -1175,35 +1161,34 @@ impl WarpPad {
             x => {
                 RaceUnlock {
                     reward: Rewards::TrophyRaceRewards(TrophyRaceRewards { trophy_reward: RaceReward::Trophy }),
-                    requirement: Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count:
+                    requirement:
                         if x == LevelID::CrashCove || x == LevelID::RoosTubes {
-                            0
+                            None
                         } else if x == LevelID::MysteryCaves {
-                            1
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 1 })
                         } else if x == LevelID::SewerSpeedway {
-                            3
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 3 })
                         } else if x == LevelID::CocoPark || x == LevelID::TigerTemple {
-                            4
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 4 })
                         } else if x == LevelID::PapusPyramid {
-                            6
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 6 })
                         } else if x == LevelID::DingoCanyon {
-                            7
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 7 })
                         } else if x == LevelID::BlizzardBluff {
-                            8
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 8 })
                         } else if x == LevelID::DragonMines {
-                            9
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 9 })
                         } else if x == LevelID::PolarPass {
-                            10
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 10 })
                         } else if x == LevelID::TinyArena {
-                            11
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 11 })
                         } else if x == LevelID::NGinLabs || x == LevelID::CortexCastle {
-                            12
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 12 })
                         } else if x == LevelID::HotAirSkyway {
-                            14
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 14 })
                         } else { //if x == LevelID::OxideStation {
-                            15
+                            Some(UnlockRequirementItem { item_type: RequiredItem::Trophy, count: 15 })
                         }
-                    })
                 }
             }
         };
@@ -1256,8 +1241,8 @@ impl WarpPad {
         self.unlock_1
     }
 
-    pub fn set_unlock_1(&mut self, requirement: UnlockRequirementItem) {
-        self.unlock_1.requirement = Some(requirement);
+    pub fn set_unlock_1(&mut self, requirement: Option<UnlockRequirementItem>) {
+        self.unlock_1.requirement = requirement;
     }
 
     pub fn get_unlock_2(&self) -> Option<RaceUnlock> {

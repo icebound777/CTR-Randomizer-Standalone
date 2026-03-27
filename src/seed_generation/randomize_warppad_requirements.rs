@@ -113,10 +113,7 @@ pub fn get_random_warppad_unlocks(
         let actual_level = warppad_links.get(x).expect("Links should have every level");
         random_unlocks.insert(
             (*actual_level, UnlockStage::One),
-            Some(UnlockRequirementItem {
-                item_type: RequiredItem::Trophy,
-                count: 0,
-            }),
+            None,
         );
     }
 
@@ -474,38 +471,38 @@ pub fn get_random_warppad_unlocks(
     let mut unlock_modifications: HashMap<(LevelID, UnlockStage), Option<UnlockRequirementItem>> =
         HashMap::new();
     for (k, opt_req) in &random_unlocks_vec {
-        let req = opt_req.unwrap();
-
-        if seed.random_range(0..100) < 66 {
-            if req.count != 0 {
-                println!(
-                    "Lowering {:?} {}",
-                    req,
-                    ((req.count as f32) * 0.6).ceil() as u8
-                );
+        if let Some(req) = opt_req {
+            if seed.random_range(0..100) < 66 {
+                if req.count != 0 {
+                    println!(
+                        "Lowering {:?} {}",
+                        req,
+                        ((req.count as f32) * 0.6).ceil() as u8
+                    );
+                    unlock_modifications.insert(
+                        k.clone(),
+                        Some(UnlockRequirementItem {
+                            item_type: req.item_type,
+                            count: ((req.count as f32) * 0.6).ceil() as u8,
+                        }),
+                    );
+                }
+            } else if matches!(req.item_type, RequiredItem::Key)
+                && req.count == 4
+                && matches!(
+                    requirement_setting,
+                    WarppadUnlockRequirements::RandomWithout4Keys
+                )
+            {
+                println!("Setting '4 keys' requirement to '3 keys' {:?}", req,);
                 unlock_modifications.insert(
                     k.clone(),
                     Some(UnlockRequirementItem {
                         item_type: req.item_type,
-                        count: ((req.count as f32) * 0.6).ceil() as u8,
+                        count: 3,
                     }),
                 );
             }
-        } else if matches!(req.item_type, RequiredItem::Key)
-            && req.count == 4
-            && matches!(
-                requirement_setting,
-                WarppadUnlockRequirements::RandomWithout4Keys
-            )
-        {
-            println!("Setting '4 keys' requirement to '3 keys' {:?}", req,);
-            unlock_modifications.insert(
-                k.clone(),
-                Some(UnlockRequirementItem {
-                    item_type: req.item_type,
-                    count: 3,
-                }),
-            );
         }
     }
     for (k, v) in unlock_modifications {
