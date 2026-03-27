@@ -1,5 +1,12 @@
 # Changelog
 
+## next release
+
+### Misc. (seed generator)
+
+* Generator Logo
+  * Add simplistic logo for the randomizer
+
 ## beta 3
 
 ### Bug Fixes (base mod)

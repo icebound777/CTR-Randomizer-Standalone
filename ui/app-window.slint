@@ -1050,6 +1050,8 @@ component RomOutputBar inherits Rectangle {
 
 export component MainWindow inherits Window {
     title: "CTR Randomizer";
+    icon: @image-url("../res/CTR_logo.png");
+
     width: 1000px;
     height: 600px;
     callback gen_seed();
