@@ -3,6 +3,7 @@ use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::randomize_game::get_randomized_game;
 use crate::seed_generation::rom_patching::bsdiff_patching::{apply_base_patchfile, create_patchfile};
+use crate::seed_generation::rom_patching::eccedc_fixing::full_recalc;
 use crate::seed_generation::seed_settings::SeedSettings;
 use crate::seed_generation::spoilerlog::{get_seed_hash, write_spoilerlog};
 use crate::seed_generation::write_rando_db::write_db_to_rom;
@@ -47,6 +48,12 @@ pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSetting
                 let write_result = write_db_to_rom(&new_rom, &randomized_game);
                 if write_result.is_err() {
                     return Err(write_result.expect_err("str type error").to_owned());
+                }
+
+                // recalculate error detection / error correction code
+                let readwrite_result = full_recalc(&new_rom);
+                if readwrite_result.is_err() {
+                    return Err("Could not fix EDC / ECC data!".to_owned());
                 }
 
                 // if needed, write patch file

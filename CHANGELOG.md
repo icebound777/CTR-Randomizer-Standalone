@@ -1,13 +1,20 @@
 # Changelog
 
+## next version
+
+### Misc
+
+* Add EDC / ECC (error detection code, error correction code) generation
+  * This should allow more emulators, most importantly bizhawk, to properly play ROMs of this randomizer
+
 ## beta 4
 
-### Bug Fixes (base mod)
+### Bug Fixes (base mod) (beta 4)
 
 * Pause menu item display
   * Fix the gems showing as unlocked in the pause menu after winning their original gem cup, even if the player never actually found the gem item. These "fake gems" did not count for warp pad unlocks, though, so this was a purely visual bug.
 
-### Misc. (seed generator)
+### Misc. (seed generator) (beta 4)
 
 * Generator Logo
   * Add simplistic logo for the randomizer
