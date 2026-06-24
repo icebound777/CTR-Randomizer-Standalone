@@ -245,8 +245,31 @@ pub fn get_random_warppad_unlocks(
         // Choose item requirement to place here and assign it, unless when
         // it's a boss race as those have very different requirements.
         // We want an unequal weighting between the different item types,
-        // otherwise tokens and relics are vastly overrepresented
-        // We also tone down the chance for gems and keys
+        // otherwise tokens and relics are vastly overrepresented.
+        // We also tone down the chance for gems and keys.
+        // Per generic item type, the weights are as follows:
+        // Tropyh: 100
+        // Token:   70
+        // Relic:   60
+        // Key:     25
+        // Gem:     10
+        // which results roughly in the following percentages:
+        // Tropyh: 37.7%
+        // Token:  26.4%
+        // Relic:  22.6%
+        // Key:     9.4%
+        // Gem:     3.8%
+        // With 27 warp pads, on average you see every seed:
+        // Tropyh:  10
+        // Token:    7
+        // Relic:    6
+        // Key:      3
+        // Gem:      1
+        //
+        // The highest possible values for the "any" requirements are:
+        // Any Token: 12
+        // Any Relic: 16
+        // Any Gem:    4
         let req_chances: HashMap<RequiredItem, u16> = HashMap::from([
             (RequiredItem::Trophy, 100),
             (RequiredItem::RedCtrToken, 15),
