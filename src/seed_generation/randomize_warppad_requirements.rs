@@ -245,24 +245,56 @@ pub fn get_random_warppad_unlocks(
         // Choose item requirement to place here and assign it, unless when
         // it's a boss race as those have very different requirements.
         // We want an unequal weighting between the different item types,
-        // otherwise tokens and relics are vastly overrepresented
-        // We also tone down the chance for gems and keys
+        // otherwise tokens and relics are vastly overrepresented.
+        // We also tone down the chance for gems and keys.
+        // Per generic item type, the weights are as follows:
+        // Trophy:  90
+        // Token:   76
+        // Relic:   54
+        // Key:     20
+        // Gem:     20
+        // One would think this results roughly in the following percentages:
+        // Tropyh: 34.6%
+        // Token:  29.2%
+        // Relic:  20.7%
+        // Key:     7.7%
+        // Gem:     7.7%
+        // But due to differences in item count in the item pool during
+        // the "no requirements" item placement step, the actual percentages
+        // become roughly:
+        // Tropyh: 37,9%
+        // Token:  25,7%
+        // Relic:  24,0%
+        // Key:     8,8%
+        // Gem:     3,7%
+        // With 27 warp pads, 16 of which having 2 unlock stages for a total of,
+        // 43 unlocks, on average you see every seed:
+        // Trophy:  16
+        // Token:   11
+        // Relic:   10
+        // Key:      4
+        // Gem:      2
+        //
+        // The highest possible values for the "any" requirements are:
+        // Any Token: 16
+        // Any Relic: 27
+        // Any Gem:    5
         let req_chances: HashMap<RequiredItem, u16> = HashMap::from([
-            (RequiredItem::Trophy, 100),
-            (RequiredItem::RedCtrToken, 15),
-            (RequiredItem::GreenCtrToken, 15),
-            (RequiredItem::BlueCtrToken, 15),
-            (RequiredItem::YellowCtrToken, 15),
-            (RequiredItem::PurpleCtrToken, 10),
-            (RequiredItem::SapphireRelic, 20),
-            (RequiredItem::GoldRelic, 20),
-            (RequiredItem::PlatinumRelic, 20),
-            (RequiredItem::Key, 25),
-            (RequiredItem::RedGem, 2),
-            (RequiredItem::GreenGem, 2),
-            (RequiredItem::BlueGem, 2),
-            (RequiredItem::YellowGem, 2),
-            (RequiredItem::PurpleGem, 2),
+            (RequiredItem::Trophy, 90),
+            (RequiredItem::RedCtrToken, 16),
+            (RequiredItem::GreenCtrToken, 16),
+            (RequiredItem::BlueCtrToken, 16),
+            (RequiredItem::YellowCtrToken, 16),
+            (RequiredItem::PurpleCtrToken, 12),
+            (RequiredItem::SapphireRelic, 18),
+            (RequiredItem::GoldRelic, 18),
+            (RequiredItem::PlatinumRelic, 18),
+            (RequiredItem::Key, 20),
+            (RequiredItem::RedGem, 4),
+            (RequiredItem::GreenGem, 4),
+            (RequiredItem::BlueGem, 4),
+            (RequiredItem::YellowGem, 4),
+            (RequiredItem::PurpleGem, 4),
         ]);
         if !matches!(chosen_location.racetype, RaceType::BossRace) {
             let mut possible_reqs: Vec<(RequiredItem, u8)> = Vec::new();
@@ -317,7 +349,7 @@ pub fn get_random_warppad_unlocks(
                             required_amount += count;
                         }
                     }
-                    required_amount = (((required_amount as f32) * 0.6).ceil()) as u8;
+                    required_amount = (((required_amount as f32) * 0.8).ceil()) as u8;
                 }
             } else if matches!(
                 required_item,
@@ -335,7 +367,7 @@ pub fn get_random_warppad_unlocks(
                             required_amount += count;
                         }
                     }
-                    required_amount = (((required_amount as f32) * 0.3).ceil()) as u8;
+                    required_amount = (((required_amount as f32) * 0.5).ceil()) as u8;
                 }
             } else if matches!(
                 required_item,
@@ -358,9 +390,6 @@ pub fn get_random_warppad_unlocks(
                             | RaceReward::PurpleGem
                     ) {
                         required_amount += count;
-                    }
-                    if required_amount > 1 {
-                        required_amount -= 1;
                     }
                 }
             }

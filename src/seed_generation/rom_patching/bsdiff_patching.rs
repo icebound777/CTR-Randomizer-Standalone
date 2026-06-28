@@ -2,6 +2,16 @@ use std::{io, path::PathBuf};
 
 use qbsdiff::{Bsdiff, Bspatch};
 
+pub fn get_new_rom_file_path(old_rom_path: &str, seed: u32) -> PathBuf {
+    let new_rom_name = format!("{}{}{}", "CTR-Randomizer_", seed, ".bin");
+
+    let mut new_rom_path = PathBuf::from(old_rom_path);
+    new_rom_path.pop();
+    new_rom_path.push(new_rom_name);
+
+    new_rom_path
+}
+
 pub fn apply_base_patchfile(old_rom_path: &str, seed: u32) -> Result<PathBuf, Box<dyn std::error::Error>> {
     let patchdata = include_bytes!("../../../res/base_patch.bsdiff4");
 
