@@ -248,44 +248,53 @@ pub fn get_random_warppad_unlocks(
         // otherwise tokens and relics are vastly overrepresented.
         // We also tone down the chance for gems and keys.
         // Per generic item type, the weights are as follows:
-        // Tropyh: 100
-        // Token:   70
-        // Relic:   60
-        // Key:     25
-        // Gem:     10
-        // which results roughly in the following percentages:
-        // Tropyh: 37.7%
-        // Token:  26.4%
-        // Relic:  22.6%
-        // Key:     9.4%
-        // Gem:     3.8%
-        // With 27 warp pads, on average you see every seed:
-        // Tropyh:  10
-        // Token:    7
-        // Relic:    6
-        // Key:      3
-        // Gem:      1
+        // Trophy:  90
+        // Token:   76
+        // Relic:   54
+        // Key:     20
+        // Gem:     20
+        // One would think this results roughly in the following percentages:
+        // Tropyh: 34.6%
+        // Token:  29.2%
+        // Relic:  20.7%
+        // Key:     7.7%
+        // Gem:     7.7%
+        // But due to differences in item count in the item pool during
+        // the "no requirements" item placement step, the actual percentages
+        // become roughly:
+        // Tropyh: 37,9%
+        // Token:  25,7%
+        // Relic:  24,0%
+        // Key:     8,8%
+        // Gem:     3,7%
+        // With 27 warp pads, 16 of which having 2 unlock stages for a total of,
+        // 43 unlocks, on average you see every seed:
+        // Trophy:  16
+        // Token:   11
+        // Relic:   10
+        // Key:      4
+        // Gem:      2
         //
         // The highest possible values for the "any" requirements are:
         // Any Token: 16
         // Any Relic: 27
         // Any Gem:    5
         let req_chances: HashMap<RequiredItem, u16> = HashMap::from([
-            (RequiredItem::Trophy, 100),
-            (RequiredItem::RedCtrToken, 15),
-            (RequiredItem::GreenCtrToken, 15),
-            (RequiredItem::BlueCtrToken, 15),
-            (RequiredItem::YellowCtrToken, 15),
-            (RequiredItem::PurpleCtrToken, 10),
-            (RequiredItem::SapphireRelic, 20),
-            (RequiredItem::GoldRelic, 20),
-            (RequiredItem::PlatinumRelic, 20),
-            (RequiredItem::Key, 25),
-            (RequiredItem::RedGem, 2),
-            (RequiredItem::GreenGem, 2),
-            (RequiredItem::BlueGem, 2),
-            (RequiredItem::YellowGem, 2),
-            (RequiredItem::PurpleGem, 2),
+            (RequiredItem::Trophy, 90),
+            (RequiredItem::RedCtrToken, 16),
+            (RequiredItem::GreenCtrToken, 16),
+            (RequiredItem::BlueCtrToken, 16),
+            (RequiredItem::YellowCtrToken, 16),
+            (RequiredItem::PurpleCtrToken, 12),
+            (RequiredItem::SapphireRelic, 18),
+            (RequiredItem::GoldRelic, 18),
+            (RequiredItem::PlatinumRelic, 18),
+            (RequiredItem::Key, 20),
+            (RequiredItem::RedGem, 4),
+            (RequiredItem::GreenGem, 4),
+            (RequiredItem::BlueGem, 4),
+            (RequiredItem::YellowGem, 4),
+            (RequiredItem::PurpleGem, 4),
         ]);
         if !matches!(chosen_location.racetype, RaceType::BossRace) {
             let mut possible_reqs: Vec<(RequiredItem, u8)> = Vec::new();

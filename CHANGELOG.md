@@ -9,6 +9,15 @@
     * Any x Gems: Now 5 (was 4)
     * Any x Relics: Now 27 (was 16)
     * Any x Tokens: Now 16 (was 12)
+  * Adjust weights for choosing which item type to use for a warp pad unlock
+    * Slightly lowered chances for Trophy and Relic requirements
+    * Slightly increased chances for Token and Gem requirements
+    * This now results in roughly these chances every seed:
+      * Trophy requirement: 37.9% (used on average ~16 times per seed) (was 39.9% / ~ 17 times)
+      * Token requirement:  25.7% (used on average ~11 times per seed) (was 22.6% / ~ 10 times)
+      * Relic requirement:  24.0% (used on average ~10 times per seed) (was 25.2% / ~ 11 times)
+      * Key requirement:     8.8% (used on average  ~4 times per seed) (was 10.4% / ~  4 times)
+      * Gem requirement:     3.7% (used on average  ~2 times per seed) (was  1.8% / ~ <1 times)
 
 ### Misc
 
