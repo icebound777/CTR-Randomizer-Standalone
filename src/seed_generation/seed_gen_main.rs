@@ -29,7 +29,7 @@ pub fn generate_seeds<'a>(
         seed_filename: "placeholder".to_owned(), seed_hash: "placeholder".to_owned()
     };
 
-    for _ in 1..seed_count {
+    for _ in 0..seed_count {
         let one_seed_gen = generate_seed(
             rom_filepath,
             chosen_settings,
@@ -148,7 +148,7 @@ fn generate_seed<'a>(
             Version: {}\n\
             Settings:\n{}",
         seed,
-        "beta 4",
+        "1.0.0-beta5",
         chosen_settings
     ))
 }
