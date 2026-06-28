@@ -267,9 +267,9 @@ pub fn get_random_warppad_unlocks(
         // Gem:      1
         //
         // The highest possible values for the "any" requirements are:
-        // Any Token: 12
-        // Any Relic: 16
-        // Any Gem:    4
+        // Any Token: 16
+        // Any Relic: 27
+        // Any Gem:    5
         let req_chances: HashMap<RequiredItem, u16> = HashMap::from([
             (RequiredItem::Trophy, 100),
             (RequiredItem::RedCtrToken, 15),
@@ -340,7 +340,7 @@ pub fn get_random_warppad_unlocks(
                             required_amount += count;
                         }
                     }
-                    required_amount = (((required_amount as f32) * 0.6).ceil()) as u8;
+                    required_amount = (((required_amount as f32) * 0.8).ceil()) as u8;
                 }
             } else if matches!(
                 required_item,
@@ -358,7 +358,7 @@ pub fn get_random_warppad_unlocks(
                             required_amount += count;
                         }
                     }
-                    required_amount = (((required_amount as f32) * 0.3).ceil()) as u8;
+                    required_amount = (((required_amount as f32) * 0.5).ceil()) as u8;
                 }
             } else if matches!(
                 required_item,
@@ -381,9 +381,6 @@ pub fn get_random_warppad_unlocks(
                             | RaceReward::PurpleGem
                     ) {
                         required_amount += count;
-                    }
-                    if required_amount > 1 {
-                        required_amount -= 1;
                     }
                 }
             }

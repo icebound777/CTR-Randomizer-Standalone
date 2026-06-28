@@ -2,6 +2,14 @@
 
 ## next version
 
+### Features (seed generator)
+
+* `Warp Pad Unlock Requirements`
+  * Adjust maximum allowed item count for "Any" requirements
+    * Any x Gems: Now 5 (was 4)
+    * Any x Relics: Now 27 (was 16)
+    * Any x Tokens: Now 16 (was 12)
+
 ### Misc
 
 * Add command line argument `--seed-count n`
