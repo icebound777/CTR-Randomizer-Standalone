@@ -1,6 +1,6 @@
 # Changelog
 
-## next version
+## 1.0.0-beta5
 
 ### Features (seed generator)
 
@@ -19,7 +19,7 @@
       * Key requirement:     8.8% (used on average  ~4 times per seed) (was 10.4% / ~  4 times)
       * Gem requirement:     3.7% (used on average  ~2 times per seed) (was  1.8% / ~ <1 times)
 
-### Misc
+### Misc (seed generator)
 
 * Add command line argument `--seed-count n`
   * This allows generating `n` seeds at once, and is intended as a mass-testing feature. Despite this, it is still available to the user.
@@ -27,6 +27,13 @@
   * This makes the seed generator write only the spoiler log file, without actually patching the ROM. This saves a lot of time and disk space when used for mass-testing in combination with `--seed-count n`.
 * Add EDC / ECC (error detection code, error correction code) generation
   * This should allow more emulators, most importantly bizhawk, to properly play ROMs of this randomizer
+
+### Misc (base mod)
+
+* Credits
+  * Moved `Wiz_Taor` to new `Special Thanks` section.
+* Multiworld
+  * Add ignoring the special white gem race reward, so that can be handled by multiworld implementations.
 
 ## beta 4
 
