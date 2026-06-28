@@ -17,7 +17,42 @@ pub struct SeedMetadata {
 }
 
 
-pub fn generate_seed<'a>(rom_filepath: &'a str, chosen_settings: &'a SeedSettings) -> Result<SeedMetadata, String> {
+pub fn generate_seeds<'a>(
+    rom_filepath: &'a str,
+    chosen_settings: &'a SeedSettings,
+    seed_count: u32,
+) -> Result<SeedMetadata, String> {
+    let now = Instant::now();
+
+    let mut result = SeedMetadata {
+        seed_filename: "placeholder".to_owned(), seed_hash: "placeholder".to_owned()
+    };
+
+    for _ in 1..seed_count {
+        let one_seed_gen = generate_seed(
+            rom_filepath,
+            chosen_settings,
+        );
+
+        match one_seed_gen {
+            Ok(x) => {result = x;},
+            Err(_) => {},
+        }
+    }
+
+    if seed_count > 1 {
+        let elapsed = now.elapsed();
+        println!("Generating {} seeds took: {:.2?}", seed_count, elapsed);
+    }
+
+    Ok(result)
+}
+
+
+fn generate_seed<'a>(
+    rom_filepath: &'a str,
+    chosen_settings: &'a SeedSettings,
+) -> Result<SeedMetadata, String> {
     let now = Instant::now();
 
     let mut seed: u32;

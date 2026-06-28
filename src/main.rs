@@ -10,7 +10,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use crate::seed_generation::rom_patching::bsdiff_patching::apply_patchfile;
-use crate::seed_generation::seed_gen_main::generate_seed;
+use crate::seed_generation::seed_gen_main::generate_seeds;
 use crate::seed_generation::seed_settings::{
     BossGarageRequirements, FinalOxideUnlock, GeneralSettings, QualityOfLifeSettings, RandomizationSettings, RelicTime, RewardShuffle, SeedSettings, TrickSettings, WarppadShuffle, WarppadUnlockRequirements
 };
@@ -26,7 +26,34 @@ enum RomValidState {
     Valid = 3,
 }
 
+struct AppArgs {
+    seed_count: u32,
+}
+
+fn parse_seed_count(s: &str) -> Result<u32, &'static str> {
+    s.parse().map_err(|_| "not a number")
+}
+
+fn parse_args() -> Result<AppArgs, pico_args::Error> {
+    let mut pargs = pico_args::Arguments::from_env();
+
+    let args = AppArgs {
+        seed_count: pargs.opt_value_from_fn("--seed-count", parse_seed_count)?.unwrap_or(1),
+    };
+
+    Ok(args)
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
+    // CLI argument parsing
+    let app_args = match parse_args() {
+        Ok(x) => {x},
+        Err(e) => {
+            eprintln!("Error: {}.", e);
+            std::process::exit(1);
+        }
+    };
+
     let ui = MainWindow::new()?;
 
     let main_ui_weak = ui.as_weak();
@@ -119,7 +146,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             // Generate seed
             let rom_path = main_window.get_rom_path();
             let rom_path = rom_path.as_str();
-            let gen_result = generate_seed(rom_path, &chosen_settings);
+            let gen_result = generate_seeds(
+                rom_path,
+                &chosen_settings,
+                app_args.seed_count,
+            );
 
             match gen_result {
                 Ok(seed_meta) => {
