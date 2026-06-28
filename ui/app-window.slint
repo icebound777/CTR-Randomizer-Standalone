@@ -674,14 +674,6 @@ component AboutSubmenu inherits Rectangle {
     }
     Text {
         y: 30px;
-        text: "wiz_taor";
-        horizontal-alignment: center;
-        vertical-alignment: center;
-        font-weight: 800;
-        font-size: 10pt;
-    }
-    Text {
-        y: 50px;
         text: "Icebound777";
         horizontal-alignment: center;
         vertical-alignment: center;
@@ -690,7 +682,24 @@ component AboutSubmenu inherits Rectangle {
     }
 
     Text {
-        y: 100px;
+        y: 60px;
+        text: "Special Thanks";
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        font-weight: 800;
+        font-size: 10pt;
+    }
+    Text {
+        y: 80px;
+        text: "wiz_taor";
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        font-weight: 800;
+        font-size: 10pt;
+    }
+
+    Text {
+        y: 130px;
         text: "Sources of this seed generator:";
         horizontal-alignment: center;
         vertical-alignment: center;
@@ -700,7 +709,7 @@ component AboutSubmenu inherits Rectangle {
     TouchArea {
         height: 30px;
         width: 75px;
-        y: 120px;
+        y: 150px;
         clicked => {root.sources_generator();}
         Button {
             enabled: false;
@@ -715,7 +724,7 @@ component AboutSubmenu inherits Rectangle {
     }
 
     Text {
-        y: 160px;
+        y: 190px;
         text: "Sources of the randomizer mod:";
         horizontal-alignment: center;
         vertical-alignment: center;
@@ -725,7 +734,7 @@ component AboutSubmenu inherits Rectangle {
     TouchArea {
         height: 30px;
         width: 75px;
-        y: 180px;
+        y: 210px;
         clicked => {root.sources_mod();}
         Button {
             enabled: false;

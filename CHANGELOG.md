@@ -27,6 +27,8 @@
   * This makes the seed generator write only the spoiler log file, without actually patching the ROM. This saves a lot of time and disk space when used for mass-testing in combination with `--seed-count n`.
 * Add EDC / ECC (error detection code, error correction code) generation
   * This should allow more emulators, most importantly bizhawk, to properly play ROMs of this randomizer
+* "About" tab
+  * Moved `wiz_taor` to new `Special Thanks` section.
 
 ### Misc (base mod)
 
