@@ -28,6 +28,7 @@ enum RomValidState {
 
 struct AppArgs {
     seed_count: u32,
+    spoilerlog_only: bool,
 }
 
 fn parse_seed_count(s: &str) -> Result<u32, &'static str> {
@@ -39,6 +40,7 @@ fn parse_args() -> Result<AppArgs, pico_args::Error> {
 
     let args = AppArgs {
         seed_count: pargs.opt_value_from_fn("--seed-count", parse_seed_count)?.unwrap_or(1),
+        spoilerlog_only: pargs.contains(["-s", "--spoilerlog-only"]),
     };
 
     Ok(args)
@@ -150,6 +152,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 rom_path,
                 &chosen_settings,
                 app_args.seed_count,
+                app_args.spoilerlog_only,
             );
 
             match gen_result {

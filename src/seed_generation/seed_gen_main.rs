@@ -2,7 +2,7 @@ use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
 use crate::seed_generation::randomize_game::get_randomized_game;
-use crate::seed_generation::rom_patching::bsdiff_patching::{apply_base_patchfile, create_patchfile};
+use crate::seed_generation::rom_patching::bsdiff_patching::{apply_base_patchfile, create_patchfile, get_new_rom_file_path};
 use crate::seed_generation::rom_patching::eccedc_fixing::full_recalc;
 use crate::seed_generation::seed_settings::SeedSettings;
 use crate::seed_generation::spoilerlog::{get_seed_hash, write_spoilerlog};
@@ -21,6 +21,7 @@ pub fn generate_seeds<'a>(
     rom_filepath: &'a str,
     chosen_settings: &'a SeedSettings,
     seed_count: u32,
+    spoilerlog_only: bool,
 ) -> Result<SeedMetadata, String> {
     let now = Instant::now();
 
@@ -32,6 +33,7 @@ pub fn generate_seeds<'a>(
         let one_seed_gen = generate_seed(
             rom_filepath,
             chosen_settings,
+            spoilerlog_only
         );
 
         match one_seed_gen {
@@ -52,6 +54,7 @@ pub fn generate_seeds<'a>(
 fn generate_seed<'a>(
     rom_filepath: &'a str,
     chosen_settings: &'a SeedSettings,
+    spoilerlog_only: bool,
 ) -> Result<SeedMetadata, String> {
     let now = Instant::now();
 
@@ -74,49 +77,66 @@ fn generate_seed<'a>(
     println!("Elapsed: {:.2?}", elapsed);
 
     if let Ok(randomized_game) = randomized_game {
-        // apply base mod patch to rom
-        let filepath_new_rom = apply_base_patchfile(rom_filepath, seed);
+        let new_rom_file_path = get_new_rom_file_path(rom_filepath, seed);
 
-        match filepath_new_rom {
-            Ok(new_rom) => {
-                // write randomization to rom
-                let write_result = write_db_to_rom(&new_rom, &randomized_game);
-                if write_result.is_err() {
-                    return Err(write_result.expect_err("str type error").to_owned());
+        if spoilerlog_only {
+            let log_success = write_spoilerlog(&new_rom_file_path, randomized_game, seed, chosen_settings);
+
+            if log_success.is_err() {
+                return Err("Could not create spoiler log file!".to_owned());
+            }
+
+            return Ok(
+                SeedMetadata {
+                    seed_filename: new_rom_file_path.file_name().unwrap().to_string_lossy().to_string(),
+                    seed_hash: get_seed_hash(seed),
                 }
+            );
+        } else {
+            // apply base mod patch to rom
+            let filepath_new_rom = apply_base_patchfile(rom_filepath, seed);
 
-                // recalculate error detection / error correction code
-                let readwrite_result = full_recalc(&new_rom);
-                if readwrite_result.is_err() {
-                    return Err("Could not fix EDC / ECC data!".to_owned());
-                }
-
-                // if needed, write patch file
-                if chosen_settings.write_patchfile {
-                    let filepath_new_patch = create_patchfile(rom_filepath, &new_rom);
-
-                    if filepath_new_patch.is_err() {
-                        return Err("Could not create patch file!".to_owned());
+            match filepath_new_rom {
+                Ok(new_rom) => {
+                    // write randomization to rom
+                    let write_result = write_db_to_rom(&new_rom, &randomized_game);
+                    if write_result.is_err() {
+                        return Err(write_result.expect_err("str type error").to_owned());
                     }
-                }
 
-                // if needed, write spoiler log
-                if chosen_settings.write_spoilerlog {
-                    let log_success = write_spoilerlog(&new_rom, randomized_game, seed, chosen_settings);
-
-                    if log_success.is_err() {
-                        return Err("Could not create spoiler log file!".to_owned());
+                    // recalculate error detection / error correction code
+                    let readwrite_result = full_recalc(&new_rom);
+                    if readwrite_result.is_err() {
+                        return Err("Could not fix EDC / ECC data!".to_owned());
                     }
-                }
 
-                return Ok(
-                    SeedMetadata {
-                        seed_filename: new_rom.file_name().unwrap().to_string_lossy().to_string(),
-                        seed_hash: get_seed_hash(seed),
+                    // if needed, write patch file
+                    if chosen_settings.write_patchfile {
+                        let filepath_new_patch = create_patchfile(rom_filepath, &new_rom);
+
+                        if filepath_new_patch.is_err() {
+                            return Err("Could not create patch file!".to_owned());
+                        }
                     }
-                );
-            },
-            _ => { return Err("Could not apply base patch to vanilla ROM!".to_owned());}
+
+                    // if needed, write spoiler log
+                    if chosen_settings.write_spoilerlog {
+                        let log_success = write_spoilerlog(&new_rom, randomized_game, seed, chosen_settings);
+
+                        if log_success.is_err() {
+                            return Err("Could not create spoiler log file!".to_owned());
+                        }
+                    }
+
+                    return Ok(
+                        SeedMetadata {
+                            seed_filename: new_rom.file_name().unwrap().to_string_lossy().to_string(),
+                            seed_hash: get_seed_hash(seed),
+                        }
+                    );
+                },
+                _ => { return Err("Could not apply base patch to vanilla ROM!".to_owned());}
+            }
         }
     }
 

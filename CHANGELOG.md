@@ -6,6 +6,8 @@
 
 * Add command line argument `--seed-count n`
   * This allows generating `n` seeds at once, and is intended as a mass-testing feature. Despite this, it is still available to the user.
+* Add command line argument `--spoilerlog-only`
+  * This makes the seed generator write only the spoiler log file, without actually patching the ROM. This saves a lot of time and disk space when used for mass-testing in combination with `--seed-count n`.
 * Add EDC / ECC (error detection code, error correction code) generation
   * This should allow more emulators, most importantly bizhawk, to properly play ROMs of this randomizer
 
